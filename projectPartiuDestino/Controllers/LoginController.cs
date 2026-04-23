@@ -8,6 +8,11 @@ namespace projectPartiuDestino.Controllers
     {
         private string conexao = "server=localhost;database=bdpartiudestino;uid=root;pwd=nicolas123;";
 
+        public IActionResult Index()
+        {
+            return View();
+        }
+
         [HttpPost]
         public IActionResult Entrar(string email, string senha)
         {
@@ -15,34 +20,30 @@ namespace projectPartiuDestino.Controllers
             {
                 conn.Open();
 
-                string sql = "SELECT COUNT(*) FROM usuarios WHERE email = @Email AND senha = @Senha";
+                string sql = "SELECT tipo FROM usuarios WHERE email = @Email AND senha = @Senha";
 
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
-
                 cmd.Parameters.AddWithValue("@Email", email);
                 cmd.Parameters.AddWithValue("@Senha", senha);
 
-                int usuarioExiste = Convert.ToInt32(cmd.ExecuteScalar());
+                object resultado = cmd.ExecuteScalar();
 
-                if (usuarioExiste > 0)
+                if (resultado != null)
                 {
-                    return RedirectToAction("Index", "Home");
+                    string tipo = resultado.ToString();
+
+                    if (tipo == "admin")
+                    {
+                        return RedirectToAction("Index", "Admin");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
             }
 
             return Content("Email ou senha inválidos");
-        }
-        public IActionResult Index()
-        {
-            Conexao conexao = new Conexao();
-
-            using (MySqlConnection conn = conexao.ObterConexao())
-            {
-                conn.Open();
-                Console.WriteLine("Conectado com sucesso!");
-            }
-
-            return View();
         }
     }
 }

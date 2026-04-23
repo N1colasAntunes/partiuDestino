@@ -8,6 +8,16 @@ CREATE TABLE usuarios (
     email VARCHAR(255) UNIQUE,
     senha VARCHAR(255)
 );
+ALTER TABLE usuarios
+ADD COLUMN tipo VARCHAR(20) NOT NULL DEFAULT 'usuario';
+
+-- aqui define quem vai ser admin
+UPDATE usuarios
+SET tipo = 'admin'
+WHERE email = 'nick@gmail.com';
+
+SELECT tipo FROM usuarios WHERE email = @Email AND senha = @Senha;
+
 select * from usuarios;
 
 -- destinos disponíveis
