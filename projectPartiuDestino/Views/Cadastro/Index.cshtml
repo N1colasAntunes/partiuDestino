@@ -1,13 +1,18 @@
-﻿<div>
+﻿@model projectPartiuDestino.Models.Usuario
+
+<div>
     <h2>Cadastro</h2>
 
-    <input type="text" placeholder="Nome">
+    <form asp-controller="Cadastro" asp-action="Criar" method="post">
 
-    <input type="email" placeholder="E-mail">
+        <input asp-for="Nome" type="text" placeholder="Nome">
 
-    <input type="password" placeholder="Senha">
+        <input asp-for="Email" type="email" placeholder="E-mail">
 
-    <button>Criar Conta</button>
+        <input asp-for="Senha" type="password" placeholder="Senha">
+
+        <button type="submit">Criar Conta</button>
+    </form>
 
     <a asp-controller="Login" asp-action="Index">
         <button type="button">Login</button>

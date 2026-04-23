@@ -8,6 +8,7 @@ CREATE TABLE usuarios (
     email VARCHAR(255) UNIQUE,
     senha VARCHAR(255)
 );
+select * from usuarios;
 
 -- destinos disponíveis
 CREATE TABLE destinos (

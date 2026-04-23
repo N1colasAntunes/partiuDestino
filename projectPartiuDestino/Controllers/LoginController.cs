@@ -26,7 +26,7 @@ namespace projectPartiuDestino.Controllers
 
                 if (usuarioExiste > 0)
                 {
-                    return Content("Login realizado com sucesso");
+                    return RedirectToAction("Index", "Home");
                 }
             }
 
