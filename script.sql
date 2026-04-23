@@ -3,12 +3,10 @@ USE bdpartiudestino;
 
 -- tabela de login / controle de acesso
 CREATE TABLE usuarios (
-  id            INT          PRIMARY KEY AUTO_INCREMENT,
-  username      VARCHAR(100) UNIQUE NOT NULL,
-  password_hash VARCHAR(255) NOT NULL,
-  role          VARCHAR(30)  NOT NULL,
-  ativo         TINYINT(1)   DEFAULT 1,
-  criado_em     DATETIME     DEFAULT CURRENT_TIMESTAMP
+  id INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(255),
+    email VARCHAR(255) UNIQUE,
+    senha VARCHAR(255)
 );
 
 -- destinos disponíveis
