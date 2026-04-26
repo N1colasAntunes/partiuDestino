@@ -2,28 +2,107 @@
     ViewData["Title"] = "Login";
 }
 
-<div class="login-container">
-    <h2>Login</h2>
+<style>
+    .login-principal {
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f3f4f6;
+        padding: 20px;
+    }
 
-    <form asp-controller="Login" asp-action="Entrar" method="post">
-        <div>
-            <label>Email</label>
-            <input type="email" name="email" required />
+    .login-card {
+        background: #fff;
+        width: 100%;
+        max-width: 400px;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05 );
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+        .login-header i {
+            font-size: 3rem;
+            color: #1e3a8a;
+            animation: float 3s infinite ease-in-out;
+        }
+
+        .login-header h2 {
+            font-weight: 800;
+            margin-top: 15px;
+        }
+
+    .login-caixatexto {
+        margin-bottom: 20px;
+    }
+
+        .login-caixatexto label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+        }
+
+    .input-login {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+    }
+
+    .login-btn-entrar {
+        width: 100%;
+        background: #1e3a8a;
+        color: #fff;
+        border: none;
+        padding: 14px;
+        border-radius: 10px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .login-footer {
+        text-align: center;
+        margin-top: 25px;
+        border-top: 1px solid #eee;
+        padding-top: 20px;
+    }
+
+    @@keyframes float {
+        0%, 100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-5px);
+        }
+    }
+</style>
+
+<div class="login-principal">
+    <div class="login-card">
+        <div class="login-header">
+            <h2>Bem-vindo!</h2>
+            <p>Acesse sua conta para viajar.</p>
         </div>
-
-        <div>
-            <label>Senha</label>
-            <input type="password" name="senha" required />
+        <form asp-action="Entrar" method="post">
+            <div class="login-caixatexto">
+                <label>E-mail</label>
+                <input type="email" name="email" class="input-login" placeholder="seu@email.com" required />
+            </div>
+            <div class="login-caixatexto">
+                <label>Senha</label>
+                <input type="password" name="senha" class="input-login" placeholder="Sua senha" required />
+            </div>
+            <button type="submit" class="login-btn-entrar">Entrar na Conta</button>
+        </form>
+        <div class="login-footer">
+            <p>Não tem conta? <a asp-controller="Cadastro" asp-action="Index" style="color: #1e3a8a; font-weight: 700;">Cadastre-se</a></p>
         </div>
-
-        <div>
-            <button type="submit">Entrar</button>
-        </div>
-    </form>
-
-    <div>
-        <a asp-controller="Cadastro" asp-action="Index">
-            <button type="button">Cadastro</button>
-        </a>
     </div>
 </div>

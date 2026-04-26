@@ -14,7 +14,7 @@ ADD COLUMN tipo VARCHAR(20) NOT NULL DEFAULT 'usuario';
 -- aqui define quem vai ser admin
 UPDATE usuarios
 SET tipo = 'admin'
-WHERE email = 'nick@gmail.com';
+WHERE email = 'juliacostacarvalho0928@gmail.com';
 
 SELECT tipo FROM usuarios WHERE email = @Email AND senha = @Senha;
 

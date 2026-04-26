@@ -1,20 +1,189 @@
 ﻿@model projectPartiuDestino.Models.Usuario
 
-<div>
-    <h2>Cadastro</h2>
+@{
+    ViewData["Title"] = "Criar Conta - Partiu Destino";
+}
 
-    <form asp-controller="Cadastro" asp-action="Criar" method="post">
+<style>
+    /* Estilos específicos para a página de Cadastro */
+    .cadastro-wrapper {
+        min-height: 85vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f3f4f6;
+        padding: 40px 20px;
+    }
 
-        <input asp-for="Nome" type="text" placeholder="Nome">
+    .cadastro-card {
+        background: #ffffff;
+        width: 100%;
+        max-width: 500px;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e5e7eb;
+    }
 
-        <input asp-for="Email" type="email" placeholder="E-mail">
+    .cadastro-header {
+        text-align: center;
+        margin-bottom: 35px;
+    }
 
-        <input asp-for="Senha" type="password" placeholder="Senha">
+        .cadastro-header i {
+            font-size: 3.5rem;
+            color: #1e3a8a;
+            margin-bottom: 15px;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
 
-        <button type="submit">Criar Conta</button>
-    </form>
+        .cadastro-header h2 {
+            font-weight: 800;
+            color: #111827;
+            font-size: 1.75rem;
+            margin-bottom: 10px;
+        }
 
-    <a asp-controller="Login" asp-action="Index">
-        <button type="button">Login</button>
-    </a>
+        .cadastro-header p {
+            color: #6b7280;
+            font-size: 0.95rem;
+        }
+
+    .form-group-cadastro {
+        margin-bottom: 20px;
+    }
+
+        .form-group-cadastro label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #374151;
+            font-size: 0.9rem;
+        }
+
+    .input-cadastro {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #d1d5db;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background-color: #f9fafb;
+    }
+
+        .input-cadastro:focus {
+            outline: none;
+            border-color: #1e3a8a;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.1);
+        }
+
+    .btn-cadastro-submit {
+        width: 100%;
+        background-color: #1e3a8a;
+        color: white;
+        border: none;
+        padding: 16px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+    }
+
+        .btn-cadastro-submit:hover {
+            background-color: #1e40af;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 58, 138, 0.2);
+        }
+
+    .cadastro-footer {
+        text-align: center;
+        margin-top: 30px;
+        padding-top: 25px;
+        border-top: 1px solid #f3f4f6;
+    }
+
+        .cadastro-footer p {
+            color: #6b7280;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+
+    .link-login {
+        color: #1e3a8a;
+        text-decoration: none;
+        font-weight: 700;
+        transition: color 0.3s;
+    }
+
+        .link-login:hover {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+
+    @@keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.05);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+</style>
+
+<div class="cadastro-wrapper">
+    <div class="cadastro-card">
+        <div class="cadastro-header">
+            <h2>Crie sua Conta</h2>
+            <p>Junte-se a milhares de viajantes e comece sua jornada.</p>
+        </div>
+
+        <form asp-action="Criar" method="post">
+            <div class="form-group-cadastro">
+                <label asp-for="Nome">Nome Completo</label>
+                <input asp-for="Nome" class="input-cadastro" placeholder="Como quer ser chamado?" required />
+            </div>
+
+            <div class="form-group-cadastro">
+                <label asp-for="Email">E-mail</label>
+                <input asp-for="Email" type="email" class="input-cadastro" placeholder="seu@email.com" required />
+            </div>
+
+            <div class="form-group-cadastro">
+                <label asp-for="Senha">Senha</label>
+                <input asp-for="Senha" type="password" class="input-cadastro" placeholder="Crie uma senha forte" required />
+            </div>
+
+            <div class="form-check mb-4">
+                <input class="form-check-input" type="checkbox" id="termos" required>
+                <label class="form-check-label" for="termos" style="font-size: 0.85rem; color: #6b7280;">
+                    Eu aceito os <a href="#" style="color: #1e3a8a;">Termos de Uso</a> e a <a href="#" style="color: #1e3a8a;">Política de Privacidade</a>.
+                </label>
+            </div>
+
+            <button type="submit" class="btn-cadastro-submit">
+                <i class="fas fa-check-circle"></i>
+                <span>Finalizar Cadastro</span>
+            </button>
+        </form>
+
+        <div class="cadastro-footer">
+            <p>Já possui uma conta?</p>
+            <a asp-controller="Login" asp-action="Index" class="link-login">
+                Fazer Login agora
+            </a>
+        </div>
+    </div>
 </div>

@@ -1,19 +1,191 @@
-﻿<h1>Essa é sua parte principal julia, tela comum do cliente</h1>
+﻿@{
+    ViewData["Title"] = "Página Inicial - Partiu Destino";
+}
 
+<!-- ========================================
+     HERO SECTION - BANNER COM IMAGEM
+     ======================================== -->
+<section class="hero-section">
+    <div class="hero-content">
+        <h1>Encontre seu Destino Perfeito</h1>
+        <p>Explore as melhores viagens ao redor do mundo</p>
+    </div>
+</section>
 
+<!-- ========================================
+     SEÇÃO DE BUSCA
+     ======================================== -->
+<div class="container">
+    <div class="busca-container">
+        <h3 class="busca-titulo">
+            <i class="fas fa-search me-2"></i> Buscar Pacotes
+        </h3>
+        <form class="busca-form" method="post" asp-controller="Home" asp-action="Buscar">
+            <div class="form-group-busca">
+                <label for="destino">Destino</label>
+                <input type="text" id="destino" name="destino" placeholder="Para onde você quer ir?" />
+            </div>
+            <div class="form-group-busca">
+                <label for="dataPartida">Data de Partida</label>
+                <input type="date" id="dataPartida" name="dataPartida" />
+            </div>
+            <div class="form-group-busca">
+                <label for="dataRetorno">Data de Retorno</label>
+                <input type="date" id="dataRetorno" name="dataRetorno" />
+            </div>
+            <div class="form-group-busca">
+                <label for="viajantes">Viajantes</label>
+                <select id="viajantes" name="viajantes">
+                    <option value="1">1 Pessoa</option>
+                    <option value="2">2 Pessoas</option>
+                    <option value="3">3 Pessoas</option>
+                    <option value="4">4 Pessoas</option>
+                    <option value="5">5+ Pessoas</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-buscar">
+                <i class="fas fa-search me-2"></i> Buscar
+            </button>
+        </form>
+    </div>
+</div>
 
+<!-- ========================================
+     SEÇÃO DE DESTINOS POPULARES
+     ======================================== -->
+<section class="secao-destinos">
+    <div class="container">
+        <div class="secao-titulo">
+            <h2>Conheça alguns de nossos destinos</h2>
+            <p>Escolha entre os melhores pacotes de viagem disponíveis</p>
+        </div>
 
+        <div class="destinos-grid">
+            <!-- Card Destino 1 -->
+            <div class="card-destino">
+                <div class="card-destino-imagem">
+                    <img src="https://images.unsplash.com/photo-1502602898657-3e91760c0337?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Paris, França" />
+                </div>
+                <div class="card-destino-corpo">
+                    <h3 class="card-destino-titulo">Paris</h3>
+                    <p class="card-destino-pais">
+                        <i class="fas fa-map-pin me-1"></i> França
+                    </p>
+                    <p class="card-destino-descricao">
+                        A cidade do amor com arquitetura icônica, museus de classe mundial e gastronomia inesquecível.
+                    </p>
+                    <p class="card-destino-preco">A partir de R$ 3.500</p>
+                </div>
+            </div>
 
+            <!-- Card Destino 2 -->
+            <div class="card-destino">
+                <div class="card-destino-imagem">
+                    <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Tóquio, Japão" />
+                </div>
+                <div class="card-destino-corpo">
+                    <h3 class="card-destino-titulo">Tóquio</h3>
+                    <p class="card-destino-pais">
+                        <i class="fas fa-map-pin me-1"></i> Japão
+                    </p>
+                    <p class="card-destino-descricao">
+                        Metrópole vibrante que mistura o tradicional e o ultramoderno, de templos antigos a arranha-céus.
+                    </p>
+                    <p class="card-destino-preco">A partir de R$ 4.200</p>
+                </div>
+            </div>
 
+            <!-- Card Destino 3 -->
+            <div class="card-destino">
+                <div class="card-destino-imagem">
+                    <img src="https://images.unsplash.com/photo-1519680387993-468b1a5b5320?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Rio de Janeiro, Brasil" />
+                </div>
+                <div class="card-destino-corpo">
+                    <h3 class="card-destino-titulo">Rio de Janeiro</h3>
+                    <p class="card-destino-pais">
+                        <i class="fas fa-map-pin me-1"></i> Brasil
+                    </p>
+                    <p class="card-destino-descricao">
+                        Praias deslumbrantes, o Cristo Redentor e a energia contagiante do carnaval carioca.
+                    </p>
+                    <p class="card-destino-preco">A partir de R$ 2.800</p>
+                </div>
+            </div>
+        </div>
 
+        <div style="text-align: center;">
+            <a href="#" class="btn btn-primary btn-lg">
+                <i class="fas fa-arrow-right me-2"></i> Ver Todos os Destinos
+            </a>
+        </div>
+    </div>
+</section>
 
+<!-- ========================================
+     SEÇÃO QUEM SOMOS
+     ======================================== -->
+<section class="secao-quem-somos">
+    <div class="container">
+        <div class="quem-somos-container">
+            <div class="quem-somos-conteudo">
+                <h2>Quem Somos</h2>
+                <p>
+                    A <strong>Partiu Destino</strong> é uma agência de viagens moderna e inovadora, dedicada a transformar seus sonhos em realidade.
+                    Com mais de 10 anos de experiência no mercado, oferecemos os melhores pacotes de viagem para destinos incríveis ao redor do mundo.
+                </p>
+                <p>
+                    Nossa missão é proporcionar experiências inesquecíveis, com atendimento personalizado e preços competitivos.
+                    Cada viagem é planejada com cuidado para garantir que você tenha a melhor experiência possível.
+                </p>
+                <ul class="quem-somos-lista">
+                    <li>Mais de 500 destinos disponíveis</li>
+                    <li>Atendimento 24/7 em português</li>
+                    <li>Pacotes personalizados</li>
+                    <li>Parcelamento sem juros</li>
+                    <li>Garantia de melhor preço</li>
+                </ul>
+            </div>
+            <div class="quem-somos-imagem">
+                <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Equipe Partiu Destino" />
+            </div>
+        </div>
+    </div>
+</section>
 
+<!-- ========================================
+     SEÇÃO DE CONTATO
+     ======================================== -->
+<section class="secao-contato" id="contato">
+    <div class="container">
+        <div class="contato-titulo">
+            <h2>Entre em Contato</h2>
+            <p>Tem alguma dúvida? Envie-nos uma mensagem e entraremos em contato em breve!</p>
+        </div>
 
+        <form class="contato-form" method="post" asp-controller="Home" asp-action="EnviarContato">
+            <div class="form-group-contato">
+                <label for="nomeContato">Nome Completo</label>
+                <input type="text" id="nomeContato" name="nomeContato" placeholder="Seu nome" required />
+            </div>
 
-@* essa parte vai ficar no footer, só estou fazendo porque eu vou colocar a função de redirecionar para o site. *@
-<footer>
-    <p>Copyright © 2024 - Projeto Partiu Destino</p>
-    <a href="https://n1colasantunes.github.io/Bravyn/">
-        <img src="~/images/bravyn.png" alt="Logo Bravyn" style="width: 50px; height: auto;" />
-    </a>
-</footer>
+            <div class="form-group-contato">
+                <label for="emailContato">E-mail</label>
+                <input type="email" id="emailContato" name="emailContato" placeholder="seu@email.com" required />
+            </div>
+
+            <div class="form-group-contato">
+                <label for="assuntoContato">Assunto</label>
+                <input type="text" id="assuntoContato" name="assuntoContato" placeholder="Qual é o assunto?" required />
+            </div>
+
+            <div class="form-group-contato">
+                <label for="mensagemContato">Mensagem</label>
+                <textarea id="mensagemContato" name="mensagemContato" placeholder="Escreva sua mensagem aqui..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn-enviar">
+                <i class="fas fa-paper-plane me-2"></i> Enviar Mensagem
+            </button>
+        </form>
+    </div>
+</section>
