@@ -6,7 +6,7 @@
 
 <style>
     /* Estilos específicos para a página de Cadastro */
-    .cadastro-wrapper {
+    .cadastro-tela {
         min-height: 85vh;
         display: flex;
         align-items: center;
@@ -50,11 +50,11 @@
             font-size: 0.95rem;
         }
 
-    .form-group-cadastro {
+    .cadastro-caixatexto {
         margin-bottom: 20px;
     }
 
-        .form-group-cadastro label {
+        .cadastro-caixatexto label {
             display: block;
             font-weight: 600;
             margin-bottom: 8px;
@@ -79,7 +79,7 @@
             box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.1);
         }
 
-    .btn-cadastro-submit {
+    .cadastro-btn-finalizar {
         width: 100%;
         background-color: #1e3a8a;
         color: white;
@@ -97,7 +97,7 @@
         gap: 12px;
     }
 
-        .btn-cadastro-submit:hover {
+    .cadastro-btn-finalizar:hover {
             background-color: #1e40af;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(30, 58, 138, 0.2);
@@ -143,7 +143,7 @@
     }
 </style>
 
-<div class="cadastro-wrapper">
+<div class="cadastro-tela">
     <div class="cadastro-card">
         <div class="cadastro-header">
             <h2>Crie sua Conta</h2>
@@ -151,17 +151,17 @@
         </div>
 
         <form asp-action="Criar" method="post">
-            <div class="form-group-cadastro">
+            <div class="cadastro-caixatexto">
                 <label asp-for="Nome">Nome Completo</label>
                 <input asp-for="Nome" class="input-cadastro" placeholder="Como quer ser chamado?" required />
             </div>
 
-            <div class="form-group-cadastro">
+            <div class="cadastro-caixatexto">
                 <label asp-for="Email">E-mail</label>
                 <input asp-for="Email" type="email" class="input-cadastro" placeholder="seu@email.com" required />
             </div>
 
-            <div class="form-group-cadastro">
+            <div class="cadastro-caixatexto">
                 <label asp-for="Senha">Senha</label>
                 <input asp-for="Senha" type="password" class="input-cadastro" placeholder="Crie uma senha forte" required />
             </div>
@@ -173,7 +173,7 @@
                 </label>
             </div>
 
-            <button type="submit" class="btn-cadastro-submit">
+            <button type="submit" class="cadastro-btn-finalizar">
                 <i class="fas fa-check-circle"></i>
                 <span>Finalizar Cadastro</span>
             </button>

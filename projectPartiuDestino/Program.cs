@@ -23,6 +23,6 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     //alterado de Home para Login, começar na tela de login 
-    pattern: "{controller=Login}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

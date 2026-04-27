@@ -1,191 +1,450 @@
 ﻿@{
-    ViewData["Title"] = "Página Inicial - Partiu Destino";
+    ViewData["Title"] = "Home - Partiu Destino";
 }
 
-<!-- ========================================
-     HERO SECTION - BANNER COM IMAGEM
-     ======================================== -->
-<section class="hero-section">
+<style>
+    /* ============================================
+           ESTILO FIEL AO FIGMA - PARTIU DESTINO
+           ============================================ */
+
+    :root {
+        --azul-escuro: #1e3a8a;
+        --azul-claro: #3b82f6;
+        --cinza-texto: #4b5563;
+        --cinza-claro: #f3f4f6;
+        --branco: #ffffff;
+    }
+
+    body {
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+        color: #111827;
+        background-color: var(--branco);
+    }
+
+    /* Banner Principal */
+    .hero-container {
+        position: relative;
+        height: 500px;
+        background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80' ) center/cover no-repeat;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-align: center;
+    }
+
+        .hero-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+        .hero-content h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .hero-content p {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            opacity: 0.9;
+        }
+
+    .btn-conheca {
+        background-color: var(--azul-escuro);
+        color: white;
+        padding: 12px 25px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    /* Barra de Busca (Frame do Figma) */
+    .busca-frame {
+        position: relative;
+        z-index: 10;
+        background: white;
+        max-width: 950px;
+        margin: -80px auto 80px;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    .busca-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr) 100px;
+        gap: 15px;
+        align-items: flex-end;
+    }
+
+    .busca-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+        .busca-item label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .busca-item input, .busca-item select {
+            border: 1px solid #d1d5db;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+
+    .btn-busca-azul {
+        background-color: var(--azul-escuro);
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    /* Seção Destinos */
+    .secao-destinos {
+        text-align: center;
+        padding: 40px 0;
+    }
+
+        .secao-destinos h2 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .secao-destinos p {
+            color: var(--cinza-texto);
+            margin-bottom: 50px;
+        }
+
+    .carrossel-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        position: relative;
+    }
+
+    .card-destino {
+        width: 300px;
+        text-align: left;
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+        .card-destino img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+    .card-body {
+        padding: 15px;
+    }
+
+        .card-body h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .card-body .info {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-bottom: 10px;
+        }
+
+        .card-body .preco {
+            font-weight: 800;
+            color: #111827;
+            font-size: 1.1rem;
+        }
+
+    .seta-carrossel {
+        font-size: 1.5rem;
+        color: #d1d5db;
+        cursor: pointer;
+    }
+
+    /* Quem Somos (Layout Figma) */
+    .quem-somos-secao {
+        padding: 100px 0;
+        display: flex;
+        justify-content: space-between;
+        gap: 60px;
+    }
+
+    .quem-somos-texto {
+        flex: 1;
+    }
+
+        .quem-somos-texto h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+
+        .quem-somos-texto p {
+            color: var(--cinza-texto);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+    .quem-somos-cards {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .missao-card {
+        display: flex;
+        gap: 15px;
+        padding: 20px;
+        background: white;
+    }
+
+    .missao-icon {
+        width: 50px;
+        height: 50px;
+        background: #f3f4f6;
+        border-radius: 8px;
+    }
+
+    .missao-info h4 {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .missao-info p {
+        font-size: 0.85rem;
+        color: var(--cinza-texto);
+    }
+
+    /* Contate-nos */
+    .contato-secao {
+        text-align: center;
+        padding: 80px 0;
+    }
+
+        .contato-secao h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .contato-secao p {
+            color: var(--cinza-texto);
+            margin-bottom: 40px;
+        }
+
+    .form-contato {
+        max-width: 550px;
+        margin: 0 auto;
+        text-align: left;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 5px;
+        }
+
+    .btn-enviar-azul {
+        width: 100%;
+        background-color: var(--azul-escuro);
+        color: white;
+        border: none;
+        padding: 15px;
+        border-radius: 5px;
+        font-weight: 700;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    /* Footer Azul Escuro */
+    .footer-figma {
+        background-color: var(--azul-escuro);
+        color: white;
+        padding: 30px 0;
+        text-align: center;
+        font-size: 0.85rem;
+    }
+
+    .footer-links-sociais {
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        align-items: center;
+    }
+
+        .footer-links-sociais a {
+            color: white;
+            text-decoration: none;
+        }
+</style>
+
+<!-- Banner Principal -->
+<section class="hero-container">
     <div class="hero-content">
-        <h1>Encontre seu Destino Perfeito</h1>
-        <p>Explore as melhores viagens ao redor do mundo</p>
+        <h1>Seu destino começa aqui</h1>
+        <p>Viaje do seu jeito, com roteiros exclusivos e personalizados. Reserve agora.</p>
+        <a href="#" class="btn-conheca">Conheça os lugares</a>
     </div>
 </section>
 
-<!-- ========================================
-     SEÇÃO DE BUSCA
-     ======================================== -->
+<!-- Barra de Busca -->
 <div class="container">
-    <div class="busca-container">
-        <h3 class="busca-titulo">
-            <i class="fas fa-search me-2"></i> Buscar Pacotes
-        </h3>
-        <form class="busca-form" method="post" asp-controller="Home" asp-action="Buscar">
-            <div class="form-group-busca">
-                <label for="destino">Destino</label>
-                <input type="text" id="destino" name="destino" placeholder="Para onde você quer ir?" />
+    <div class="busca-frame">
+        <div class="busca-grid">
+            <div class="busca-item">
+                <label>Origem</label>
+                <input type="text" placeholder="Cidade de saída" />
             </div>
-            <div class="form-group-busca">
-                <label for="dataPartida">Data de Partida</label>
-                <input type="date" id="dataPartida" name="dataPartida" />
+            <div class="busca-item">
+                <label>Destino</label>
+                <input type="text" placeholder="Para onde vamos?" />
             </div>
-            <div class="form-group-busca">
-                <label for="dataRetorno">Data de Retorno</label>
-                <input type="date" id="dataRetorno" name="dataRetorno" />
+            <div class="busca-item">
+                <label>Ida</label>
+                <input type="date" />
             </div>
-            <div class="form-group-busca">
-                <label for="viajantes">Viajantes</label>
-                <select id="viajantes" name="viajantes">
-                    <option value="1">1 Pessoa</option>
-                    <option value="2">2 Pessoas</option>
-                    <option value="3">3 Pessoas</option>
-                    <option value="4">4 Pessoas</option>
-                    <option value="5">5+ Pessoas</option>
-                </select>
+            <div class="busca-item">
+                <label>Pessoas</label>
+                <input type="number" value="1" />
             </div>
-            <button type="submit" class="btn-buscar">
-                <i class="fas fa-search me-2"></i> Buscar
-            </button>
-        </form>
+            <button class="btn-busca-azul">Busca</button>
+        </div>
     </div>
 </div>
 
-<!-- ========================================
-     SEÇÃO DE DESTINOS POPULARES
-     ======================================== -->
-<section class="secao-destinos">
-    <div class="container">
-        <div class="secao-titulo">
-            <h2>Conheça alguns de nossos destinos</h2>
-            <p>Escolha entre os melhores pacotes de viagem disponíveis</p>
-        </div>
+<!-- Destinos -->
+<section class="container secao-destinos">
+    <h2>Conheça alguns de nossos destinos!</h2>
+    <p>veja nossos pacotes mais populares!</p>
 
-        <div class="destinos-grid">
-            <!-- Card Destino 1 -->
-            <div class="card-destino">
-                <div class="card-destino-imagem">
-                    <img src="https://images.unsplash.com/photo-1502602898657-3e91760c0337?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Paris, França" />
-                </div>
-                <div class="card-destino-corpo">
-                    <h3 class="card-destino-titulo">Paris</h3>
-                    <p class="card-destino-pais">
-                        <i class="fas fa-map-pin me-1"></i> França
-                    </p>
-                    <p class="card-destino-descricao">
-                        A cidade do amor com arquitetura icônica, museus de classe mundial e gastronomia inesquecível.
-                    </p>
-                    <p class="card-destino-preco">A partir de R$ 3.500</p>
-                </div>
-            </div>
+    <div class="carrossel-container">
+        <i class="fas fa-chevron-left seta-carrossel"></i>
 
-            <!-- Card Destino 2 -->
-            <div class="card-destino">
-                <div class="card-destino-imagem">
-                    <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Tóquio, Japão" />
-                </div>
-                <div class="card-destino-corpo">
-                    <h3 class="card-destino-titulo">Tóquio</h3>
-                    <p class="card-destino-pais">
-                        <i class="fas fa-map-pin me-1"></i> Japão
-                    </p>
-                    <p class="card-destino-descricao">
-                        Metrópole vibrante que mistura o tradicional e o ultramoderno, de templos antigos a arranha-céus.
-                    </p>
-                    <p class="card-destino-preco">A partir de R$ 4.200</p>
-                </div>
-            </div>
-
-            <!-- Card Destino 3 -->
-            <div class="card-destino">
-                <div class="card-destino-imagem">
-                    <img src="https://images.unsplash.com/photo-1519680387993-468b1a5b5320?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Rio de Janeiro, Brasil" />
-                </div>
-                <div class="card-destino-corpo">
-                    <h3 class="card-destino-titulo">Rio de Janeiro</h3>
-                    <p class="card-destino-pais">
-                        <i class="fas fa-map-pin me-1"></i> Brasil
-                    </p>
-                    <p class="card-destino-descricao">
-                        Praias deslumbrantes, o Cristo Redentor e a energia contagiante do carnaval carioca.
-                    </p>
-                    <p class="card-destino-preco">A partir de R$ 2.800</p>
-                </div>
-            </div>
-        </div>
-
-        <div style="text-align: center;">
-            <a href="#" class="btn btn-primary btn-lg">
-                <i class="fas fa-arrow-right me-2"></i> Ver Todos os Destinos
-            </a>
-        </div>
-    </div>
-</section>
-
-<!-- ========================================
-     SEÇÃO QUEM SOMOS
-     ======================================== -->
-<section class="secao-quem-somos">
-    <div class="container">
-        <div class="quem-somos-container">
-            <div class="quem-somos-conteudo">
-                <h2>Quem Somos</h2>
-                <p>
-                    A <strong>Partiu Destino</strong> é uma agência de viagens moderna e inovadora, dedicada a transformar seus sonhos em realidade.
-                    Com mais de 10 anos de experiência no mercado, oferecemos os melhores pacotes de viagem para destinos incríveis ao redor do mundo.
+        <div class="card-destino">
+            <img src="https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?auto=format&fit=crop&w=400&q=80" />
+            <div class="card-body">
+                <h4>Rio de Janeiro, 7 dias</h4>
+                <p class="info">
+                    Ida
+                    Volta
                 </p>
-                <p>
-                    Nossa missão é proporcionar experiências inesquecíveis, com atendimento personalizado e preços competitivos.
-                    Cada viagem é planejada com cuidado para garantir que você tenha a melhor experiência possível.
+                <p class="preco">R$ 1.500</p>
+            </div>
+        </div>
+
+        <div class="card-destino">
+            <img src="https://images.unsplash.com/photo-1516306580123-e6e52b1b7b5f?auto=format&fit=crop&w=400&q=80" />
+            <div class="card-body">
+                <h4>Florianópolis, 5 dias</h4>
+                <p class="info">
+                    Ida
+                    Volta
                 </p>
-                <ul class="quem-somos-lista">
-                    <li>Mais de 500 destinos disponíveis</li>
-                    <li>Atendimento 24/7 em português</li>
-                    <li>Pacotes personalizados</li>
-                    <li>Parcelamento sem juros</li>
-                    <li>Garantia de melhor preço</li>
-                </ul>
+                <p class="preco">R$ 1.200</p>
             </div>
-            <div class="quem-somos-imagem">
-                <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Equipe Partiu Destino" />
+        </div>
+
+        <div class="card-destino">
+            <img src="https://images.unsplash.com/photo-1506929199175-fe09628b0354?auto=format&fit=crop&w=400&q=80" />
+            <div class="card-body">
+                <h4>Salvador, 10 dias</h4>
+                <p class="info">
+                    Ida
+                    Volta
+                </p>
+                <p class="preco">R$ 2.500</p>
+            </div>
+        </div>
+
+        <i class="fas fa-chevron-right seta-carrossel"></i>
+    </div>
+</section>
+
+<!-- Quem Somos -->
+<section class="container quem-somos-secao">
+    <div class="quem-somos-texto">
+        <h2>Quem Somos</h2>
+        <p>Na Partiu Destino, criamos experiências de viagens únicas, com pacotes personalizados, preços acessíveis e atendimento humanizado. Nosso objetivo é transformar cada viagem em um momento inesquecível.</p>
+    </div>
+    <div class="quem-somos-cards">
+        <div class="missao-card">
+            <div class="missao-icon"></div>
+            <div class="missao-info">
+                <h4>Nossa Missão</h4>
+                <p>Proporcionar experiências de viagem únicas, conectando pessoas a destinos incríveis com conforto e segurança.</p>
+            </div>
+        </div>
+        <div class="missao-card">
+            <div class="missao-icon"></div>
+            <div class="missao-info">
+                <h4>Nossa Visão</h4>
+                <p>Ser a agência de viagens líder em personalização de roteiros, reconhecida pela excelência no atendimento.</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- ========================================
-     SEÇÃO DE CONTATO
-     ======================================== -->
-<section class="secao-contato" id="contato">
-    <div class="container">
-        <div class="contato-titulo">
-            <h2>Entre em Contato</h2>
-            <p>Tem alguma dúvida? Envie-nos uma mensagem e entraremos em contato em breve!</p>
+<!-- Contato -->
+<section class="container contato-secao">
+    <h2>Contate-nos</h2>
+    <p>Tem alguma dúvida? Mande uma mensagem!</p>
+
+    <form class="form-contato">
+        <div class="form-group">
+            <label>Seu Nome</label>
+            <input type="text" placeholder="Digite seu nome" />
         </div>
-
-        <form class="contato-form" method="post" asp-controller="Home" asp-action="EnviarContato">
-            <div class="form-group-contato">
-                <label for="nomeContato">Nome Completo</label>
-                <input type="text" id="nomeContato" name="nomeContato" placeholder="Seu nome" required />
-            </div>
-
-            <div class="form-group-contato">
-                <label for="emailContato">E-mail</label>
-                <input type="email" id="emailContato" name="emailContato" placeholder="seu@email.com" required />
-            </div>
-
-            <div class="form-group-contato">
-                <label for="assuntoContato">Assunto</label>
-                <input type="text" id="assuntoContato" name="assuntoContato" placeholder="Qual é o assunto?" required />
-            </div>
-
-            <div class="form-group-contato">
-                <label for="mensagemContato">Mensagem</label>
-                <textarea id="mensagemContato" name="mensagemContato" placeholder="Escreva sua mensagem aqui..." required></textarea>
-            </div>
-
-            <button type="submit" class="btn-enviar">
-                <i class="fas fa-paper-plane me-2"></i> Enviar Mensagem
-            </button>
-        </form>
-    </div>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" placeholder="seu@email.com" />
+        </div>
+        <div class="form-group">
+            <label>Diga aqui!</label>
+            <input type="text" placeholder="Sua mensagem aqui..." />
+        </div>
+        <button type="button" class="btn-enviar-azul">Enviar mensagem</button>
+    </form>
 </section>
+

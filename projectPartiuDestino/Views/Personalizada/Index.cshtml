@@ -1,0 +1,71 @@
+﻿@{
+    ViewBag.Title = "Cadastro de Viagem";
+}
+
+
+<div class="container">
+    <h2>Mapa sua Viagem dos Sonhos</h2>
+
+    <form method="post">
+
+        <h4>Informações Básicas</h4>
+        <label>Destino</label>
+        <input type="text" name="destino" />
+
+        <label>País</label>
+        <input type="text" name="pais" />
+
+        <div class="row">
+            <div>
+                <label>Data de Ida</label>
+                <input type="date" name="dataIda" />
+            </div>
+            <div>
+                <label>Data de Volta</label>
+                <input type="date" name="dataVolta" />
+            </div>
+        </div>
+
+        <h4>Detalhes da Viagem</h4>
+        <label>Tipo de Viagem</label>
+        <select name="tipo">
+            <option>Lazer</option>
+            <option>Negócios</option>
+            <option>Aventura</option>
+        </select>
+
+        <label>Número de Pessoas</label>
+        <input type="number" name="pessoas" />
+
+        <label>Orçamento</label>
+        <input type="number" name="orcamento" />
+
+        <h4>Preferências</h4>
+        <label>Hospedagem</label>
+        <select>
+            <option>Hotel</option>
+            <option>Airbnb</option>
+            <option>Hostel</option>
+        </select>
+
+        <label>Transporte</label>
+        <select>
+            <option>Avião</option>
+            <option>Carro</option>
+            <option>Ônibus</option>
+        </select>
+
+        <h4>Experiências Desejadas</h4>
+        <textarea rows="3"></textarea>
+
+        <h4>Extras</h4>
+        <label>Observações</label>
+        <textarea rows="3"></textarea>
+
+        <h4>Observações Finais</h4>
+        <textarea rows="3"></textarea>
+
+        <button type="submit" class="btn">Criar minha viagem</button>
+
+    </form>
+</div>

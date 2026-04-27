@@ -1,3 +1,434 @@
-﻿<h1>Painel do Administrador</h1>
-<p>aqui vai ficar o painel de admin, se quiser adicionar alguma coisa..., eu vou colocar</p>
-<p>botão de excluir e alterar as coisas, tipo: alterar reserva, alterar dia. tendeu?</p>
+﻿@{
+    ViewData["Title"] = "Painel Administrativo - Partiu Destino";
+}
+
+<style>
+    /* ============================================
+           ESTILOS DO PAINEL ADMINISTRATIVO
+           ============================================ */
+
+    .admin-wrapper {
+        display: flex;
+        min-height: 100vh;
+        background-color: #f8fafc;
+    }
+
+    /* Barra Lateral (Sidebar) */
+    .admin-sidebar {
+        width: 260px;
+        background-color: #1e3a8a;
+        color: white;
+        padding: 30px 20px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .sidebar-header {
+        font-size: 1.25rem;
+        font-weight: 800;
+        margin-bottom: 40px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .sidebar-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        flex-grow: 1;
+    }
+
+    .sidebar-item {
+        margin-bottom: 10px;
+    }
+
+    .sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 15px;
+        color: white;
+        text-decoration: none;
+        border-radius: 10px;
+        transition: all 0.3s;
+        font-weight: 500;
+    }
+
+        .sidebar-link:hover, .sidebar-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .sidebar-link i {
+            width: 20px;
+            text-align: center;
+        }
+
+    /* Conteúdo Principal */
+    .admin-main {
+        flex-grow: 1;
+        padding: 40px;
+    }
+
+    .admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 35px;
+    }
+
+        .admin-header h2 {
+            font-weight: 800;
+            color:white;
+            margin: 0;
+        }
+
+    /* Cartões de Métricas */
+    .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 25px;
+        margin-bottom: 40px;
+    }
+
+    .metric-card {
+        background: white;
+        padding: 25px;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        border: 1px solid #f1f5f9;
+    }
+
+    .metric-icon {
+        width: 55px;
+        height: 55px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+
+    .icon-blue {
+        background-color: #eff6ff;
+        color: #3b82f6;
+    }
+
+    .icon-green {
+        background-color: #f0fdf4;
+        color: #22c55e;
+    }
+
+    .icon-orange {
+        background-color: #fff7ed;
+        color: #f97316;
+    }
+
+    .metric-info h4 {
+        font-size: 0.85rem;
+        color: #64748b;
+        margin: 0 0 5px 0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .metric-info p {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #1e293b;
+        margin: 0;
+    }
+
+    /* Tabela de Gerenciamento */
+    .admin-card-table {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        border: 1px solid #f1f5f9;
+        overflow: hidden;
+    }
+
+    .card-table-header {
+        padding: 20px 25px;
+        border-bottom: 1px solid #f1f5f9;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .card-table-header h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+    .btn-add {
+        background-color: #1e3a8a;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+        .btn-add:hover {
+            background-color: #1e40af;
+        }
+
+    .table-responsive {
+        padding: 0;
+    }
+
+    .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .admin-table th {
+            background-color: #f8fafc;
+            padding: 15px 25px;
+            text-align: left;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+        }
+
+        .admin-table td {
+            padding: 15px 25px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 0.9rem;
+            color: #334155;
+        }
+
+    .status-badge {
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .status-active {
+        background-color: #dcfce7;
+        color: #166534;
+    }
+
+    .status-pending {
+        background-color: #fef9c3;
+        color: #854d0e;
+    }
+
+    .action-btns {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-action {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #e2e8f0;
+        background: white;
+        color: #64748b;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .btn-edit:hover {
+        background-color: #eff6ff;
+        color: #3b82f6;
+        border-color: #3b82f6;
+    }
+
+    .btn-delete:hover {
+        background-color: #fef2f2;
+        color: #ef4444;
+        border-color: #ef4444;
+    }
+
+    @@media (max-width: 992px) {
+        .admin-sidebar {
+            width: 80px;
+            padding: 30px 10px;
+        }
+
+        .sidebar-header span, .sidebar-link span {
+            display: none;
+        }
+
+        .sidebar-header {
+            justify-content: center;
+        }
+
+        .sidebar-link {
+            justify-content: center;
+        }
+    }
+</style>
+
+<div class="admin-wrapper">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+        <div class="sidebar-header">
+          
+            <span>Administração Partiu</span>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link active">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <span>Destinos</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <i class="fas fa-suitcase-rolling"></i>
+                    <span>Pacotes</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <i class="fas fa-users"></i>
+                    <span>Usuários</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <i class="fas fa-cog"></i>
+                    <span>Configurações</span>
+                </a>
+            </li>
+        </ul>
+        <div class="sidebar-footer">
+            <a href="/" class="sidebar-link">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Sair do Painel</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+        <div class="admin-header">
+            <div>
+                <h2>Olá, Administrador!</h2>
+                <p class="text-muted">Aqui está o resumo do seu projeto hoje.</p>
+            </div>
+            <div class="admin-user-info d-flex align-items-center gap-3">
+                <div class="text-end">
+                    <p class="mb-0 fw-bold">João Silva</p>
+                    <small class="text-muted">Admin Master</small>
+                </div>
+                <img src="https://ui-avatars.com/api/?name=Joao+Silva&background=1e3a8a&color=fff" class="rounded-circle" width="45" alt="Avatar">
+            </div>
+        </div>
+
+        <!-- Metrics -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-icon icon-blue">
+                    <i class="fas fa-globe-americas"></i>
+                </div>
+                <div class="metric-info">
+                    <h4>Destinos Ativos</h4>
+                    <p>42</p>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon icon-green">
+                    <i class="fas fa-ticket-alt"></i>
+                </div>
+                <div class="metric-info">
+                    <h4>Reservas Mês</h4>
+                    <p>128</p>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon icon-orange">
+                    <i class="fas fa-user-friends"></i>
+                </div>
+                <div class="metric-info">
+                    <h4>Novos Clientes</h4>
+                    <p>15</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Management Table -->
+        <div class="admin-card-table">
+            <div class="card-table-header">
+                <h3>Gerenciar Destinos Recentes</h3>
+                <button class="btn-add">
+                    <i class="fas fa-plus me-2"></i> Novo Destino
+                </button>
+            </div>
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Destino</th>
+                            <th>País</th>
+                            <th>Preço Base</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Paris</strong></td>
+                            <td>França</td>
+                            <td>R$ 3.500</td>
+                            <td><span class="status-badge status-active">Ativo</span></td>
+                            <td>
+                                <div class="action-btns">
+                                    <button class="btn-action btn-edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-action btn-delete" title="Excluir"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tóquio</strong></td>
+                            <td>Japão</td>
+                            <td>R$ 4.200</td>
+                            <td><span class="status-badge status-active">Ativo</span></td>
+                            <td>
+                                <div class="action-btns">
+                                    <button class="btn-action btn-edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-action btn-delete" title="Excluir"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Rio de Janeiro</strong></td>
+                            <td>Brasil</td>
+                            <td>R$ 1.800</td>
+                            <td><span class="status-badge status-pending">Pendente</span></td>
+                            <td>
+                                <div class="action-btns">
+                                    <button class="btn-action btn-edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-action btn-delete" title="Excluir"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
