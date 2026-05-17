@@ -6,7 +6,7 @@ namespace projectPartiuDestino.Controllers
 {
     public class LoginController : Controller
     {
-        private string conexao = "server=localhost;database=bdpartiudestino;uid=root;pwd=nicolas123;";
+        private string conexao = "server=localhost;database=bdpartiudestino;uid=root;pwd=12345678;";
 
         public IActionResult Index()
         {
@@ -43,7 +43,12 @@ namespace projectPartiuDestino.Controllers
                 }
             }
 
-            return Content("Email ou senha inválidos");
+            ViewBag.MensagemErro = "E-mail ou senha incorretos. Por favor, tente novamente.";
+
+            // Retorna para a página de login (Index) passando a mensagem
+            return View("Index");
+
+
         }
     }
 }

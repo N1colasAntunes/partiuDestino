@@ -6,7 +6,7 @@ namespace projectPartiuDestino.Controllers
 {
     public class CadastroController : Controller
     {
-        private string conexao = "server=localhost;database=bdpartiudestino;uid=root;pwd=;";
+        private string conexao = "server=localhost;database=bdpartiudestino;uid=root;pwd=12345678;";
 
         public IActionResult Index()
         {

@@ -1,0 +1,239 @@
+﻿@model IEnumerable<projectPartiuDestino.Models.Destino>
+
+@{
+    ViewData["Title"] = "Nossos Destinos - Partiu Destino";
+}
+
+<style>
+    /* ============================================
+           ESTILO PÁGINA DE DESTINOS (BASEADO NO BANCO)
+           ============================================ */
+
+    :root {
+        --primary: #1e3a8a;
+        --accent: #3b82f6;
+        --text-main: #1f2937;
+        --text-muted: #6b7280;
+        --bg-body: #f8fafc;
+        --white: #ffffff;
+        --border: #e5e7eb;
+    }
+
+    .destinos-wrapper {
+        background-color: var(--bg-body);
+        padding: 80px 0;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .destinos-header {
+        text-align: center;
+        margin-bottom: 60px;
+    }
+
+        .destinos-header h1 {
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: #111827;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+        }
+
+        .destinos-header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+    /* Grid de Destinos */
+    .destinos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 30px;
+    }
+
+    .card-destino-banco {
+        background: var(--white);
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        border: 1px solid var(--border);
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .card-destino-banco:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+    /* Imagem Placeholder (Já que não tem no banco, usamos uma bonita por padrão) */
+    .destino-img-box {
+        height: 200px;
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 3rem;
+        position: relative;
+    }
+
+        .destino-img-box i {
+            opacity: 0.5;
+        }
+
+    .status-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        padding: 5px 12px;
+        border-radius: 50px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .status-ativo {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .status-inativo {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .destino-corpo {
+        padding: 25px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .destino-pais {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--accent);
+        text-transform: uppercase;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .destino-nome {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: #111827;
+        margin-bottom: 12px;
+    }
+
+    .destino-descricao {
+        font-size: 0.95rem;
+        color: var(--text-muted);
+        line-height: 1.6;
+        margin-bottom: 20px;
+        flex-grow: 1;
+    }
+
+    .destino-footer {
+        padding-top: 20px;
+        border-top: 1px solid #f1f5f9;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .btn-detalhes {
+        background-color: var(--primary);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-decoration: none;
+        transition: background 0.3s;
+    }
+
+        .btn-detalhes:hover {
+            background-color: var(--accent);
+            color: white;
+        }
+
+    .destino-id {
+        font-size: 0.75rem;
+        color: #cbd5e1;
+        font-weight: 500;
+    }
+
+    /* Mensagem de Lista Vazia */
+    .vazio-container {
+        align-items:center;
+        text-align: center;
+        padding: 100px 20px;
+        background: white;
+        border-radius: 24px;
+        border: 2px dashed var(--border);
+    }
+</style>
+
+<div class="destinos-wrapper">
+    <div class="container">
+
+        <!-- Header -->
+        <div class="destinos-header">
+            <h1>Destinos Disponíveis</h1>
+            <p>Explore nossa seleção exclusiva de lugares incríveis, cadastrados diretamente em nosso sistema.</p>
+        </div>
+
+        <div class="destinos-grid">
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var item in Model)
+                {
+                    <div class="card-destino-banco">
+                        <div class="destino-img-box">
+                            <i class="fas fa-map-marked-alt"></i>
+                            @if (item.Ativo == 1)
+                            {
+                                <span class="status-badge status-ativo">Disponível</span>
+                            }
+                            else
+                            {
+                                <span class="status-badge status-inativo">Indisponível</span>
+                            }
+                        </div>
+
+                        <div class="destino-corpo">
+                            <div class="destino-pais">
+                                <i class="fas fa-globe-americas"></i> @item.Pais
+                            </div>
+                            <h3 class="destino-nome">@item.Nome</h3>
+                            <p class="destino-descricao">
+                                @(item.Descricao?.Length > 120 ? item.Descricao.Substring(0, 120) + "..." : item.Descricao)
+                            </p>
+
+                            <div class="destino-footer">
+                                <span class="destino-id">Ref: #@item.Id</span>
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn-detalhes">
+                                    Ver Detalhes
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="vazio-container w-100">
+                    <i class="fas fa-search-location fa-3x mb-3" style="color: #cbd5e1;"></i>
+                    <h3>Nenhum destino encontrado</h3>
+                    <p>No momento não temos destinos cadastrados ou ativos no sistema.</p>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-3">Voltar ao Início</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

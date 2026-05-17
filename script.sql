@@ -11,9 +11,18 @@ CREATE TABLE usuarios (
 ALTER TABLE usuarios
 ADD COLUMN tipo VARCHAR(20) NOT NULL DEFAULT 'usuario';
 
+select * from usuarios;
+
 -- aqui define quem vai ser admin
+INSERT INTO usuarios (id, nome, email, senha)
+VALUES (default, 'Julia Costa', 'juliacostacarvalho0928@gmail.com','12345');
+
 UPDATE usuarios
 SET tipo = 'admin'
+WHERE email = 'juliacostacarvalho0928@gmail.com';
+
+UPDATE usuarios
+SET senha = '123456'
 WHERE email = 'juliacostacarvalho0928@gmail.com';
 
 SELECT tipo FROM usuarios WHERE email = @Email AND senha = @Senha;
@@ -117,6 +126,7 @@ CREATE TABLE avaliacoes (
   criado_em  DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+select *from usuarios;
 ALTER TABLE avaliacoes
   ADD CONSTRAINT fk_avaliacoes_pacote
   FOREIGN KEY (pacote_id) REFERENCES pacotes (id);

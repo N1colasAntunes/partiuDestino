@@ -6,7 +6,7 @@ namespace projectPartiuDestino.Data
     {
         //altera aqui pra sua senha e o seu root, o meu ta diferente do padrão
         private string dadosConexao =
-            "Server=localhost;Database=bdpartiudestino;Uid=root;Pwd=;";
+            "Server=localhost;Database=bdpartiudestino;Uid=root;Pwd=12345678;";
 
         public MySqlConnection ObterConexao()
         {

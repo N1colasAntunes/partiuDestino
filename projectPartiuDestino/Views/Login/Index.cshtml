@@ -1,7 +1,46 @@
 ﻿@{
     ViewData["Title"] = "Login";
 }
+<!-- Adicione este bloco logo acima do seu <form> -->
+@if (ViewBag.MensagemErro != null)
+{
+    <div class="alerta-erro">
+        <i class="fas fa-exclamation-circle"></i>
+        <span>@ViewBag.MensagemErro</span>
+    </div>
+}
 
+<style>
+    /* Estilo para o alerta de erro caprichado */
+    .alerta-erro {
+        background-color: #fee2e2; /* Vermelho bem clarinho */
+        border: 1px solid #f87171;
+        color: #991b1b;
+        padding: 12px 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        animation: shake 0.5s ease-in-out; /* Efeito de balanço para chamar atenção */
+    }
+
+    /* Animação de balanço (shake) */
+    @@keyframes shake {
+        0%, 100% {
+            transform: translateX(0);
+        }
+
+        25% {
+            transform: translateX(-5px);
+        }
+
+        75% {
+            transform: translateX(5px);
+        }
+    }
+</style>
 <style>
     .login-principal {
         min-height: 70vh;
@@ -73,6 +112,11 @@
         padding-top: 20px;
     }
 
+    body{
+        background-color: #f3f4f6;
+    
+    }
+
     @@keyframes float {
         0%, 100% {
             transform: translateY(0);
@@ -81,8 +125,12 @@
         50% {
             transform: translateY(-5px);
         }
+
+        
     }
 </style>
+
+<body>
 
 <div class="login-principal">
     <div class="login-card">
@@ -106,3 +154,4 @@
         </div>
     </div>
 </div>
+</body>

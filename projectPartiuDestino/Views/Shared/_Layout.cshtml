@@ -125,24 +125,29 @@
                             <a class="nav-link nav-link-figma" asp-controller="Personalizada" asp-action="Index">Viagem Personalizada</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link nav-link-figma" href="#">Destinos</a>
+                            <a class="nav-link nav-link-figma" asp-controller="Destinos" asp-action="Index">Destinos</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link nav-link-figma" href="#">Pacotes</a>
+                            <a class="nav-link nav-link-figma" asp-controller="Pacotes" asp-action="Index">Pacotes</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-link-figma" href="#contato">Contato</a>
-                        </li>
+                       
                     </ul>
 
-                    <!-- Busca e Botão Alinhados à Direita -->
                     <div class="d-flex align-items-center">
-                        <div class="nav-search-container">
-                            <input type="text" class="nav-search-input" placeholder="Para onde você quer ir?">
-                            <i class="fas fa-search nav-search-icon"></i>
-                        </div>
-                        <a asp-controller="Login" asp-action="Index" class="btn-entrar-nav">Entrar</a>
+                        @if (Context.Session.GetString("UsuarioNome") != null)
+                        {
+                            <span style="color:#1e3a8a; font-weight:600; margin-right:15px;">
+                                Olá, @Context.Session.GetString("UsuarioNome")
+                            </span>
+                            <a asp-controller="Login" asp-action="Logout" class="btn-entrar-nav">Sair</a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Login" asp-action="Index" class="btn-entrar-nav">Entrar</a>
+                        }
                     </div>
+
+
                 </div>
             </div>
         </nav>
@@ -154,20 +159,5 @@
 
 </body>
 
-    <!-- Footer -->
-    <footer class="footer-figma">
-        <div class="container">
-            <div class="footer-links-sociais">
-                <span>Siga nossas redes:</span>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-facebook"></i></a>
-                <span>| Whatsapp: (11 ) 95511-2233</span>
-            </div>
-            <p>&copy; 2024 Travel Agency. All rights reserved. | Privacy Policy | Terms of Service</p>
-        </div>
-    </footer>
-
-
-    <!-- Footer omitido para brevidade, mantenha o anterior -->
 
 </html>

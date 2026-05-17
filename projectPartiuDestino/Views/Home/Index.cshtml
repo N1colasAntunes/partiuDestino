@@ -1,4 +1,5 @@
-﻿@{
+﻿@model projectPartiuDestino.Models.Destino
+@{
     ViewData["Title"] = "Home - Partiu Destino";
 }
 
@@ -85,9 +86,26 @@
 
     .busca-grid {
         display: grid;
-        grid-template-columns: repeat(4, 1fr) 100px;
+        grid-template-columns: repeat(4, 1fr) 1fr; /* mantém 5 colunas */
         gap: 15px;
         align-items: flex-end;
+    }
+
+    /* Faz o botão ocupar a linha inteira e centraliza */
+    .btn-busca-azul {
+        grid-column: 1 / -1; /* ocupa todas as colunas */
+        width: fit-content;
+        min-width: 150px;
+        padding: 12px 40px;
+        margin: 10px auto 0; /* centraliza horizontalmente */
+        display: block;
+        background-color: var(--azul-escuro);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1rem;
     }
 
     .busca-item {
@@ -109,16 +127,6 @@
             font-size: 0.85rem;
             color: #6b7280;
         }
-
-    .btn-busca-azul {
-        background-color: var(--azul-escuro);
-        color: white;
-        border: none;
-        padding: 10px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: 600;
-    }
 
     /* Seção Destinos */
     .secao-destinos {
@@ -325,81 +333,201 @@
     <div class="hero-content">
         <h1>Seu destino começa aqui</h1>
         <p>Viaje do seu jeito, com roteiros exclusivos e personalizados. Reserve agora.</p>
-        <a href="#" class="btn-conheca">Conheça os lugares</a>
+        <a asp-controller="Personalizada" asp-action="Index" class="btn btn-primary">
+            Monte sua viagem
+        </a>
     </div>
 </section>
 
 <!-- Barra de Busca -->
+<!-- Barra de Busca -->
 <div class="container">
     <div class="busca-frame">
-        <div class="busca-grid">
+        <form asp-controller="Pacotes" asp-action="Buscar" method="get" class="busca-grid">
+
+            <!-- Campo Origem -->
             <div class="busca-item">
                 <label>Origem</label>
-                <input type="text" placeholder="Cidade de saída" />
+                <input type="text" name="origem" placeholder="Cidade de saída" />
             </div>
+
             <div class="busca-item">
                 <label>Destino</label>
-                <input type="text" placeholder="Para onde vamos?" />
+                <select name="destino_id" class="input-premium select-estilizado">
+                    <option value="" disabled selected>Para onde vamos?</option>
+                    @if (ViewBag.Destinos != null)
+                    {
+                        foreach (var destino in ViewBag.Destinos)
+                        {
+                            <option value="@destino.Id">@destino.Nome (@destino.Pais)</option>
+                        }
+                    }
+                    </select>
+
             </div>
+
+            <!-- Campo Ida -->
             <div class="busca-item">
                 <label>Ida</label>
-                <input type="date" />
+                <input type="date" name="data_ida" />
             </div>
+
+                    <div class="busca-item">
+                        <label>Volta</label>
+                        <input type="date" name="data_ida" />
+                    </div>
+            <!-- Campo Pessoas -->
             <div class="busca-item">
                 <label>Pessoas</label>
-                <input type="number" value="1" />
+                <input type="number" name="pessoas" value="1" min="1" />
             </div>
-            <button class="btn-busca-azul">Busca</button>
-        </div>
+
+            <button type="submit" class="btn-busca-azul">Busca</button>
+        </form>
     </div>
 </div>
+
 
 <!-- Destinos -->
 <section class="container secao-destinos">
     <h2>Conheça alguns de nossos destinos!</h2>
     <p>veja nossos pacotes mais populares!</p>
 
-    <div class="carrossel-container">
-        <i class="fas fa-chevron-left seta-carrossel"></i>
+    <!-- Seção Destinos com Carrossel Atualizado -->
+    <section class="container secao-destinos">
+        <h2>Conheça alguns de nossos destinos!</h2>
+        <p>Veja nossos pacotes mais populares e escolha sua próxima aventura!</p>
 
-        <div class="card-destino">
-            <img src="https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?auto=format&fit=crop&w=400&q=80" />
-            <div class="card-body">
-                <h4>Rio de Janeiro, 7 dias</h4>
-                <p class="info">
-                    Ida
-                    Volta
-                </p>
-                <p class="preco">R$ 1.500</p>
+        <div class="carrossel-container">
+            <i class="fas fa-chevron-left seta-carrossel" onclick="scrollCarrossel(-1)"></i>
+
+            <div class="carrossel-scroll" id="carrosselDestinos">
+
+                <!-- Destino 1: Rio de Janeiro -->
+                <a asp-controller="Pacotes" asp-action="Index" class="card-destino-link">
+                    <div class="card-destino">
+                        <img src="/images/heibe-rio-1303951_1920.jpg" alt="Rio de Janeiro" />
+                        <div class="card-body">
+                            <h4>Rio de Janeiro, 7 dias</h4>
+                            <p class="info">A partir de</p>
+                            <p class="preco">R$ 1.800</p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Destino 2: Florianópolis -->
+                <a asp-controller="Pacotes" asp-action="Index" class="card-destino-link">
+                    <div class="card-destino">
+                        <img src="~/images/floripa.jpg" alt="Florianópolis" />
+                        <div class="card-body">
+                            <h4>Florianópolis, 5 dias</h4>
+                            <p class="info">A partir de</p>
+                            <p class="preco">R$ 1.200</p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Destino 3: Salvador -->
+                <a asp-controller="Pacotes" asp-action="Index" class="card-destino-link">
+                    <div class="card-destino">
+                        <img src="~/images/soel84-salvador-2379443_1920.jpg" alt="Salvador" />
+                        <div class="card-body">
+                            <h4>Salvador, 10 dias</h4>
+                            <p class="info">A partir de</p>
+                            <p class="preco">R$ 2.500</p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- NOVO Destino 4: Paris -->
+                <a asp-controller="Pacotes" asp-action="Index" class="card-destino-link">
+                    <div class="card-destino">
+                        <img src="~/images/nuno_lopes-eiffel-tower-975004_1920.jpg" alt="Paris" />
+                        <div class="card-body">
+                            <h4>Paris, 10 dias</h4>
+                            <p class="info">A partir de</p>
+                            <p class="preco">R$ 5.800</p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- NOVO Destino 5: Tóquio -->
+                <a asp-controller="Pacotes" asp-action="Index" class="card-destino-link">
+                    <div class="card-destino">
+                        <img src="~/images/mailtotobi-people-4259948_1920.jpg" alt="Tóquio" />
+                        <div class="card-body">
+                            <h4>Tóquio, 12 dias</h4>
+                            <p class="info">A partir de</p>
+                            <p class="preco">R$ 8.900</p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- NOVO Destino 6: Roma -->
+                <a asp-controller="Pacotes" asp-action="Index" class="card-destino-link">
+                    <div class="card-destino">
+                        <img src="~/images/martinophuc-italy-9505450_1920.jpg" alt="Roma" />
+                        <div class="card-body">
+                            <h4>Roma, 8 dias</h4>
+                            <p class="info">A partir de</p>
+                            <p class="preco">R$ 4.200</p>
+                        </div>
+                    </div>
+                </a>
+
             </div>
-        </div>
 
-        <div class="card-destino">
-            <img src="https://images.unsplash.com/photo-1516306580123-e6e52b1b7b5f?auto=format&fit=crop&w=400&q=80" />
-            <div class="card-body">
-                <h4>Florianópolis, 5 dias</h4>
-                <p class="info">
-                    Ida
-                    Volta
-                </p>
-                <p class="preco">R$ 1.200</p>
-            </div>
+            <i class="fas fa-chevron-right seta-carrossel" onclick="scrollCarrossel(1 )"></i>
         </div>
+    </section>
 
-        <div class="card-destino">
-            <img src="https://images.unsplash.com/photo-1506929199175-fe09628b0354?auto=format&fit=crop&w=400&q=80" />
-            <div class="card-body">
-                <h4>Salvador, 10 dias</h4>
-                <p class="info">
-                    Ida
-                    Volta
-                </p>
-                <p class="preco">R$ 2.500</p>
-            </div>
-        </div>
+    <style>
+        /* Estilos para o Carrossel Funcionar com Scroll */
+        .carrossel-scroll {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 20px 10px;
+            scrollbar-width: none; /* Esconde barra no Firefox */
+        }
 
-        <i class="fas fa-chevron-right seta-carrossel"></i>
-    </div>
+            .carrossel-scroll::-webkit-scrollbar {
+                display: none; /* Esconde barra no Chrome/Safari */
+            }
+
+        .card-destino-link {
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.3s ease;
+        }
+
+            .card-destino-link:hover {
+                transform: translateY(-10px);
+            }
+
+        .card-destino {
+            width: 300px;
+            flex-shrink: 0; /* Impede que os cards diminuam */
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+    </style>
+
+    <script>
+        // Função simples para as setas funcionarem
+        function scrollCarrossel(direcao) {
+            const carrossel = document.getElementById('carrosselDestinos');
+            const scrollAmount = 320; // Largura do card + gap
+            carrossel.scrollBy({
+                left: direcao * scrollAmount,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+
 </section>
 
 <!-- Quem Somos -->
@@ -447,4 +575,17 @@
         <button type="button" class="btn-enviar-azul">Enviar mensagem</button>
     </form>
 </section>
+
+
+<footer class="footer-figma">
+    <div class="container">
+        <div class="footer-links-sociais">
+            <span>Siga nossas redes:</span>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <span>| Whatsapp: (11 ) 95511-2233</span>
+        </div>
+        <p>&copy; 2024 Travel Agency. All rights reserved. | Privacy Policy | Terms of Service</p>
+    </div>
+</footer>
 

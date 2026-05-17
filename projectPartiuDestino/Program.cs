@@ -20,6 +20,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+
 app.MapControllerRoute(
     name: "default",
     //alterado de Home para Login, começar na tela de login 

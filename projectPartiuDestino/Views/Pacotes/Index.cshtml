@@ -1,0 +1,294 @@
+﻿@model IEnumerable<projectPartiuDestino.Models.Pacotes>
+
+
+
+@{
+    ViewData["Title"] = "Pacotes de Viagem - Partiu Destino";
+}
+
+<style>
+    /* ============================================
+           ESTILO PÁGINA DE PACOTES PREMIUM
+           ============================================ */
+
+    :root {
+        --primary: #1e3a8a;
+        --accent: #3b82f6;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --text-main: #1f2937;
+        --text-muted: #6b7280;
+        --bg-body: #f8fafc;
+        --white: #ffffff;
+        --border: #e5e7eb;
+    }
+
+    .pacotes-container {
+        background-color: var(--bg-body);
+        padding: 60px 0;
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+    }
+
+    .header-secao {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+        .header-secao h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .header-secao p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+    /* Grid de Cards */
+    .pacotes-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 30px;
+    }
+
+    .card-pacote-premium {
+        background: var(--white);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        border: 1px solid var(--border);
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+
+        .card-pacote-premium:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+    /* Badge de Vagas */
+    .badge-vagas {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        padding: 6px 12px;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        z-index: 10;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .vagas-ok {
+        background: var(--success);
+        color: white;
+    }
+
+    .vagas-alerta {
+        background: var(--warning);
+        color: white;
+    }
+
+    .vagas-esgotado {
+        background: var(--danger);
+        color: white;
+    }
+
+    .pacote-imagem-topo {
+        height: 200px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255,255,255,0.3);
+        font-size: 4rem;
+    }
+
+    .pacote-conteudo {
+        padding: 25px;
+        flex-grow: 1;
+    }
+
+    .pacote-destino-tag {
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .pacote-titulo {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: var(--text-main);
+        margin-bottom: 15px;
+        line-height: 1.2;
+    }
+
+    .pacote-detalhes-rapidos {
+        display: flex;
+        justify-content: space-between;
+        background: #f9fafb;
+        padding: 12px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+    }
+
+    .detalhe-item {
+        text-align: center;
+    }
+
+    .detalhe-label {
+        display: block;
+        font-size: 0.65rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        font-weight: 700;
+        margin-bottom: 2px;
+    }
+
+    .detalhe-valor {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--text-main);
+    }
+
+    .pacote-descricao-curta {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        line-height: 1.5;
+        margin-bottom: 20px;
+    }
+
+    .pacote-footer {
+        padding: 20px 25px;
+        background: #fcfcfd;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .pacote-preco-box {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .preco-sub {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+    }
+
+    .preco-principal {
+        font-size: 1.5rem;
+        font-weight: 900;
+        color: var(--primary);
+    }
+
+    .btn-detalhes-pacote {
+        background: var(--primary);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all 0.3s;
+        font-size: 0.9rem;
+    }
+
+        .btn-detalhes-pacote:hover {
+            background: var(--accent);
+            color: white;
+            transform: scale(1.05);
+        }
+
+    .lista-vazia {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 100px 20px;
+        background: white;
+        border-radius: 20px;
+        border: 2px dashed var(--border);
+    }
+</style>
+
+<div class="pacotes-container">
+    <div class="container">
+
+        <div class="header-secao">
+            <h1>Nossos Pacotes</h1>
+            <p>Roteiros exclusivos planejados para que você só se preocupe em aproveitar cada segundo da sua viagem.</p>
+        </div>
+
+        <div class="pacotes-grid">
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var item in Model)
+                {
+                    <div class="card-pacote-premium">
+
+                        <div class="pacote-imagem-topo">
+                            <i class="fas fa-plane-departure"></i>
+                        </div>
+
+                        <div class="pacote-conteudo">
+                            <span class="pacote-destino-tag">
+                                <i class="fas fa-map-marker-alt me-1"></i>
+                                @(item.Destino != null ? item.Destino.Nome : "Destino") | @item.TipoViagem
+                            </span>
+
+                            <h3 class="pacote-titulo">@item.Nome</h3>
+
+                            <div class="pacote-detalhes-rapidos">
+                                <div class="detalhe-item">
+                                    <span class="detalhe-label">Duração</span>
+                                    <span class="detalhe-valor">@item.DuracaoDias Dias</span>
+                                </div>
+                                <div class="detalhe-item">
+                                    <span class="detalhe-label">Partida</span>
+                                    <span class="detalhe-valor">@item.DataPartida.ToString("dd/MM/yy")</span>
+                                </div>
+                                <div class="detalhe-item">
+                                    <span class="detalhe-label">Retorno</span>
+                                    <span class="detalhe-valor">@item.DataRetorno.ToString("dd/MM/yy")</span>
+                                </div>
+                            </div>
+
+                            <p class="pacote-descricao-curta">
+                                @(item.Descricao?.Length > 120 ? item.Descricao.Substring(0, 120) + "..." : item.Descricao)
+                            </p>
+                        </div>
+
+                        <div class="pacote-footer">
+                            <div class="pacote-preco-box">
+                                <span class="preco-sub">Por pessoa</span>
+                                <span class="preco-principal">@item.PrecoPorPessoa.ToString("C")</span>
+                            </div>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn-detalhes-pacote">
+                                Ver Detalhes
+                            </a>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="lista-vazia">
+                    <i class="fas fa-suitcase-rolling fa-4x mb-4" style="color: #cbd5e1;"></i>
+                    <h3>Nenhum pacote encontrado</h3>
+                    <p>Estamos preparando novas aventuras. Volte em breve!</p>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-3 px-4 py-2 rounded-pill">Voltar ao Início</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
