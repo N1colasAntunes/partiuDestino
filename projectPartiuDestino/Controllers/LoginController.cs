@@ -6,7 +6,7 @@ namespace projectPartiuDestino.Controllers
 {
     public class LoginController : Controller
     {
-        private string conexao = "server=localhost;database=bdpartiudestino;uid=root;pwd=12345678;";
+        private string conexao = "server=localhost;database=bdpartiudestino;uid=root;pwd=nicolas123;";
 
         public IActionResult Index()
         {

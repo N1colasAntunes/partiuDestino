@@ -1,1 +1,96 @@
-﻿bbbbbbbbb
+﻿@{
+    ViewData["Title"] = "Pacotes - Painel Administrativo";
+}
+@using MySql.Data.MySqlClient
+
+@{
+    string conexao = "server=localhost;database=bdpartiudestino;uid=root;pwd=nicolas123;";
+}
+
+<div class="metric-info">
+    <h4>Quantidade de Pacotes</h4>
+
+    <p>
+        @{
+            int totalPacotes = 0;
+
+            using (MySqlConnection conn = new MySqlConnection(conexao))
+            {
+                conn.Open();
+
+                string sqlTotal = "SELECT COUNT(*) FROM pacotes";
+
+                MySqlCommand cmdTotal = new MySqlCommand(sqlTotal, conn);
+
+                totalPacotes = Convert.ToInt32(cmdTotal.ExecuteScalar());
+            }
+        }
+
+        @totalPacotes
+    </p>
+</div>
+
+<h2>Pacotes Cadastrados</h2>
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>ID</th>
+        <th>ID Destino</th>
+        <th>Nome</th>
+        <th>Descrição</th>
+        <th>Tipo de Viagem</th>
+        <th>Duração (Dias)</th>
+        <th>Data Partida</th>
+        <th>Data Retorno</th>
+        <th>Preço por Pessoa</th>
+        <th>Vagas Disponíveis</th>
+    </tr>
+
+    @{
+        using (MySqlConnection conn = new MySqlConnection(conexao))
+        {
+            conn.Open();
+
+            string sql = "SELECT * FROM pacotes";
+
+            MySqlCommand cmd = new MySqlCommand(sql, conn);
+
+            MySqlDataReader reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                <tr>
+                    <td>@reader["id"]</td>
+                    <td>@reader["destino_id"]</td>
+                    <td>@reader["nome"]</td>
+                    <td>@reader["descricao"]</td>
+                    <td>@reader["tipo_viagem"]</td>
+                    <td>@reader["duracao_dias"]</td>
+
+                    <td>
+                        @Convert.ToDateTime(reader["data_partida"]).ToString("dd/MM/yyyy")
+                    </td>
+
+                    <td>
+                        @Convert.ToDateTime(reader["data_retorno"]).ToString("dd/MM/yyyy")
+                    </td>
+
+                    <td>
+                        R$ @reader["preco_por_pessoa"]
+                    </td>
+
+                    <td>@reader["vagas_disponiveis"]</td>
+                </tr>
+            }
+        }
+    }
+</table>
+
+<br>
+
+<li class="sidebar-item">
+    <a asp-controller="Admin" asp-action="Index" class="sidebar-link">
+        <i class="fas fa-arrow-left"></i>
+        <span>Voltar</span>
+    </a>
+</li>

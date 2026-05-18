@@ -1,1 +1,72 @@
-﻿aaaaaaaaa
+﻿@{
+    ViewData["Title"] = "Destinos - Painel Administrativo";
+}
+@using MySql.Data.MySqlClient
+
+@{
+    string conexao = "server=localhost;database=bdpartiudestino;uid=root;pwd=nicolas123;";
+}
+
+<div class="metric-info">
+    <h4>Quantidade de Destinos Ativos</h4>
+
+    <p>
+        @{
+            int totalDestinos = 0;
+
+            using (MySqlConnection conn = new MySqlConnection(conexao))
+            {
+                conn.Open();
+
+                string sqlTotal = "SELECT COUNT(*) FROM destinos";
+
+                MySqlCommand cmdTotal = new MySqlCommand(sqlTotal, conn);
+
+                totalDestinos = Convert.ToInt32(cmdTotal.ExecuteScalar());
+            }
+        }
+
+        @totalDestinos
+    </p>
+</div>
+
+<h2>Destinos Cadastrados</h2>
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>ID</th>
+        <th>País</th>
+        <th>Estado</th>
+    </tr>
+
+    @{
+        using (MySqlConnection conn = new MySqlConnection(conexao))
+        {
+            conn.Open();
+
+            string sql = "SELECT * FROM destinos";
+
+            MySqlCommand cmd = new MySqlCommand(sql, conn);
+
+            MySqlDataReader reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                <tr>
+                    <td>@reader["id"]</td>
+                    <td>@reader["pais"]</td>
+                    <td>@reader["estado"]</td>
+                </tr>
+            }
+        }
+    }
+</table>
+
+<br>
+
+<li class="sidebar-item">
+    <a asp-controller="Admin" asp-action="Index" class="sidebar-link">
+        <i class="fas fa-arrow-left"></i>
+        <span>Voltar</span>
+    </a>
+</li>

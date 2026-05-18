@@ -1,5 +1,10 @@
 ﻿@{
-    ViewData["Title"] = "Painel Administrativo - Partiu Destino";
+    ViewData["Title"] = "Destinos - Painel Administrativo";
+}
+@using MySql.Data.MySqlClient
+
+@{
+    string conexao = "server=localhost;database=bdpartiudestino;uid=root;pwd=nicolas123;";
 }
 
 <style>
@@ -331,39 +336,133 @@
         <div class="admin-header">
             <div>
                 <h2>Olá, Administrador!</h2>
-                <p class="text-muted">Aqui está o resumo do seu projeto hoje.</p>
+                <p class="text-muted">Aqui está os dados do site.</p>
             </div>
         </div>
 
         <!-- Metrics -->
         <div class="metrics-grid">
+
+            <!-- Destinos -->
             <div class="metric-card">
                 <div class="metric-icon icon-blue">
                     <i class="fas fa-globe-americas"></i>
                 </div>
+
                 <div class="metric-info">
                     <h4>Destinos Ativos</h4>
-                    <p>42</p>
+
+                    <p>
+                        @{
+                            int totalDestinos = 0;
+
+                            using (MySqlConnection conn = new MySqlConnection(conexao))
+                            {
+                                conn.Open();
+
+                                string sqlDestinos = "SELECT COUNT(*) FROM destinos";
+
+                                MySqlCommand cmdDestinos = new MySqlCommand(sqlDestinos, conn);
+
+                                totalDestinos = Convert.ToInt32(cmdDestinos.ExecuteScalar());
+                            }
+                        }
+
+                        @totalDestinos
+                    </p>
                 </div>
             </div>
+
+            <!-- Pacotes -->
             <div class="metric-card">
                 <div class="metric-icon icon-green">
                     <i class="fas fa-ticket-alt"></i>
                 </div>
+
                 <div class="metric-info">
-                    <h4>Reservas Mês</h4>
-                    <p>128</p>
+                    <h4>Pacotes Ativos</h4>
+
+                    <p>
+                        @{
+                            int totalPacotes = 0;
+
+                            using (MySqlConnection conn = new MySqlConnection(conexao))
+                            {
+                                conn.Open();
+
+                                string sqlPacotes = "SELECT COUNT(*) FROM pacotes";
+
+                                MySqlCommand cmdPacotes = new MySqlCommand(sqlPacotes, conn);
+
+                                totalPacotes = Convert.ToInt32(cmdPacotes.ExecuteScalar());
+                            }
+                        }
+
+                        @totalPacotes
+                    </p>
                 </div>
             </div>
+
+            <!-- Viagens Personalizadas -->
             <div class="metric-card">
                 <div class="metric-icon icon-orange">
-                    <i class="fas fa-user-friends"></i>
+                    <i class="fas fa-map"></i>
                 </div>
+
                 <div class="metric-info">
-                    <h4>Novos Clientes</h4>
-                    <p>15</p>
+                    <h4>Viagens Personalizadas</h4>
+
+                    <p>
+                        @{
+                            int totalViagens = 0;
+
+                            using (MySqlConnection conn = new MySqlConnection(conexao))
+                            {
+                                conn.Open();
+
+                                string sqlViagens = "SELECT COUNT(*) FROM viagem_personalizada";
+
+                                MySqlCommand cmdViagens = new MySqlCommand(sqlViagens, conn);
+
+                                totalViagens = Convert.ToInt32(cmdViagens.ExecuteScalar());
+                            }
+                        }
+
+                        @totalViagens
+                    </p>
                 </div>
             </div>
+
+            <!-- Usuários -->
+            <div class="metric-card">
+                <div class="metric-icon icon-orange">
+                    <i class="fas fa-users"></i>
+                </div>
+
+                <div class="metric-info">
+                    <h4>Usuários</h4>
+
+                    <p>
+                        @{
+                            int totalUsuarios = 0;
+
+                            using (MySqlConnection conn = new MySqlConnection(conexao))
+                            {
+                                conn.Open();
+
+                                string sqlUsuarios = "SELECT COUNT(*) FROM usuarios";
+
+                                MySqlCommand cmdUsuarios = new MySqlCommand(sqlUsuarios, conn);
+
+                                totalUsuarios = Convert.ToInt32(cmdUsuarios.ExecuteScalar());
+                            }
+                        }
+
+                        @totalUsuarios
+                    </p>
+                </div>
+            </div>
+
         </div>
     </main>
 </div>
