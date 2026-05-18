@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿﻿
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="utf-8" />
@@ -40,8 +41,7 @@
             position: relative;
             margin-right: 15px;
             width: 280px;
-            margin-left:20px;
-
+            margin-left: 20px;
         }
 
         .nav-search-input {
@@ -130,14 +130,14 @@
                         <li class="nav-item">
                             <a class="nav-link nav-link-figma" asp-controller="Pacotes" asp-action="Index">Pacotes</a>
                         </li>
-                       
+
                     </ul>
 
-                    @* <div class="d-flex align-items-center">
-                        @if (Context.Session.GetString("UsuarioNome") != null)
+                    <div class="d-flex align-items-center">
+                        @if (Context.Session.GetString("UserName") != null)
                         {
                             <span style="color:#1e3a8a; font-weight:600; margin-right:15px;">
-                                Olá, @Context.Session.GetString("UsuarioNome")
+                                Olá, @Context.Session.GetString("UserName")
                             </span>
                             <a asp-controller="Login" asp-action="Logout" class="btn-entrar-nav">Sair</a>
                         }
@@ -145,25 +145,12 @@
                         {
                             <a asp-controller="Login" asp-action="Index" class="btn-entrar-nav">Entrar</a>
                         }
-                    </div> *@
+                    </div>
 
 
                 </div>
             </div>
         </nav>
-        <div class="d-flex align-items-center">
-            @if (Context.Session.GetString("UsuarioNome") != null)
-            {
-                <span style="color:#1e3a8a; font-weight:600; margin-right:15px;">
-                    Olá, @Context.Session.GetString("UsuarioNome")
-                </span>
-                <a asp-controller="Login" asp-action="Logout" class="btn-entrar-nav">Sair</a>
-            }
-            else
-            {
-                <a asp-controller="Login" asp-action="Index" class="btn-entrar-nav">Entrar</a>
-            }
-        </div>
     </header>
 
     <main role="main">

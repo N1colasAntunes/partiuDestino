@@ -20,10 +20,7 @@ namespace projectPartiuDestino.Controllers
             {
                 conn.Open();
 
-                string sql = @"SELECT id, nome, email, tipo
-                               FROM usuarios
-                               WHERE email = @Email
-                               AND senha = @Senha";
+                string sql = "SELECT id, nome, email, tipo FROM usuarios WHERE email = @Email AND senha = @Senha";
 
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
 
@@ -34,27 +31,16 @@ namespace projectPartiuDestino.Controllers
 
                 if (reader.Read())
                 {
-                    HttpContext.Session.SetInt32(
-                        SessionKeys.UserId,
-                        Convert.ToInt32(reader["id"])
-                    );
-
-                    HttpContext.Session.SetString(
-                        SessionKeys.UserName,
-                        reader["nome"].ToString()
-                    );
-
-                    HttpContext.Session.SetString(
-                        SessionKeys.UserEmail,
-                        reader["email"].ToString()
-                    );
-
-                    HttpContext.Session.SetString(
-                        SessionKeys.UserRole,
-                        reader["tipo"].ToString()
-                    );
-
+                    int id = Convert.ToInt32(reader["id"]);
+                    string nome = reader["nome"].ToString();
+                    string emailUsuario = reader["email"].ToString();
                     string tipo = reader["tipo"].ToString();
+
+                    // SALVANDO SESSÃO
+                    HttpContext.Session.SetInt32("UserId", id);
+                    HttpContext.Session.SetString("UserName", nome);
+                    HttpContext.Session.SetString("UserEmail", emailUsuario);
+                    HttpContext.Session.SetString("UserRole", tipo);
 
                     if (tipo == "admin")
                     {
@@ -70,6 +56,12 @@ namespace projectPartiuDestino.Controllers
             ViewBag.MensagemErro = "E-mail ou senha incorretos.";
 
             return View("Index");
+        }
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }
