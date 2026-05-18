@@ -1,0 +1,94 @@
+﻿@{
+    ViewData["Title"] = "Painel Administrativo - Partiu Destino";
+}
+@using MySql.Data.MySqlClient
+
+@{
+    string conexao = "server=localhost;database=bdpartiudestino;uid=root;pwd=nicolas123;";
+}
+
+
+<div class="metric-info">
+    <h4>Quantidade de Viagens Personalizadas</h4>
+
+    <p>
+        @{
+            int totalPedidos = 0;
+
+            using (MySqlConnection conn = new MySqlConnection(conexao))
+            {
+                conn.Open();
+
+                string sqlPedidos = "SELECT COUNT(*) FROM viagem_personalizada";
+
+                MySqlCommand cmdPedidos = new MySqlCommand(sqlPedidos, conn);
+
+                totalPedidos = Convert.ToInt32(cmdPedidos.ExecuteScalar());
+            }
+        }
+
+        @totalPedidos
+    </p>
+</div>
+
+
+<h2>Viagens Personalizadas</h2>
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>ID do Pedido</th>
+        <th>ID Usuário</th>
+        <th>Destino</th>
+        <th>País</th>
+        <th>Data Ida</th>
+        <th>Data Volta</th>
+        <th>Tipo</th>
+        <th>Pessoas</th>
+        <th>Orçamento</th>
+        <th>Hospedagem</th>
+        <th>Transporte</th>
+        <th>Experiências Desejadas</th>
+        <th>Observações</th>
+        <th>Observações Finais</th>
+    </tr>
+
+    @{
+        using (MySqlConnection conn = new MySqlConnection(conexao))
+        {
+            conn.Open();
+
+            string sql = "SELECT * FROM viagem_personalizada";
+
+            MySqlCommand cmd = new MySqlCommand(sql, conn);
+
+            MySqlDataReader reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                <tr>
+                    <td>@reader["id"]</td>
+                    <td>@reader["usuario_id"]</td>
+                    <td>@reader["destino"]</td>
+                    <td>@reader["pais"]</td>
+                    <td>@Convert.ToDateTime(reader["data_ida"]).ToString("dd/MM/yyyy")</td>
+                    <td>@Convert.ToDateTime(reader["data_volta"]).ToString("dd/MM/yyyy")</td>
+                    <td>@reader["tipo_viagem"]</td>
+                    <td>@reader["numero_pessoas"]</td>
+                    <td>R$ @reader["orcamento"]</td>
+                    <td>@reader["hospedagem"]</td>
+                    <td>@reader["transporte"]</td>
+                    <td>@reader["experiencias_desejadas"]</td>
+                    <td>@reader["observacoes"]</td>
+                    <td>@reader["observacoes_finais"]</td>
+                </tr>
+            }
+        }
+    }
+</table>
+
+<li class="sidebar-item">
+    <a asp-controller="Admin" asp-action="Index" class="sidebar-link">
+        <i class="fas fa-arrow-left"></i>
+        <span>Voltar</span>
+    </a>
+</li>

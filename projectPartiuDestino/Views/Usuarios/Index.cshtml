@@ -1,0 +1,77 @@
+﻿@{
+    ViewData["Title"] = "Painel Administrativo - Partiu Destino";
+}
+@using MySql.Data.MySqlClient
+
+@{
+    string conexao = "server=localhost;database=bdpartiudestino;uid=root;pwd=nicolas123;";
+}
+<!-- Usuários Registrados -->
+<div class="metric-card">
+    <div class="metric-icon icon-green">
+        <i class="fas fa-users"></i>
+    </div>
+
+    <div class="metric-info">
+        <h4>Quantidade de Usuários Registrados</h4>
+
+        <p>
+            @{
+                int totalUsuarios = 0;
+
+                using (MySqlConnection conn = new MySqlConnection(conexao))
+                {
+                    conn.Open();
+
+                    string sqlUsuarios = "SELECT COUNT(*) FROM usuarios";
+
+                    MySqlCommand cmdUsuarios = new MySqlCommand(sqlUsuarios, conn);
+
+                    totalUsuarios = Convert.ToInt32(cmdUsuarios.ExecuteScalar());
+                }
+            }
+
+            @totalUsuarios
+        </p>
+    </div>
+</div>
+
+<h2>Usuários Cadastrados</h2>
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Tipo</th>
+    </tr>
+
+    @{
+        using (MySqlConnection conn = new MySqlConnection(conexao))
+        {
+            conn.Open();
+
+            string sqlUsuarios = "SELECT id, nome, email, tipo FROM usuarios";
+
+            MySqlCommand cmdUsuarios = new MySqlCommand(sqlUsuarios, conn);
+
+            MySqlDataReader readerUsuarios = cmdUsuarios.ExecuteReader();
+
+            while (readerUsuarios.Read())
+            {
+                <tr>
+                    <td>@readerUsuarios["id"]</td>
+                    <td>@readerUsuarios["nome"]</td>
+                    <td>@readerUsuarios["email"]</td>
+                    <td>@readerUsuarios["tipo"]</td>
+                </tr>
+            }
+        }
+    }
+</table>
+<li class="sidebar-item">
+    <a asp-controller="Admin" asp-action="Index" class="sidebar-link">
+        <i class="fas fa-arrow-left"></i>
+        <span>Voltar</span>
+    </a>
+</li>
