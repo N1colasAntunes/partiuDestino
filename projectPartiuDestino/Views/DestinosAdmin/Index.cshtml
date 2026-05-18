@@ -4,8 +4,100 @@
 @using MySql.Data.MySqlClient
 
 @{
-    string conexao = "server=localhost;database=bdpartiudestino;uid=root;pwd=nicolas123;";
+    string conexao = "server=localhost;database=bdpartiudestino;uid=root;pwd=12345678;";
 }
+<style>
+    /* Estilo para a métrica */
+    .metric-info {
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        border: 1px solid #e2e8f0;
+        display: inline-block;
+        margin-bottom: 30px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+        .metric-info h4 {
+            margin: 0;
+            color: #64748b;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .metric-info p {
+            margin: 10px 0 0 0;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1e3a8a;
+        }
+
+    /* Estilo para o título */
+    h2 {
+        font-family: 'Segoe UI', sans-serif;
+        color: #1e3a8a;
+        margin-bottom: 20px;
+    }
+
+    /* Estilo para a tabela */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #ffffff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        border: none !important;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    th {
+        background-color: #1e3a8a;
+        color: #ffffff;
+        text-align: left;
+        padding: 15px !important;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+    }
+
+    td {
+        padding: 12px 15px !important;
+        border-bottom: 1px solid #e2e8f0;
+        color: #334155;
+    }
+
+    tr:hover {
+        background-color: #f8fafc;
+    }
+
+    /* Estilo para o botão Voltar */
+    .sidebar-item {
+        list-style: none;
+        margin-top: 20px;
+    }
+
+    .sidebar-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        color: #1e3a8a;
+        font-weight: 600;
+        font-family: 'Segoe UI', sans-serif;
+        padding: 10px 15px;
+        border: 1px solid #1e3a8a;
+        border-radius: 6px;
+        transition: all 0.3s;
+    }
+
+        .sidebar-link:hover {
+            background-color: #1e3a8a;
+            color: #ffffff;
+        }
+</style>
+
 
 <div class="metric-info">
     <h4>Quantidade de Destinos Ativos</h4>

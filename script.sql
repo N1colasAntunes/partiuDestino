@@ -1,6 +1,8 @@
 CREATE DATABASE bdpartiudestino;
 USE bdpartiudestino;
 
+drop database bdpartiudestino;
+
 -- tabela de login / controle de acesso
 CREATE TABLE usuarios (
   id INT PRIMARY KEY AUTO_INCREMENT,
@@ -11,11 +13,13 @@ CREATE TABLE usuarios (
 ALTER TABLE usuarios
 ADD COLUMN tipo VARCHAR(20) NOT NULL DEFAULT 'usuario';
 
+insert into usuarios (id,nome,email,senha) values (default,'Julia Costa','julia@gmail.com','12345');
 -- aqui define quem vai ser admin
 UPDATE usuarios
 SET tipo = 'admin'
-WHERE email = 'nick@gmail.com';
+WHERE email = 'julia@gmail.com';
 
+select * from usuarios;
 SELECT tipo FROM usuarios WHERE email = @Email AND senha = @Senha;
 
 CREATE TABLE viagem_personalizada (
@@ -134,10 +138,6 @@ CREATE TABLE pacotes (
   preco_por_pessoa  DECIMAL(10, 2) NOT NULL,
   vagas_disponiveis INT
 );
-
-ALTER TABLE pacotes
-  ADD CONSTRAINT fk_pacotes_destino
-  FOREIGN KEY (destino_id) REFERENCES destinos (id);
 
 INSERT INTO pacotes 
 (destino_id, nome, descricao, tipo_viagem, duracao_dias, data_partida, data_retorno, preco_por_pessoa, vagas_disponiveis)

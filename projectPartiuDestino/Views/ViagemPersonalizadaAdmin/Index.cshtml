@@ -4,8 +4,128 @@
 @using MySql.Data.MySqlClient
 
 @{
-    string conexao = "server=localhost;database=bdpartiudestino;uid=root;pwd=nicolas123;";
+    string conexao = "server=localhost;database=bdpartiudestino;uid=root;pwd=12345678;";
 }
+
+<style>
+    /* Estilo para a métrica (Card) */
+    .metric-info {
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        border: 1px solid #e2e8f0;
+        display: inline-block;
+        margin-bottom: 30px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+        .metric-info h4 {
+            margin: 0;
+            color: #64748b;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .metric-info p {
+            margin: 10px 0 0 0;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1e3a8a;
+        }
+
+    /* Estilo para o título */
+    h2 {
+        font-family: 'Segoe UI', sans-serif;
+        color: #1e3a8a;
+        margin-bottom: 20px;
+        font-weight: 800;
+    }
+
+    /* Estilo para a tabela (Limpa e Moderna) */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #ffffff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        border: none !important; /* Remove o visual do border="1" */
+        font-family: 'Segoe UI', sans-serif;
+        margin-bottom: 30px;
+    }
+
+    th {
+        background-color: #1e3a8a;
+        color: #ffffff;
+        text-align: left;
+        padding: 15px !important;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    td {
+        padding: 12px 15px !important;
+        border-bottom: 1px solid #f1f5f9;
+        color: #334155;
+        font-size: 0.85rem;
+        line-height: 1.4;
+    }
+
+    tr:hover {
+        background-color: #f8fafc;
+    }
+
+    /* Destaque para colunas importantes */
+    td:nth-child(1) {
+        font-weight: bold;
+        color: #1e3a8a;
+    }
+    /* ID */
+    td:nth-child(2) {
+        font-weight: 600;
+    }
+    /* Nome */
+
+    /* Estilo para o botão Voltar */
+    .sidebar-item {
+        list-style: none;
+        margin-top: 10px;
+    }
+
+    .sidebar-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        color: #1e3a8a;
+        font-weight: 600;
+        font-family: 'Segoe UI', sans-serif;
+        padding: 10px 20px;
+        border: 2px solid #1e3a8a;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+        .sidebar-link:hover {
+            background-color: #1e3a8a;
+            color: #ffffff;
+            transform: translateX(-5px);
+        }
+
+        .sidebar-link i {
+            font-size: 0.9rem;
+        }
+
+    /* Ajuste para tabelas com muitas colunas (scroll horizontal se necessário) */
+    .table-container {
+        overflow-x: auto;
+        width: 100%;
+    }
+</style>
+
 
 <div class="metric-info">
     <h4>Quantidade de Viagens Personalizadas</h4>

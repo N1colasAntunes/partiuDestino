@@ -8,5 +8,15 @@ namespace projectPartiuDestino.Controllers
         {
             return View();
         }
+
+        public IActionResult CriarDestino()
+        {
+            return View();
+        }
+
+        public IActionResult CriarPacote()
+        {
+            return View();
+        }
     }
 }

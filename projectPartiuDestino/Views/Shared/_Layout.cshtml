@@ -130,6 +130,13 @@
                         <li class="nav-item">
                             <a class="nav-link nav-link-figma" asp-controller="Pacotes" asp-action="Index">Pacotes</a>
                         </li>
+                        
+                        @if (Context.Session.GetString("UserRole") == "admin")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-figma" asp-controller="Admin" asp-action="Index">Admin</a>
+                            </li>
+                        }
 
                     </ul>
 
