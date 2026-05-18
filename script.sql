@@ -139,93 +139,122 @@ ALTER TABLE pacotes
   ADD CONSTRAINT fk_pacotes_destino
   FOREIGN KEY (destino_id) REFERENCES destinos (id);
 
--- clientes
-CREATE TABLE clientes (
-  id              INT          PRIMARY KEY AUTO_INCREMENT,
-  usuario_id      INT          NOT NULL,
-  nome            VARCHAR(150) NOT NULL,
-  email           VARCHAR(150) NOT NULL,
-  telefone        VARCHAR(20),
-  cpf             VARCHAR(14)  NOT NULL,
-  data_nascimento DATE
+INSERT INTO pacotes 
+(destino_id, nome, descricao, tipo_viagem, duracao_dias, data_partida, data_retorno, preco_por_pessoa, vagas_disponiveis)
+VALUES
+
+(
+    1,
+    'Rio Premium Experience',
+    'Pacote completo para conhecer as praias e pontos turísticos do Rio de Janeiro.',
+    'Praia',
+    7,
+    '2026-07-10',
+    '2026-07-17',
+    4599.90,
+    20
+),
+(
+    3,
+    'Bahia All Inclusive',
+    'Experiência incrível em resort all inclusive na Bahia.',
+    'Relaxamento',
+    6,
+    '2026-08-05',
+    '2026-08-11',
+    3899.50,
+    15
+),
+(
+    16,
+    'Califórnia Dreams',
+    'Conheça Los Angeles, praias e parques famosos da Califórnia.',
+    'Internacional',
+    10,
+    '2026-09-12',
+    '2026-09-22',
+    12999.99,
+    12
+),
+(
+    18,
+    'Nova York Experience',
+    'Pacote completo para explorar Nova York e seus principais pontos turísticos.',
+    'Internacional',
+    8,
+    '2026-11-03',
+    '2026-11-11',
+    14500.00,
+    10
+),
+(
+    21,
+    'Paris Romântica',
+    'Uma viagem inesquecível para casais na cidade luz.',
+    'Romance',
+    7,
+    '2026-06-15',
+    '2026-06-22',
+    16990.90,
+    8
+),
+(
+    22,
+    'Toscana Gourmet',
+    'Experiência gastronômica e cultural na Toscana.',
+    'Gastronomia',
+    9,
+    '2026-10-02',
+    '2026-10-11',
+    15200.00,
+    10
+),
+(
+    31,
+    'Patagônia Argentina',
+    'Aventura nas paisagens geladas da Patagônia.',
+    'Aventura',
+    8,
+    '2026-07-20',
+    '2026-07-28',
+    8990.00,
+    14
+),
+(
+    41,
+    'Tóquio Tech Tour',
+    'Conheça o Japão moderno e tradicional em uma experiência única.',
+    'Cultura',
+    12,
+    '2026-09-05',
+    '2026-09-17',
+    18990.00,
+    9
+),
+(
+    45,
+    'Bali Paradise',
+    'Pacote de luxo em Bali com hospedagem premium.',
+    'Relaxamento',
+    10,
+    '2026-12-01',
+    '2026-12-11',
+    17499.99,
+    6
+),
+(
+    50,
+    'Dubai Lux Experience',
+    'Explore o luxo e modernidade de Dubai.',
+    'Luxo',
+    7,
+    '2026-08-18',
+    '2026-08-25',
+    19990.00,
+    5
 );
-
-ALTER TABLE clientes
-  ADD CONSTRAINT fk_clientes_usuario
-  FOREIGN KEY (usuario_id) REFERENCES usuarios (id);
-
-ALTER TABLE clientes
-  ADD CONSTRAINT uq_clientes_email UNIQUE (email);
-
-ALTER TABLE clientes
-  ADD CONSTRAINT uq_clientes_cpf UNIQUE (cpf);
-
--- reservas
-CREATE TABLE reservas (
-  id             INT            PRIMARY KEY AUTO_INCREMENT,
-  cliente_id     INT            NOT NULL,
-  pacote_id      INT            NOT NULL,
-  codigo_reserva VARCHAR(20)    NOT NULL,
-  status         VARCHAR(30)    DEFAULT 'pendente',
-  qtd_viajantes  INT            DEFAULT 1,
-  valor_total    DECIMAL(10, 2) NOT NULL,
-  criado_em      DATETIME       DEFAULT CURRENT_TIMESTAMP
-);
-
-ALTER TABLE reservas
-  ADD CONSTRAINT fk_reservas_cliente
-  FOREIGN KEY (cliente_id) REFERENCES clientes (id);
-
-ALTER TABLE reservas
-  ADD CONSTRAINT fk_reservas_pacote
-  FOREIGN KEY (pacote_id) REFERENCES pacotes (id);
-
-ALTER TABLE reservas
-  ADD CONSTRAINT uq_reservas_codigo UNIQUE (codigo_reserva);
-
--- pagamentos
-CREATE TABLE pagamentos (
-  id         INT            PRIMARY KEY AUTO_INCREMENT,
-  reserva_id INT            NOT NULL,
-  metodo     VARCHAR(30)    NOT NULL,
-  status     VARCHAR(30)    DEFAULT 'aguardando',
-  valor      DECIMAL(10, 2) NOT NULL,
-  parcelas   INT            DEFAULT 1,
-  pago_em    DATETIME,
-  criado_em  DATETIME       DEFAULT CURRENT_TIMESTAMP
-);
-
-ALTER TABLE pagamentos
-  ADD CONSTRAINT fk_pagamentos_reserva
-  FOREIGN KEY (reserva_id) REFERENCES reservas (id);
-
--- avaliações dos pacotes
-CREATE TABLE avaliacoes (
-  id         INT      PRIMARY KEY AUTO_INCREMENT,
-  pacote_id  INT      NOT NULL,
-  cliente_id INT      NOT NULL,
-  nota       TINYINT  NOT NULL,
-  comentario TEXT,
-  criado_em  DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
-ALTER TABLE avaliacoes
-  ADD CONSTRAINT fk_avaliacoes_pacote
-  FOREIGN KEY (pacote_id) REFERENCES pacotes (id);
-
-ALTER TABLE avaliacoes
-  ADD CONSTRAINT fk_avaliacoes_cliente
-  FOREIGN KEY (cliente_id) REFERENCES clientes (id);
 
 -- consultas
 SELECT * FROM usuarios;
 SELECT * FROM destinos;
 SELECT * FROM pacotes;
-SELECT * FROM clientes;
-SELECT * FROM reservas;
-SELECT * FROM pagamentos;
-SELECT * FROM avaliacoes;
-
-SELECT COUNT(*) AS 'total de pacotes'  FROM pacotes;
-SELECT COUNT(*) AS 'total de reservas' FROM reservas;
-SELECT COUNT(*) AS 'total de clientes' FROM clientes;
