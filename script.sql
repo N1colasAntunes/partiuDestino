@@ -11,32 +11,108 @@ CREATE TABLE usuarios (
 ALTER TABLE usuarios
 ADD COLUMN tipo VARCHAR(20) NOT NULL DEFAULT 'usuario';
 
-select * from usuarios;
-
 -- aqui define quem vai ser admin
-INSERT INTO usuarios (id, nome, email, senha)
-VALUES (default, 'Julia Costa', 'juliacostacarvalho0928@gmail.com','12345');
-
 UPDATE usuarios
 SET tipo = 'admin'
-WHERE email = 'juliacostacarvalho0928@gmail.com';
-
-UPDATE usuarios
-SET senha = '123456'
-WHERE email = 'juliacostacarvalho0928@gmail.com';
+WHERE email = 'nick@gmail.com';
 
 SELECT tipo FROM usuarios WHERE email = @Email AND senha = @Senha;
 
-select * from usuarios;
+CREATE TABLE viagem_personalizada (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    destino VARCHAR(100) NOT NULL,
+    pais VARCHAR(100) NOT NULL,
+    data_ida DATE NOT NULL,
+    data_volta DATE NOT NULL,
+    tipo_viagem VARCHAR(50) NOT NULL,
+    numero_pessoas INT NOT NULL,
+    orcamento DECIMAL(10,2) NOT NULL,
+    hospedagem VARCHAR(50) NOT NULL,
+    transporte VARCHAR(50) NOT NULL,
+    experiencias_desejadas TEXT,
+    observacoes TEXT,
+    observacoes_finais TEXT,
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 -- destinos disponíveis
 CREATE TABLE destinos (
-  id        INT          PRIMARY KEY AUTO_INCREMENT,
-  nome      VARCHAR(100) NOT NULL,
-  pais      VARCHAR(100) NOT NULL,
-  descricao TEXT,
-  ativo     TINYINT(1)   DEFAULT 1
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    pais VARCHAR(100) NOT NULL,
+    estado VARCHAR(100) NOT NULL
 );
+
+INSERT INTO destinos (pais, estado) VALUES
+-- Brasil (Turismo Nacional Forte)
+('Brasil', 'Rio de Janeiro'),
+('Brasil', 'São Paulo'),
+('Brasil', 'Bahia'),
+('Brasil', 'Ceará'),
+('Brasil', 'Alagoas'),
+('Brasil', 'Rio Grande do Norte'),
+('Brasil', 'Santa Catarina'),
+('Brasil', 'Rio Grande do Sul'),
+('Brasil', 'Minas Gerais'),
+('Brasil', 'Goiás'),
+('Brasil', 'Amazonas'),
+('Brasil', 'Mato Grosso do Sul'),
+('Brasil', 'Paraná'),
+('Brasil', 'Maranhão'),
+('Brasil', 'Paraíba'),
+
+-- Estados Unidos
+('Estados Unidos', 'Califórnia'),
+('Estados Unidos', 'Flórida'),
+('Estados Unidos', 'Nova York'),
+('Estados Unidos', 'Nevada'),
+('Estados Unidos', 'Havaí'),
+
+-- Europa Ocidental
+('França', 'Provença-Alpes-Costa Azul'),
+('Itália', 'Toscana'),
+('Itália', 'Lácio'),
+('Itália', 'Vêneto'),
+('Espanha', 'Catalunha'),
+('Espanha', 'Andaluzia'),
+('Portugal', 'Lisboa'),
+('Portugal', 'Algarve'),
+('Reino Unido', 'Inglaterra'),
+('Alemanha', 'Baviera'),
+
+-- América do Sul e Caribe
+('Argentina', 'Buenos Aires'),
+('Argentina', 'Terra do Fogo'),
+('Chile', 'Antofagasta'),
+('Chile', 'Região Metropolitana de Santiago'),
+('Peru', 'Cusco'),
+('Peru', 'Lima'),
+('Uruguai', 'Maldonado'),
+('México', 'Quintana Roo'),
+('México', 'Baja California Sur'),
+('Colômbia', 'Bolívar'),
+
+-- Ásia e Oceania
+('Japão', 'Tóquio'),
+('Japão', 'Hokkaido'),
+('Tailândia', 'Phuket'),
+('Tailândia', 'Bangkok'),
+('Indonésia', 'Bali'),
+('Austrália', 'Nova Gales do Sul'),
+('Austrália', 'Queensland'),
+('Nova Zelândia', 'Otago'),
+
+-- África e Oriente Médio
+('Egito', 'Cairo'),
+('África do Sul', 'Cabo Ocidental'),
+('Emirados Árabes Unidos', 'Dubai'),
+('Marrocos', 'Marraquexe-Safi');
+
+
+
+
+
+
 
 -- pacotes de viagem
 CREATE TABLE pacotes (
@@ -126,7 +202,6 @@ CREATE TABLE avaliacoes (
   criado_em  DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
-select *from usuarios;
 ALTER TABLE avaliacoes
   ADD CONSTRAINT fk_avaliacoes_pacote
   FOREIGN KEY (pacote_id) REFERENCES pacotes (id);
@@ -147,7 +222,3 @@ SELECT * FROM avaliacoes;
 SELECT COUNT(*) AS 'total de pacotes'  FROM pacotes;
 SELECT COUNT(*) AS 'total de reservas' FROM reservas;
 SELECT COUNT(*) AS 'total de clientes' FROM clientes;
-
-SELECT MAX(preco_por_pessoa) AS maior_preco FROM pacotes;
-SELECT MIN(preco_por_pessoa) AS menor_preco FROM pacotes;
-SELECT AVG(preco_por_pessoa) AS preco_medio FROM pacotes;
