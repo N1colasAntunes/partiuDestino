@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
-using projectPartiuDestino.Data;
+using projectPartiuDestino.Autenticacao;
 
 namespace projectPartiuDestino.Controllers
 {
@@ -20,17 +20,41 @@ namespace projectPartiuDestino.Controllers
             {
                 conn.Open();
 
-                string sql = "SELECT tipo FROM usuarios WHERE email = @Email AND senha = @Senha";
+                string sql = @"SELECT id, nome, email, tipo
+                               FROM usuarios
+                               WHERE email = @Email
+                               AND senha = @Senha";
 
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
+
                 cmd.Parameters.AddWithValue("@Email", email);
                 cmd.Parameters.AddWithValue("@Senha", senha);
 
-                object resultado = cmd.ExecuteScalar();
+                MySqlDataReader reader = cmd.ExecuteReader();
 
-                if (resultado != null)
+                if (reader.Read())
                 {
-                    string tipo = resultado.ToString();
+                    HttpContext.Session.SetInt32(
+                        SessionKeys.UserId,
+                        Convert.ToInt32(reader["id"])
+                    );
+
+                    HttpContext.Session.SetString(
+                        SessionKeys.UserName,
+                        reader["nome"].ToString()
+                    );
+
+                    HttpContext.Session.SetString(
+                        SessionKeys.UserEmail,
+                        reader["email"].ToString()
+                    );
+
+                    HttpContext.Session.SetString(
+                        SessionKeys.UserRole,
+                        reader["tipo"].ToString()
+                    );
+
+                    string tipo = reader["tipo"].ToString();
 
                     if (tipo == "admin")
                     {
@@ -43,12 +67,9 @@ namespace projectPartiuDestino.Controllers
                 }
             }
 
-            ViewBag.MensagemErro = "E-mail ou senha incorretos. Por favor, tente novamente.";
+            ViewBag.MensagemErro = "E-mail ou senha incorretos.";
 
-            // Retorna para a página de login (Index) passando a mensagem
             return View("Index");
-
-
         }
     }
 }

@@ -7,7 +7,6 @@
     string conexao = "server=localhost;database=bdpartiudestino;uid=root;pwd=nicolas123;";
 }
 
-
 <div class="metric-info">
     <h4>Quantidade de Viagens Personalizadas</h4>
 
@@ -31,25 +30,32 @@
     </p>
 </div>
 
-
 <h2>Viagens Personalizadas</h2>
 
 <table border="1" cellpadding="10">
     <tr>
-        <th>ID do Pedido</th>
+        <th>ID</th>
         <th>ID Usuário</th>
+
+        <th>Nome Completo</th>
+        <th>CPF</th>
+        <th>Email</th>
+        <th>WhatsApp</th>
+
         <th>Destino</th>
-        <th>País</th>
-        <th>Data Ida</th>
-        <th>Data Volta</th>
-        <th>Tipo</th>
-        <th>Pessoas</th>
-        <th>Orçamento</th>
         <th>Hospedagem</th>
-        <th>Transporte</th>
-        <th>Experiências Desejadas</th>
-        <th>Observações</th>
-        <th>Observações Finais</th>
+        <th>Data Partida</th>
+        <th>Duração</th>
+
+        <th>Clima da Viagem</th>
+        <th>Orçamento</th>
+
+        <th>Adultos</th>
+        <th>Crianças</th>
+
+        <th>Desejos Especiais</th>
+
+        <th>Data Criação</th>
     </tr>
 
     @{
@@ -57,7 +63,7 @@
         {
             conn.Open();
 
-            string sql = "SELECT * FROM viagem_personalizada";
+            string sql = "SELECT * FROM viagem_personalizada ORDER BY id DESC";
 
             MySqlCommand cmd = new MySqlCommand(sql, conn);
 
@@ -68,23 +74,40 @@
                 <tr>
                     <td>@reader["id"]</td>
                     <td>@reader["usuario_id"]</td>
+
+                    <td>@reader["nome_completo"]</td>
+                    <td>@reader["cpf"]</td>
+                    <td>@reader["email"]</td>
+                    <td>@reader["whatsapp"]</td>
+
                     <td>@reader["destino"]</td>
-                    <td>@reader["pais"]</td>
-                    <td>@Convert.ToDateTime(reader["data_ida"]).ToString("dd/MM/yyyy")</td>
-                    <td>@Convert.ToDateTime(reader["data_volta"]).ToString("dd/MM/yyyy")</td>
-                    <td>@reader["tipo_viagem"]</td>
-                    <td>@reader["numero_pessoas"]</td>
-                    <td>R$ @reader["orcamento"]</td>
                     <td>@reader["hospedagem"]</td>
-                    <td>@reader["transporte"]</td>
-                    <td>@reader["experiencias_desejadas"]</td>
-                    <td>@reader["observacoes"]</td>
-                    <td>@reader["observacoes_finais"]</td>
+
+                    <td>
+                        @Convert.ToDateTime(reader["data_partida"]).ToString("dd/MM/yyyy")
+                    </td>
+
+                    <td>@reader["duracao_dias"] dias</td>
+
+                    <td>@reader["clima_viagem"]</td>
+
+                    <td>@reader["orcamento"]</td>
+
+                    <td>@reader["adultos"]</td>
+                    <td>@reader["criancas"]</td>
+
+                    <td>@reader["desejos_especiais"]</td>
+
+                    <td>
+                        @Convert.ToDateTime(reader["data_criacao"]).ToString("dd/MM/yyyy HH:mm")
+                    </td>
                 </tr>
             }
         }
     }
 </table>
+
+<br />
 
 <li class="sidebar-item">
     <a asp-controller="Admin" asp-action="Index" class="sidebar-link">

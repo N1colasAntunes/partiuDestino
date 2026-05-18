@@ -20,20 +20,27 @@ SELECT tipo FROM usuarios WHERE email = @Email AND senha = @Senha;
 
 CREATE TABLE viagem_personalizada (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    -- usuário logado
     usuario_id INT NOT NULL,
-    destino VARCHAR(100) NOT NULL,
-    pais VARCHAR(100) NOT NULL,
-    data_ida DATE NOT NULL,
-    data_volta DATE NOT NULL,
-    tipo_viagem VARCHAR(50) NOT NULL,
-    numero_pessoas INT NOT NULL,
-    orcamento DECIMAL(10,2) NOT NULL,
-    hospedagem VARCHAR(50) NOT NULL,
-    transporte VARCHAR(50) NOT NULL,
-    experiencias_desejadas TEXT,
-    observacoes TEXT,
-    observacoes_finais TEXT,
-    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    -- dados pessoais
+    nome_completo VARCHAR(150),
+    cpf VARCHAR(14),
+    email VARCHAR(150),
+    whatsapp VARCHAR(20),
+    -- viagem
+    destino VARCHAR(100),
+    hospedagem VARCHAR(100),
+    data_partida DATE,
+    duracao_dias INT,
+    -- experiência
+    clima_viagem VARCHAR(100),
+    orcamento VARCHAR(100),
+    adultos INT,
+    criancas INT,
+    -- detalhes finais
+    desejos_especiais TEXT,
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );
 
 -- destinos disponíveis
