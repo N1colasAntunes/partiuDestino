@@ -2,7 +2,7 @@
 
 namespace projectPartiuDestino.Controllers
 {
-    public class PersonalizadasController : Controller
+    public class PacotesAdminController : Controller
     {
         public IActionResult Index()
         {
