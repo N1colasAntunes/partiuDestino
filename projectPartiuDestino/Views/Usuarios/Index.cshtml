@@ -173,6 +173,8 @@
         <th>Nome</th>
         <th>Email</th>
         <th>Tipo</th>
+
+        <th>Ações</th>
     </tr>
 
     @{
@@ -193,6 +195,20 @@
                     <td>@readerUsuarios["nome"]</td>
                     <td>@readerUsuarios["email"]</td>
                     <td>@readerUsuarios["tipo"]</td>
+
+                    <td>
+                        <form asp-action="Delete" asp-controller="Usuarios" method="post"
+                              onsubmit="return confirm('Tem certeza que deseja excluir este usuário?');">
+
+                            <input type="hidden" name="id" value="@readerUsuarios["id"]" />
+
+                            <button type="submit"
+                                    style="background:#ef4444;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;">
+                                Excluir
+                            </button>
+
+                        </form>
+                    </td>
                 </tr>
             }
         }

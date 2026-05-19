@@ -6,7 +6,7 @@ namespace projectPartiuDestino.Controllers
 {
     public class PersonalizadaController : Controller
     {
-        private string conexao = "server=localhost;database=bdpartiudestino;uid=root;pwd=nicolas123;";
+        private string conexao = "server=localhost;database=bdpartiudestino;uid=root;pwd=12345678;";
 
         [HttpGet]
         public IActionResult Index()
@@ -37,7 +37,7 @@ namespace projectPartiuDestino.Controllers
                 return RedirectToAction("Index", "Login");
             }
 
-            string conexao = "server=localhost;database=bdpartiudestino;uid=root;pwd=nicolas123;";
+            string conexao = "server=localhost;database=bdpartiudestino;uid=root;pwd=12345678;";
 
             using (MySqlConnection conn = new MySqlConnection(conexao))
             {

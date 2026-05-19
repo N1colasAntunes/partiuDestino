@@ -176,6 +176,8 @@
         <th>Desejos Especiais</th>
 
         <th>Data Criação</th>
+
+        <th>Ações</th>
     </tr>
 
     @{
@@ -220,6 +222,19 @@
 
                     <td>
                         @Convert.ToDateTime(reader["data_criacao"]).ToString("dd/MM/yyyy HH:mm")
+                    </td>
+                    <td>
+                        <form asp-action="Delete" asp-controller="ViagemPersonalizadaAdmin" method="post"
+                              onsubmit="return confirm('Tem certeza que deseja excluir esta viagem?');">
+
+                            <input type="hidden" name="id" value="@reader["id"]" />
+
+                            <button type="submit"
+                                    style="background:#ef4444;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;">
+                                Excluir
+                            </button>
+
+                        </form>
                     </td>
                 </tr>
             }

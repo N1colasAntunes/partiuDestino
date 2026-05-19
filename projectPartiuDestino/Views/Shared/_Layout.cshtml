@@ -122,14 +122,20 @@
                             <a class="nav-link nav-link-figma" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link nav-link-figma" asp-controller="Personalizada" asp-action="Index">Viagem Personalizada</a>
+                            <a class="nav-link nav-link-figma" asp-controller="Home" asp-action="Index">Contate-nos</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-link-figma" asp-controller="Destinos" asp-action="Index">Destinos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-link-figma" asp-controller="Pacotes" asp-action="Index">Pacotes</a>
-                        </li>
+                        @if (Context.Session.GetString("UserName") != null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-figma" asp-controller="Personalizada" asp-action="Index">Viagem Personalizada</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-figma" asp-controller="Destinos" asp-action="Index">Destinos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-figma" asp-controller="Pacotes" asp-action="Index">Pacotes</a>
+                            </li>
+                        }
                         
                         @if (Context.Session.GetString("UserRole") == "admin")
                         {
