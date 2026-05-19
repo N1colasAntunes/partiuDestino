@@ -156,6 +156,7 @@
         <th>Data Retorno</th>
         <th>Preço por Pessoa</th>
         <th>Vagas Disponíveis</th>
+        <th>Ações</th>
     </tr>
 
     @{
@@ -192,6 +193,21 @@
                     </td>
 
                     <td>@reader["vagas_disponiveis"]</td>
+
+                    <!-- 🔥 BOTÃO EXCLUIR -->
+                    <td>
+                        <form asp-action="Delete" asp-controller="PacotesAdmin" method="post"
+                              onsubmit="return confirm('Tem certeza que deseja excluir este pacote?');">
+
+                            <input type="hidden" name="id" value="@reader["id"]" />
+
+                            <button type="submit"
+                                    style="background:#ef4444;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;">
+                                Excluir
+                            </button>
+
+                        </form>
+                    </td>
                 </tr>
             }
         }

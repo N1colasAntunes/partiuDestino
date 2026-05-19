@@ -131,6 +131,7 @@
         <th>Origem Estado</th>
         <th>Destino País</th>
         <th>Destino Estado</th>
+        <th>Ações</th>
     </tr>
 
     @{
@@ -152,6 +153,21 @@
                     <td>@reader["origem_estado"]</td>
                     <td>@reader["pais"]</td>
                     <td>@reader["estado"]</td>
+
+                    <!-- AQUI é o botão excluir -->
+                    <td>
+                        <form asp-action="Delete" asp-controller="DestinosAdmin" method="post"
+                              onsubmit="return confirm('Tem certeza que deseja excluir este destino?');">
+
+                            <input type="hidden" name="id" value="@reader["id"]" />
+
+                            <button type="submit"
+                                    style="background:#ef4444;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;">
+                                Excluir
+                            </button>
+
+                        </form>
+                    </td>
                 </tr>
             }
         }
