@@ -1,8 +1,6 @@
 CREATE DATABASE bdpartiudestino;
 USE bdpartiudestino;
 
-drop database bdpartiudestino;
-
 -- tabela de login / controle de acesso
 CREATE TABLE usuarios (
   id INT PRIMARY KEY AUTO_INCREMENT,
@@ -47,77 +45,48 @@ CREATE TABLE viagem_personalizada (
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );
 
+
 -- destinos disponíveis
 CREATE TABLE destinos (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    origem_pais VARCHAR(100) NOT NULL,
+    origem_estado VARCHAR(100) NOT NULL,
     pais VARCHAR(100) NOT NULL,
     estado VARCHAR(100) NOT NULL
 );
 
-INSERT INTO destinos (pais, estado) VALUES
--- Brasil (Turismo Nacional Forte)
-('Brasil', 'Rio de Janeiro'),
-('Brasil', 'São Paulo'),
-('Brasil', 'Bahia'),
-('Brasil', 'Ceará'),
-('Brasil', 'Alagoas'),
-('Brasil', 'Rio Grande do Norte'),
-('Brasil', 'Santa Catarina'),
-('Brasil', 'Rio Grande do Sul'),
-('Brasil', 'Minas Gerais'),
-('Brasil', 'Goiás'),
-('Brasil', 'Amazonas'),
-('Brasil', 'Mato Grosso do Sul'),
-('Brasil', 'Paraná'),
-('Brasil', 'Maranhão'),
-('Brasil', 'Paraíba'),
+INSERT INTO destinos (origem_pais, origem_estado, pais, estado) VALUES
+-- Saindo do Brasil/SP para destinos nacionais
+('Brasil', 'São Paulo', 'Brasil', 'Rio de Janeiro'),
+('Brasil', 'São Paulo', 'Brasil', 'Bahia'),
+('Brasil', 'São Paulo', 'Brasil', 'Ceará'),
 
--- Estados Unidos
-('Estados Unidos', 'Califórnia'),
-('Estados Unidos', 'Flórida'),
-('Estados Unidos', 'Nova York'),
-('Estados Unidos', 'Nevada'),
-('Estados Unidos', 'Havaí'),
+-- Saindo do Brasil/SP para destinos internacionais
+('Brasil', 'São Paulo', 'Estados Unidos', 'Califórnia'),
+('Brasil', 'São Paulo', 'Estados Unidos', 'Flórida'),
+('Brasil', 'São Paulo', 'França', 'Provença-Alpes-Costa Azul'),
+('Brasil', 'São Paulo', 'Itália', 'Toscana'),
+('Brasil', 'São Paulo', 'Japão', 'Tóquio'),
 
--- Europa Ocidental
-('França', 'Provença-Alpes-Costa Azul'),
-('Itália', 'Toscana'),
-('Itália', 'Lácio'),
-('Itália', 'Vêneto'),
-('Espanha', 'Catalunha'),
-('Espanha', 'Andaluzia'),
-('Portugal', 'Lisboa'),
-('Portugal', 'Algarve'),
-('Reino Unido', 'Inglaterra'),
-('Alemanha', 'Baviera'),
+-- Saindo do Brasil/RJ
+('Brasil', 'Rio de Janeiro', 'Portugal', 'Lisboa'),
+('Brasil', 'Rio de Janeiro', 'Argentina', 'Buenos Aires'),
 
--- América do Sul e Caribe
-('Argentina', 'Buenos Aires'),
-('Argentina', 'Terra do Fogo'),
-('Chile', 'Antofagasta'),
-('Chile', 'Região Metropolitana de Santiago'),
-('Peru', 'Cusco'),
-('Peru', 'Lima'),
-('Uruguai', 'Maldonado'),
-('México', 'Quintana Roo'),
-('México', 'Baja California Sur'),
-('Colômbia', 'Bolívar'),
+-- Saindo do Brasil/MG
+('Brasil', 'Minas Gerais', 'Chile', 'Região Metropolitana de Santiago'),
 
--- Ásia e Oceania
-('Japão', 'Tóquio'),
-('Japão', 'Hokkaido'),
-('Tailândia', 'Phuket'),
-('Tailândia', 'Bangkok'),
-('Indonésia', 'Bali'),
-('Austrália', 'Nova Gales do Sul'),
-('Austrália', 'Queensland'),
-('Nova Zelândia', 'Otago'),
+-- Saindo do Brasil/PR
+('Brasil', 'Paraná', 'México', 'Quintana Roo');
 
--- África e Oriente Médio
-('Egito', 'Cairo'),
-('África do Sul', 'Cabo Ocidental'),
-('Emirados Árabes Unidos', 'Dubai'),
-('Marrocos', 'Marraquexe-Safi');
+
+
+
+
+
+
+
+
+
 
 
 

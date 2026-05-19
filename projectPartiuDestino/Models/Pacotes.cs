@@ -12,6 +12,6 @@
         public DateTime DataRetorno { get; set; }
         public decimal PrecoPorPessoa { get; set; }
         public int VagasDisponiveis { get; set; }
-        public Destino Destino { get; set; }
+        public Destinos Destino { get; set; }
     }
 }

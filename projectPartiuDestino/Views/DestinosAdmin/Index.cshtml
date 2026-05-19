@@ -6,6 +6,7 @@
 @{
     string conexao = "server=localhost;database=bdpartiudestino;uid=root;pwd=12345678;";
 }
+
 <style>
     /* Estilo para a métrica */
     .metric-info {
@@ -98,7 +99,6 @@
         }
 </style>
 
-
 <div class="metric-info">
     <h4>Quantidade de Destinos Ativos</h4>
 
@@ -127,8 +127,10 @@
 <table border="1" cellpadding="10">
     <tr>
         <th>ID</th>
-        <th>País</th>
-        <th>Estado</th>
+        <th>Origem País</th>
+        <th>Origem Estado</th>
+        <th>Destino País</th>
+        <th>Destino Estado</th>
     </tr>
 
     @{
@@ -146,6 +148,8 @@
             {
                 <tr>
                     <td>@reader["id"]</td>
+                    <td>@reader["origem_pais"]</td>
+                    <td>@reader["origem_estado"]</td>
                     <td>@reader["pais"]</td>
                     <td>@reader["estado"]</td>
                 </tr>
