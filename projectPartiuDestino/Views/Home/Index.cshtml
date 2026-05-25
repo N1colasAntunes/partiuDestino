@@ -333,59 +333,24 @@
     <div class="hero-content">
         <h1>Seu destino começa aqui</h1>
         <p>Viaje do seu jeito, com roteiros exclusivos e personalizados. Reserve agora.</p>
-        <a asp-controller="Personalizada" asp-action="Index" class="btn btn-primary">
-            Monte sua viagem
-        </a>
+
+
+        @if (Context.Session.GetString("UserName") != null)
+        {
+            <a asp-controller="Personalizada" asp-action="Index" class="btn btn-primary">
+                Monte sua viagem
+            </a>
+        }
+        else
+        {
+            <a asp-controller="Login" asp-action="Index" class="btn btn-primary">
+                Monte sua viagem
+            </a>
+        }
+
     </div>
 </section>
 
-<!-- Barra de Busca -->
-<!-- Barra de Busca -->
-<div class="container">
-    <div class="busca-frame">
-        <form asp-controller="Pacotes" asp-action="Buscar" method="get" class="busca-grid">
-
-            <!-- Campo Origem -->
-            <div class="busca-item">
-                <label>Origem</label>
-                <input type="text" name="origem" placeholder="Cidade de saída" />
-            </div>
-
-            <div class="busca-item">
-                <label>Destino</label>
-                <select name="destino_id" class="input-premium select-estilizado">
-                    <option value="" disabled selected>Para onde vamos?</option>
-                    @if (ViewBag.Destinos != null)
-                    {
-                        foreach (var destino in ViewBag.Destinos)
-                        {
-                            <option value="@destino.Id">@destino.Nome (@destino.Pais)</option>
-                        }
-                    }
-                    </select>
-
-            </div>
-
-            <!-- Campo Ida -->
-            <div class="busca-item">
-                <label>Ida</label>
-                <input type="date" name="data_ida" />
-            </div>
-
-                    <div class="busca-item">
-                        <label>Volta</label>
-                        <input type="date" name="data_ida" />
-                    </div>
-            <!-- Campo Pessoas -->
-            <div class="busca-item">
-                <label>Pessoas</label>
-                <input type="number" name="pessoas" value="1" min="1" />
-            </div>
-
-            <button type="submit" class="btn-busca-azul">Busca</button>
-        </form>
-    </div>
-</div>
 
 
 <!-- Destinos -->
@@ -555,24 +520,37 @@
 
 <iframe src="https://www.google.com/maps/d/embed?mid=1gy6dVeN-GqzZx-6SGrkTOp4z9T7FtpM&ehbc=2E312F&noprof=1" width="640" height="480"></iframe>
 <!-- Contato -->
+
 <section id="contate" class="container contato-secao">
     <h2>Contate-nos</h2>
     <p>Tem alguma dúvida? Mande uma mensagem!</p>
 
-    <form class="form-contato">
+    <form action="https://formsubmit.co/twofoxrlkbatefalta@gmail.com"
+          method="POST"
+          class="form-contato">
+
         <div class="form-group">
             <label>Seu Nome</label>
-            <input type="text" placeholder="Digite seu nome" />
+            <input type="text" name="Nome" placeholder="Digite seu nome" required />
         </div>
+
         <div class="form-group">
             <label>Email</label>
-            <input type="email" placeholder="seu@email.com" />
+            <input type="email" name="Email" placeholder="seu@email.com" required />
         </div>
+
         <div class="form-group">
             <label>Diga aqui!</label>
-            <input type="text" placeholder="Sua mensagem aqui..." />
+            <input type="text" name="Mensagem" placeholder="Sua mensagem aqui..." required />
         </div>
-        <button type="button" class="btn-enviar-azul">Enviar mensagem</button>
+
+        <!-- Evita captcha -->
+        <input type="hidden" name="_captcha" value="false">
+
+        <button type="submit" class="btn-enviar-azul">
+            Enviar mensagem
+        </button>
+
     </form>
 </section>
 
@@ -583,7 +561,7 @@
             <span>Siga nossas redes:</span>
             <a href="#"><i class="fab fa-instagram"></i></a>
             <a href="#"><i class="fab fa-facebook"></i></a>
-            <span>| Whatsapp: (11 ) 95511-2233</span>
+            <span>| Whatsapp: (11) 95511-2233</span>
         </div>
         <p>&copy; 2024 Travel Agency. All rights reserved. | Privacy Policy | Terms of Service</p>
     </div>
