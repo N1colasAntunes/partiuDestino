@@ -227,3 +227,4 @@ VALUES
 SELECT * FROM usuarios;
 SELECT * FROM destinos;
 SELECT * FROM pacotes;
+SELECT * FROM viagem_personalizada;
