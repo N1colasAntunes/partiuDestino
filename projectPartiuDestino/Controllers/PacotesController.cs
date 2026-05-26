@@ -46,5 +46,16 @@ namespace projectPartiuDestino.Controllers
 
             return View(listaPacotes);
         }
+
+        public IActionResult Detalhes()
+        {
+            return View();
+        }
+
+
+
+
     }
+
+
 }

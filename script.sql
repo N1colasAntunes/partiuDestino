@@ -55,6 +55,7 @@ CREATE TABLE destinos (
     estado VARCHAR(100) NOT NULL
 );
 
+drop table destinos;
 INSERT INTO destinos (origem_pais, origem_estado, pais, estado) VALUES
 -- Saindo do Brasil/SP para destinos nacionais
 ('Brasil', 'São Paulo', 'Brasil', 'Rio de Janeiro'),

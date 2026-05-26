@@ -47,5 +47,10 @@ namespace projectPartiuDestino.Controllers
 
             return View(listaDestinos);
         }
+
+        public IActionResult Detalhes()
+        {
+            return View();
+        }
     }
 }
