@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "Editar Destino";
+}
+
+<h2>Editar Destino</h2>
+
+<form method="post" asp-action="Editar">
+
+    <input type="hidden" name="id" value="@ViewBag.Id" />
+
+    <div style="margin-bottom:15px;">
+        <label>País de Origem</label><br />
+        <input type="text"
+               name="origem_pais"
+               value="@ViewBag.OrigemPais"
+               required
+               style="width:300px;padding:8px;" />
+    </div>
+
+    <div style="margin-bottom:15px;">
+        <label>Estado de Origem</label><br />
+        <input type="text"
+               name="origem_estado"
+               value="@ViewBag.OrigemEstado"
+               required
+               style="width:300px;padding:8px;" />
+    </div>
+
+    <div style="margin-bottom:15px;">
+        <label>País de Destino</label><br />
+        <input type="text"
+               name="pais"
+               value="@ViewBag.Pais"
+               required
+               style="width:300px;padding:8px;" />
+    </div>
+
+    <div style="margin-bottom:15px;">
+        <label>Estado de Destino</label><br />
+        <input type="text"
+               name="estado"
+               value="@ViewBag.Estado"
+               required
+               style="width:300px;padding:8px;" />
+    </div>
+
+    <button type="submit"
+            style="background:#2563eb;color:white;border:none;padding:10px 20px;border-radius:6px;">
+        Salvar Alterações
+    </button>
+
+</form>

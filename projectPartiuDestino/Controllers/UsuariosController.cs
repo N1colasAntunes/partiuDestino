@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
+using projectPartiuDestino.Data;
 
 namespace projectPartiuDestino.Controllers
 {
@@ -60,6 +61,62 @@ namespace projectPartiuDestino.Controllers
                     cmd.Parameters.AddWithValue("@nome", nome);
                     cmd.Parameters.AddWithValue("@email", email);
                     cmd.Parameters.AddWithValue("@senha", senha);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
+            return RedirectToAction("Index");
+        }
+        public IActionResult Editar(int id)
+        {
+            string conexao = "server=localhost;database=bdpartiudestino;uid=root;pwd=12345678;";
+
+            using (MySqlConnection conn = new MySqlConnection(conexao))
+            {
+                conn.Open();
+
+                string sql = "SELECT * FROM usuarios WHERE id = @id";
+
+                using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            ViewBag.Id = reader["id"];
+                            ViewBag.Nome = reader["nome"];
+                            ViewBag.Tipo = reader["tipo"];
+                        }
+                    }
+                }
+            }
+
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Editar(int id, string nome, string tipo)
+        {
+            string conexao = "server=localhost;database=bdpartiudestino;uid=root;pwd=12345678;";
+
+            using (MySqlConnection conn = new MySqlConnection(conexao))
+            {
+                conn.Open();
+
+                string sql = @"
+            UPDATE usuarios
+            SET
+                nome = @nome,
+                tipo = @tipo
+            WHERE id = @id";
+
+                using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.Parameters.AddWithValue("@nome", nome);
+                    cmd.Parameters.AddWithValue("@tipo", tipo);
 
                     cmd.ExecuteNonQuery();
                 }

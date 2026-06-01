@@ -1,0 +1,90 @@
+﻿@{
+    ViewData["Title"] = "Editar Pacote";
+}
+
+<h2>Editar Pacote</h2>
+
+<form method="post" asp-action="Editar">
+
+    <input type="hidden" name="id" value="@ViewBag.Id" />
+
+    <div style="margin-bottom:15px;">
+        <label>ID do Destino</label><br />
+        <input type="number"
+               name="destino_id"
+               value="@ViewBag.DestinoId"
+               required
+               style="width:300px;padding:8px;" />
+    </div>
+
+    <div style="margin-bottom:15px;">
+        <label>Nome</label><br />
+        <input type="text"
+               name="nome"
+               value="@ViewBag.Nome"
+               required
+               style="width:300px;padding:8px;" />
+    </div>
+
+    <div style="margin-bottom:15px;">
+        <label>Descrição</label><br />
+        <textarea name="descricao"
+                  style="width:500px;height:120px;padding:8px;">@ViewBag.Descricao</textarea>
+    </div>
+
+    <div style="margin-bottom:15px;">
+        <label>Tipo de Viagem</label><br />
+        <input type="text"
+               name="tipo_viagem"
+               value="@ViewBag.TipoViagem"
+               style="width:300px;padding:8px;" />
+    </div>
+
+    <div style="margin-bottom:15px;">
+        <label>Duração (dias)</label><br />
+        <input type="number"
+               name="duracao_dias"
+               value="@ViewBag.DuracaoDias"
+               style="width:300px;padding:8px;" />
+    </div>
+
+    <div style="margin-bottom:15px;">
+        <label>Data de Partida</label><br />
+        <input type="date"
+               name="data_partida"
+               value="@ViewBag.DataPartida"
+               style="width:300px;padding:8px;" />
+    </div>
+
+    <div style="margin-bottom:15px;">
+        <label>Data de Retorno</label><br />
+        <input type="date"
+               name="data_retorno"
+               value="@ViewBag.DataRetorno"
+               style="width:300px;padding:8px;" />
+    </div>
+
+    <div style="margin-bottom:15px;">
+        <label>Preço por Pessoa</label><br />
+        <input type="number"
+               step="0.01"
+               name="preco_por_pessoa"
+               value="@ViewBag.Preco"
+               required
+               style="width:300px;padding:8px;" />
+    </div>
+
+    <div style="margin-bottom:15px;">
+        <label>Vagas Disponíveis</label><br />
+        <input type="number"
+               name="vagas_disponiveis"
+               value="@ViewBag.Vagas"
+               style="width:300px;padding:8px;" />
+    </div>
+
+    <button type="submit"
+            style="background:#2563eb;color:white;border:none;padding:10px 20px;border-radius:6px;">
+        Salvar Alterações
+    </button>
+
+</form>

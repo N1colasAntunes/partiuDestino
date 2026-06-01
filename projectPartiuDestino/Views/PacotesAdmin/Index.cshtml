@@ -206,9 +206,18 @@
 
                     <td>@reader["vagas_disponiveis"]</td>
 
-                    <!-- 🔥 BOTÃO EXCLUIR -->
-                    <td>
-                        <form asp-action="Delete" asp-controller="PacotesAdmin" method="post"
+                    <td style="display:flex;gap:8px;">
+
+                        <a asp-controller="PacotesAdmin"
+                           asp-action="Editar"
+                           asp-route-id="@reader["id"]"
+                           style="background:#2563eb;color:white;padding:6px 12px;border-radius:6px;text-decoration:none;">
+                            Editar
+                        </a>
+
+                        <form asp-action="Delete"
+                              asp-controller="PacotesAdmin"
+                              method="post"
                               onsubmit="return confirm('Tem certeza que deseja excluir este pacote?');">
 
                             <input type="hidden" name="id" value="@reader["id"]" />
@@ -219,6 +228,7 @@
                             </button>
 
                         </form>
+
                     </td>
                 </tr>
             }

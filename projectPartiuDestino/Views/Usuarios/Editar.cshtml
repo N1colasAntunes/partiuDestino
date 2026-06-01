@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Editar Usuário";
+}
+
+<h2>Editar Usuário</h2>
+
+<form method="post" asp-action="Editar">
+
+    <input type="hidden" name="id" value="@ViewBag.Id" />
+
+    <div style="margin-bottom:15px;">
+        <label>Nome</label><br />
+        <input type="text"
+               name="nome"
+               value="@ViewBag.Nome"
+               required
+               style="width:300px;padding:8px;" />
+    </div>
+
+    <div style="margin-bottom:15px;">
+        <label>Tipo</label><br />
+        <select name="tipo"
+                style="width:300px;padding:8px;">
+
+            @if (ViewBag.Tipo == "admin")
+            {
+                <option value="admin" selected>Admin</option>
+                <option value="usuario">Usuário</option>
+            }
+            else
+            {
+                <option value="usuario" selected>Usuário</option>
+                <option value="admin">Admin</option>
+            }
+
+        </select>
+    </div>
+
+    <button type="submit"
+            style="background:#2563eb;color:white;border:none;padding:10px 20px;border-radius:6px;">
+        Salvar Alterações
+    </button>
+
+</form>
