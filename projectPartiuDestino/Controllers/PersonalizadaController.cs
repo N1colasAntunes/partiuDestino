@@ -16,19 +16,19 @@ namespace projectPartiuDestino.Controllers
 
         [HttpPost]
         public IActionResult Index(
-    string nomeCompleto,
-    string cpf,
-    string email,
-    string whatsapp,
-    string destino,
-    string hospedagem,
-    DateTime dataPartida,
-    int duracaoDias,
-    string climaViagem,
-    string orcamento,
-    int adultos,
-    int criancas,
-    string desejosEspeciais)
+            string nomeCompleto,
+            string cpf,
+            string email,
+            string whatsapp,
+            string destino,
+            string hospedagem,
+            DateTime dataPartida,
+            int duracaoDias,
+            string climaViagem,
+            string orcamento,
+            int adultos,
+            int criancas,
+            string desejosEspeciais)
         {
             int? usuarioId = HttpContext.Session.GetInt32("UserId");
 
