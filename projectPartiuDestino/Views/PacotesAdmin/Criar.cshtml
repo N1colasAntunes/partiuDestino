@@ -1,0 +1,76 @@
+﻿@{
+    ViewData["Title"] = "Cadastrar Pacote";
+}
+
+<h2>Cadastrar Pacote</h2>
+
+<form method="post" asp-action="Criar">
+
+    <div style="margin-bottom:15px;">
+        <label>ID do Destino</label><br />
+        <input type="number" name="destino_id" required
+               style="width:300px;padding:8px;" />
+    </div>
+
+    <div style="margin-bottom:15px;">
+        <label>Nome</label><br />
+        <input type="text" name="nome" required
+               style="width:300px;padding:8px;" />
+    </div>
+
+    <div style="margin-bottom:15px;">
+        <label>Descrição</label><br />
+        <textarea name="descricao"
+                  style="width:500px;height:120px;padding:8px;"></textarea>
+    </div>
+
+    <div style="margin-bottom:15px;">
+        <label>Tipo de Viagem</label><br />
+        <input type="text" name="tipo_viagem"
+               style="width:300px;padding:8px;" />
+    </div>
+
+    <div style="margin-bottom:15px;">
+        <label>Duração (dias)</label><br />
+        <input type="number" name="duracao_dias"
+               style="width:300px;padding:8px;" />
+    </div>
+
+    <div style="margin-bottom:15px;">
+        <label>Data de Partida</label><br />
+        <input type="date" name="data_partida"
+               style="width:300px;padding:8px;" />
+    </div>
+
+    <div style="margin-bottom:15px;">
+        <label>Data de Retorno</label><br />
+        <input type="date" name="data_retorno"
+               style="width:300px;padding:8px;" />
+    </div>
+
+    <div style="margin-bottom:15px;">
+        <label>Preço por Pessoa</label><br />
+        <input type="number"
+               step="0.01"
+               name="preco_por_pessoa"
+               required
+               style="width:300px;padding:8px;" />
+    </div>
+
+    <div style="margin-bottom:15px;">
+        <label>Vagas Disponíveis</label><br />
+        <input type="number"
+               name="vagas_disponiveis"
+               style="width:300px;padding:8px;" />
+    </div>
+
+    <button type="submit"
+            style="background:#16a34a;color:white;border:none;padding:10px 20px;border-radius:6px;cursor:pointer;">
+        Salvar
+    </button>
+
+    <a asp-action="Index" style="margin-left:10px;">
+        Cancelar
+    </a>
+
+</form>

@@ -1,0 +1,55 @@
+﻿@{
+    ViewData["Title"] = "Cadastrar Destino";
+}
+
+<h2>Cadastrar Destino</h2>
+
+<form method="post" asp-action="Criar">
+
+    <div style="margin-bottom:15px;">
+        <label>País de Origem</label>
+        <br />
+        <input type="text"
+               name="origem_pais"
+               required
+               style="width:300px;padding:8px;" />
+    </div>
+
+    <div style="margin-bottom:15px;">
+        <label>Estado de Origem</label>
+        <br />
+        <input type="text"
+               name="origem_estado"
+               required
+               style="width:300px;padding:8px;" />
+    </div>
+
+    <div style="margin-bottom:15px;">
+        <label>País de Destino</label>
+        <br />
+        <input type="text"
+               name="pais"
+               required
+               style="width:300px;padding:8px;" />
+    </div>
+
+    <div style="margin-bottom:15px;">
+        <label>Estado de Destino</label>
+        <br />
+        <input type="text"
+               name="estado"
+               required
+               style="width:300px;padding:8px;" />
+    </div>
+
+    <button type="submit"
+            style="background:#16a34a;color:white;border:none;padding:10px 20px;border-radius:6px;cursor:pointer;">
+        Salvar
+    </button>
+
+    <a asp-action="Index"
+       style="margin-left:10px;text-decoration:none;">
+        Cancelar
+    </a>
+
+</form>

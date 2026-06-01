@@ -1,7 +1,6 @@
 CREATE DATABASE bdpartiudestino;
 USE bdpartiudestino;
 
--- tabela de login / controle de acesso
 CREATE TABLE usuarios (
   id INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(255),
@@ -12,41 +11,33 @@ ALTER TABLE usuarios
 ADD COLUMN tipo VARCHAR(20) NOT NULL DEFAULT 'usuario';
 
 insert into usuarios (id,nome,email,senha) values (default,'Julia Costa','julia@gmail.com','12345');
+
 -- aqui define quem vai ser admin
 UPDATE usuarios
 SET tipo = 'admin'
 WHERE email = 'julia@gmail.com';
 
-select * from usuarios;
 SELECT tipo FROM usuarios WHERE email = @Email AND senha = @Senha;
 
 CREATE TABLE viagem_personalizada (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    -- usuário logado
     usuario_id INT NOT NULL,
-    -- dados pessoais
     nome_completo VARCHAR(150),
     cpf VARCHAR(14),
     email VARCHAR(150),
     whatsapp VARCHAR(20),
-    -- viagem
     destino VARCHAR(100),
     hospedagem VARCHAR(100),
     data_partida DATE,
     duracao_dias INT,
-    -- experiência
     clima_viagem VARCHAR(100),
     orcamento VARCHAR(100),
     adultos INT,
     criancas INT,
-    -- detalhes finais
     desejos_especiais TEXT,
     data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );
-
-
--- destinos disponíveis
 CREATE TABLE destinos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     origem_pais VARCHAR(100) NOT NULL,
@@ -55,47 +46,21 @@ CREATE TABLE destinos (
     estado VARCHAR(100) NOT NULL
 );
 
-drop table destinos;
 INSERT INTO destinos (origem_pais, origem_estado, pais, estado) VALUES
 -- Saindo do Brasil/SP para destinos nacionais
 ('Brasil', 'São Paulo', 'Brasil', 'Rio de Janeiro'),
 ('Brasil', 'São Paulo', 'Brasil', 'Bahia'),
 ('Brasil', 'São Paulo', 'Brasil', 'Ceará'),
-
--- Saindo do Brasil/SP para destinos internacionais
 ('Brasil', 'São Paulo', 'Estados Unidos', 'Califórnia'),
 ('Brasil', 'São Paulo', 'Estados Unidos', 'Flórida'),
 ('Brasil', 'São Paulo', 'França', 'Provença-Alpes-Costa Azul'),
 ('Brasil', 'São Paulo', 'Itália', 'Toscana'),
 ('Brasil', 'São Paulo', 'Japão', 'Tóquio'),
-
--- Saindo do Brasil/RJ
 ('Brasil', 'Rio de Janeiro', 'Portugal', 'Lisboa'),
 ('Brasil', 'Rio de Janeiro', 'Argentina', 'Buenos Aires'),
-
--- Saindo do Brasil/MG
 ('Brasil', 'Minas Gerais', 'Chile', 'Região Metropolitana de Santiago'),
-
--- Saindo do Brasil/PR
 ('Brasil', 'Paraná', 'México', 'Quintana Roo');
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
--- pacotes de viagem
 CREATE TABLE pacotes (
   id                INT            PRIMARY KEY AUTO_INCREMENT,
   destino_id        INT            NOT NULL,

@@ -1,0 +1,42 @@
+﻿@{
+    ViewData["Title"] = "Cadastrar Usuário";
+}
+
+<h2>Cadastrar Usuário</h2>
+
+<form method="post" asp-action="Criar">
+
+    <div style="margin-bottom:15px;">
+        <label>Nome</label><br />
+        <input type="text"
+               name="nome"
+               required
+               style="width:300px;padding:8px;" />
+    </div>
+
+    <div style="margin-bottom:15px;">
+        <label>Email</label><br />
+        <input type="email"
+               name="email"
+               required
+               style="width:300px;padding:8px;" />
+    </div>
+
+    <div style="margin-bottom:15px;">
+        <label>Senha</label><br />
+        <input type="password"
+               name="senha"
+               required
+               style="width:300px;padding:8px;" />
+    </div>
+
+    <button type="submit"
+            style="background:#16a34a;color:white;border:none;padding:10px 20px;border-radius:6px;cursor:pointer;">
+        Salvar
+    </button>
+
+    <a asp-action="Index" style="margin-left:10px;">
+        Cancelar
+    </a>
+
+</form>

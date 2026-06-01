@@ -516,6 +516,14 @@
     margin-bottom: 8px;
     }
 
+    .form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 5px;
+    resize: vertical;
+    min-height: 120px;
+}
     .form-group input {
     width: 100%;
     padding: 12px;
@@ -976,20 +984,32 @@
 
         <div class="form-group">
             <label>Seu Nome</label>
-            <input type="text" name="Nome" placeholder="Digite seu nome" required />
+            <input type="text"
+                   name="Nome"
+                   placeholder="Digite seu nome"
+                   required>
         </div>
 
         <div class="form-group">
             <label>Email</label>
-            <input type="email" name="Email" placeholder="seu@email.com" required />
+            <input type="email"
+                   name="Email"
+                   placeholder="seu@email.com"
+                   required>
         </div>
 
         <div class="form-group">
             <label>Diga aqui!</label>
-            <input type="text" name="Mensagem" placeholder="Sua mensagem aqui..." required />
+            <textarea name="Mensagem"
+                      placeholder="Sua mensagem aqui..."
+                      rows="5"
+                      required></textarea>
         </div>
 
+        <!-- Configurações do FormSubmit -->
+        <input type="hidden" name="_subject" value="Nova mensagem do site Partiu Destino">
         <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_template" value="table">
 
         <button type="submit" class="btn-enviar-azul">
             Enviar mensagem
@@ -1002,11 +1022,11 @@
     <div class="container">
         <div class="footer-links-sociais">
             <span>Siga nossas redes:</span>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href=""><i class="fab fa-instagram"></i></a>
+            <a href="https://www.instagram.com/_partiu.destino/"><i class="fab fa-facebook"></i></a>
             <span>| Whatsapp: (11) 95511-2233</span>
         </div>
-        <p>&copy; 2024 Travel Agency. All rights reserved. | Privacy Policy | Terms of Service</p>
+        <p>&copy; 2026 Partiu Destino. Todos os direitos reservados. | Politica de Privacidade | Termos de Serviço</p>
     </div>
 </footer>
 
