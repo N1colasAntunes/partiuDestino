@@ -968,14 +968,42 @@
     <h2>Contate-nos</h2>
     <p>Tem alguma dúvida? Mande uma mensagem!</p>
 
-    <form action="https://formsubmit.co/twofoxrlkbatefalta@gmail.com"
-          method="POST"
-          class="form-contato">
+    <!-- Alerta de sucesso -->
+    <div id="alerta-sucesso"
+         style="display:none;
+                background:#dcfce7;
+                border:1px solid #86efac;
+                color:#166534;
+                padding:14px 18px;
+                border-radius:10px;
+                max-width:550px;
+                margin:0 auto 20px;
+                font-weight:600;
+                text-align:center;">
+        ✅ Mensagem enviada com sucesso! Entraremos em contato em breve.
+    </div>
+
+    <!-- Alerta de erro -->
+    <div id="alerta-erro"
+         style="display:none;
+                background:#fee2e2;
+                border:1px solid #f87171;
+                color:#991b1b;
+                padding:14px 18px;
+                border-radius:10px;
+                max-width:550px;
+                margin:0 auto 20px;
+                font-weight:600;
+                text-align:center;">
+        ❌ Erro ao enviar. Tente novamente.
+    </div>
+
+    <div class="form-contato">
 
         <div class="form-group">
             <label>Seu Nome</label>
             <input type="text"
-                   name="Nome"
+                   id="contato-nome"
                    placeholder="Digite seu nome"
                    required>
         </div>
@@ -983,30 +1011,34 @@
         <div class="form-group">
             <label>Email</label>
             <input type="email"
-                   name="Email"
+                   id="contato-email"
                    placeholder="seu@email.com"
                    required>
         </div>
 
         <div class="form-group">
             <label>Diga aqui!</label>
-            <textarea name="Mensagem"
+            <textarea id="contato-mensagem"
                       placeholder="Sua mensagem aqui..."
                       rows="5"
                       required></textarea>
         </div>
 
-        <!-- Configurações do FormSubmit -->
-        <input type="hidden" name="_subject" value="Nova mensagem do site Partiu Destino">
-        <input type="hidden" name="_captcha" value="false">
-        <input type="hidden" name="_template" value="table">
-
-        <button type="submit" class="btn-enviar-azul">
+        <button type="button"
+                id="btn-enviar-contato"
+                class="btn-enviar-azul"
+                onclick="enviarEmailJS()">
             Enviar mensagem
         </button>
 
-    </form>
+    </div>
 </section>
+
+<!-- EmailJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@@emailjs/browser@@4/dist/email.min.js"></script>
+
+<!-- Script do formulário de contato -->
+<script src="~/js/contato-emailjs.js"></script>
 
 <footer class="footer-figma">
     <div class="container">
