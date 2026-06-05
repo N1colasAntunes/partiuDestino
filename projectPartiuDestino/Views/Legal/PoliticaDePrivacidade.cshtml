@@ -1,0 +1,882 @@
+@{
+    ViewData["Title"] = "Política de Privacidade - Partiu Destino";
+}
+
+<style>
+    :root {
+        --primary: #1e3a8a;
+        --accent: #3b82f6;
+        --success: #10b981;
+        --text-main: #1f2937;
+        --text-muted: #6b7280;
+        --bg-body: #f8fafc;
+        --white: #ffffff;
+        --border: #e5e7eb;
+    }
+
+    .politica-page {
+        background: var(--bg-body);
+        min-height: 100vh;
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+        padding-bottom: 80px;
+    }
+
+    .politica-hero {
+        background: linear-gradient(135deg, #0f172a 0%, var(--primary) 60%, var(--accent) 100%);
+        padding: 60px 0 70px;
+        color: white;
+        text-align: center;
+    }
+
+    .politica-hero .badge-top {
+        background: rgba(255,255,255,0.15);
+        color: white;
+        padding: 6px 18px;
+        border-radius: 50px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        display: inline-block;
+        margin-bottom: 16px;
+    }
+
+    .politica-hero h1 {
+        font-size: 2.4rem;
+        font-weight: 900;
+        margin-bottom: 12px;
+    }
+
+    .politica-hero p {
+        font-size: 1rem;
+        opacity: 0.85;
+        max-width: 580px;
+        margin: 0 auto;
+    }
+
+    .atualizacao-bar {
+        background: #f0fdf4;
+        border-bottom: 1px solid #bbf7d0;
+        padding: 12px 0;
+        text-align: center;
+        font-size: 0.85rem;
+        color: #14532d;
+        font-weight: 600;
+    }
+
+    .atualizacao-bar i {
+        margin-right: 6px;
+        color: var(--success);
+    }
+
+    .politica-layout {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 50px 20px 0;
+    }
+
+    /* Resumo LGPD */
+    .lgpd-destaque {
+        background: linear-gradient(135deg, #1e3a8a, #1e40af);
+        border-radius: 18px;
+        padding: 32px 36px;
+        margin-bottom: 36px;
+        color: white;
+    }
+
+    .lgpd-destaque h3 {
+        font-size: 1.1rem;
+        font-weight: 800;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .lgpd-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
+
+    .lgpd-item {
+        background: rgba(255,255,255,0.1);
+        border-radius: 12px;
+        padding: 16px;
+        text-align: center;
+    }
+
+    .lgpd-item i {
+        font-size: 1.6rem;
+        margin-bottom: 8px;
+        display: block;
+        opacity: 0.9;
+    }
+
+    .lgpd-item span {
+        font-size: 0.82rem;
+        font-weight: 600;
+        opacity: 0.95;
+        line-height: 1.4;
+    }
+
+    /* Índice */
+    .indice-rapido {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 28px;
+        margin-bottom: 40px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.04);
+    }
+
+    .indice-rapido h3 {
+        font-size: 0.9rem;
+        font-weight: 800;
+        color: var(--primary);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 16px;
+    }
+
+    .indice-lista {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .indice-lista li a {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.88rem;
+        font-weight: 600;
+        padding: 6px 0;
+        transition: color 0.2s;
+    }
+
+    .indice-lista li a:hover { color: var(--primary); }
+    .indice-lista li a i { font-size: 0.75rem; }
+
+    /* Seções */
+    .politica-secao {
+        background: white;
+        border-radius: 18px;
+        padding: 36px 40px;
+        margin-bottom: 24px;
+        border: 1px solid var(--border);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        scroll-margin-top: 20px;
+    }
+
+    .secao-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 22px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .secao-numero {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: white;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        font-weight: 800;
+        flex-shrink: 0;
+    }
+
+    .secao-header h2 {
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: var(--text-main);
+        margin: 0;
+    }
+
+    .politica-secao p {
+        font-size: 0.95rem;
+        color: #374151;
+        line-height: 1.75;
+        margin-bottom: 14px;
+    }
+
+    .politica-secao p:last-child { margin-bottom: 0; }
+
+    .lista-politica {
+        list-style: none;
+        padding: 0;
+        margin: 14px 0;
+    }
+
+    .lista-politica li {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        font-size: 0.93rem;
+        color: #374151;
+        line-height: 1.65;
+        padding: 8px 0;
+        border-bottom: 1px solid #f9fafb;
+    }
+
+    .lista-politica li:last-child { border-bottom: none; }
+
+    .lista-politica li i {
+        margin-top: 3px;
+        font-size: 0.85rem;
+        flex-shrink: 0;
+    }
+
+    /* Tabela de dados */
+    .tabela-dados {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 18px 0;
+        font-size: 0.9rem;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+    }
+
+    .tabela-dados thead {
+        background: var(--primary);
+        color: white;
+    }
+
+    .tabela-dados thead th {
+        padding: 14px 16px;
+        text-align: left;
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .tabela-dados tbody tr {
+        border-bottom: 1px solid var(--border);
+    }
+
+    .tabela-dados tbody tr:last-child { border-bottom: none; }
+
+    .tabela-dados tbody tr:hover { background: #f8fafc; }
+
+    .tabela-dados tbody td {
+        padding: 13px 16px;
+        color: #374151;
+        vertical-align: top;
+        line-height: 1.5;
+    }
+
+    .tabela-dados tbody td:first-child {
+        font-weight: 700;
+        color: var(--primary);
+        white-space: nowrap;
+    }
+
+    /* Direitos do titular */
+    .direitos-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+        margin-top: 16px;
+    }
+
+    .direito-card {
+        background: #f8fafc;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px;
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+    }
+
+    .direito-icone {
+        width: 38px;
+        height: 38px;
+        background: #eff6ff;
+        border-radius: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary);
+        font-size: 0.95rem;
+        flex-shrink: 0;
+    }
+
+    .direito-texto h4 {
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: var(--text-main);
+        margin: 0 0 4px;
+    }
+
+    .direito-texto p {
+        font-size: 0.82rem !important;
+        color: var(--text-muted);
+        margin: 0 !important;
+        line-height: 1.5 !important;
+    }
+
+    /* Alertas */
+    .alerta-info {
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin: 16px 0;
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+    }
+
+    .alerta-info i {
+        color: var(--accent);
+        font-size: 1.1rem;
+        margin-top: 2px;
+        flex-shrink: 0;
+    }
+
+    .alerta-info p {
+        margin: 0 !important;
+        font-size: 0.9rem;
+        color: #1e3a8a;
+        font-weight: 500;
+        line-height: 1.6;
+    }
+
+    .alerta-sucesso {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin: 16px 0;
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+    }
+
+    .alerta-sucesso i {
+        color: var(--success);
+        font-size: 1.1rem;
+        margin-top: 2px;
+        flex-shrink: 0;
+    }
+
+    .alerta-sucesso p {
+        margin: 0 !important;
+        font-size: 0.9rem;
+        color: #14532d;
+        font-weight: 500;
+        line-height: 1.6;
+    }
+
+    /* DPO Card */
+    .dpo-card {
+        background: white;
+        border: 2px solid var(--primary);
+        border-radius: 16px;
+        padding: 28px 32px;
+        margin-top: 16px;
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+    }
+
+    .dpo-icone {
+        width: 52px;
+        height: 52px;
+        background: var(--primary);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.3rem;
+        flex-shrink: 0;
+    }
+
+    .dpo-info h4 {
+        font-size: 1rem;
+        font-weight: 800;
+        color: var(--primary);
+        margin: 0 0 6px;
+    }
+
+    .dpo-info p {
+        margin: 0 0 4px !important;
+        font-size: 0.88rem;
+        color: var(--text-muted);
+    }
+
+    .dpo-info a {
+        color: var(--accent);
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    /* Contato Card */
+    .contato-card {
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        border-radius: 18px;
+        padding: 36px 40px;
+        text-align: center;
+        color: white;
+        margin-top: 10px;
+    }
+
+    .contato-card h3 {
+        font-size: 1.3rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+    }
+
+    .contato-card p {
+        opacity: 0.9;
+        font-size: 0.95rem;
+        margin-bottom: 20px;
+    }
+
+    .contato-card a {
+        background: white;
+        color: var(--primary);
+        padding: 12px 28px;
+        border-radius: 10px;
+        font-weight: 700;
+        text-decoration: none;
+        font-size: 0.95rem;
+        transition: all 0.2s;
+        display: inline-block;
+    }
+
+    .contato-card a:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }
+
+    @@media (max-width: 768px) {
+        .lgpd-grid { grid-template-columns: 1fr; }
+        .indice-lista { grid-template-columns: 1fr; }
+        .direitos-grid { grid-template-columns: 1fr; }
+        .politica-secao { padding: 24px 20px; }
+        .politica-hero h1 { font-size: 1.8rem; }
+        .dpo-card { flex-direction: column; }
+    }
+</style>
+
+<div class="politica-page">
+
+    <!-- Hero -->
+    <div class="politica-hero">
+        <span class="badge-top"><i class="fas fa-shield-alt"></i> LGPD Compliance</span>
+        <h1>Política de Privacidade</h1>
+        <p>Saiba como coletamos, utilizamos e protegemos seus dados pessoais na Partiu Destino.</p>
+    </div>
+
+    <!-- Barra verde LGPD -->
+    <div class="atualizacao-bar">
+        <i class="fas fa-check-circle"></i>
+        Em conformidade com a <strong>LGPD — Lei nº 13.709/2018</strong> &nbsp;|&nbsp;
+        Última atualização: <strong>junho de 2026</strong>
+    </div>
+
+    <div class="politica-layout">
+
+        <!-- Destaque LGPD -->
+        <div class="lgpd-destaque">
+            <h3><i class="fas fa-shield-alt"></i> Seus direitos são nossa prioridade</h3>
+            <div class="lgpd-grid">
+                <div class="lgpd-item">
+                    <i class="fas fa-lock"></i>
+                    <span>Dados protegidos com criptografia e boas práticas de segurança</span>
+                </div>
+                <div class="lgpd-item">
+                    <i class="fas fa-user-shield"></i>
+                    <span>Você controla seus dados e pode solicitar exclusão a qualquer momento</span>
+                </div>
+                <div class="lgpd-item">
+                    <i class="fas fa-ban"></i>
+                    <span>Jamais vendemos ou compartilhamos seus dados com terceiros para fins publicitários</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Índice -->
+        <div class="indice-rapido">
+            <h3><i class="fas fa-list"></i> Índice Rápido</h3>
+            <ul class="indice-lista">
+                <li><a href="#controlador"><i class="fas fa-chevron-right"></i> 1. Controlador dos Dados</a></li>
+                <li><a href="#coleta"><i class="fas fa-chevron-right"></i> 2. Dados Coletados</a></li>
+                <li><a href="#finalidade"><i class="fas fa-chevron-right"></i> 3. Finalidade do Tratamento</a></li>
+                <li><a href="#base-legal"><i class="fas fa-chevron-right"></i> 4. Base Legal</a></li>
+                <li><a href="#compartilhamento"><i class="fas fa-chevron-right"></i> 5. Compartilhamento</a></li>
+                <li><a href="#retencao"><i class="fas fa-chevron-right"></i> 6. Retenção dos Dados</a></li>
+                <li><a href="#seguranca"><i class="fas fa-chevron-right"></i> 7. Segurança</a></li>
+                <li><a href="#direitos"><i class="fas fa-chevron-right"></i> 8. Direitos do Titular</a></li>
+                <li><a href="#cookies"><i class="fas fa-chevron-right"></i> 9. Cookies</a></li>
+                <li><a href="#menores"><i class="fas fa-chevron-right"></i> 10. Menores de Idade</a></li>
+                <li><a href="#alteracoes"><i class="fas fa-chevron-right"></i> 11. Alterações</a></li>
+                <li><a href="#dpo"><i class="fas fa-chevron-right"></i> 12. Contato / DPO</a></li>
+            </ul>
+        </div>
+
+        <!-- 1. Controlador -->
+        <div class="politica-secao" id="controlador">
+            <div class="secao-header">
+                <div class="secao-numero">1</div>
+                <h2>Controlador dos Dados Pessoais</h2>
+            </div>
+            <p>
+                O <strong>controlador</strong> dos dados pessoais coletados por esta plataforma é a
+                <strong>Partiu Destino</strong>, agência de viagens digital desenvolvida pelo grupo de
+                alunos do Curso Técnico em Desenvolvimento de Sistemas da ETEC Basilides de Godoy,
+                com sede no estado de São Paulo.
+            </p>
+            <p>
+                Para fins desta Política, aplicam-se as seguintes definições da LGPD:
+            </p>
+            <ul class="lista-politica">
+                <li><i class="fas fa-circle" style="color:var(--accent); font-size:0.5rem; margin-top:7px;"></i> <strong>Titular:</strong> a pessoa natural a quem se referem os dados pessoais tratados;</li>
+                <li><i class="fas fa-circle" style="color:var(--accent); font-size:0.5rem; margin-top:7px;"></i> <strong>Controlador:</strong> pessoa jurídica que toma decisões sobre o tratamento dos dados (Partiu Destino);</li>
+                <li><i class="fas fa-circle" style="color:var(--accent); font-size:0.5rem; margin-top:7px;"></i> <strong>Tratamento:</strong> qualquer operação realizada com dados pessoais (coleta, armazenamento, uso, exclusão);</li>
+                <li><i class="fas fa-circle" style="color:var(--accent); font-size:0.5rem; margin-top:7px;"></i> <strong>Dados sensíveis:</strong> dados de origem racial, saúde, biometria, entre outros — que a Partiu Destino <u>não coleta</u>.</li>
+            </ul>
+        </div>
+
+        <!-- 2. Dados Coletados -->
+        <div class="politica-secao" id="coleta">
+            <div class="secao-header">
+                <div class="secao-numero">2</div>
+                <h2>Dados Pessoais Coletados</h2>
+            </div>
+            <p>
+                A Partiu Destino coleta apenas os dados estritamente necessários para a prestação
+                dos seus serviços, conforme o princípio da minimização previsto na LGPD. A tabela
+                abaixo detalha os dados coletados:
+            </p>
+
+            <table class="tabela-dados">
+                <thead>
+                    <tr>
+                        <th>Dado</th>
+                        <th>Como é coletado</th>
+                        <th>Obrigatório?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Nome completo</td>
+                        <td>Cadastro na plataforma</td>
+                        <td>Sim</td>
+                    </tr>
+                    <tr>
+                        <td>Endereço de e-mail</td>
+                        <td>Cadastro na plataforma</td>
+                        <td>Sim</td>
+                    </tr>
+                    <tr>
+                        <td>Senha (hash)</td>
+                        <td>Cadastro na plataforma</td>
+                        <td>Sim</td>
+                    </tr>
+                    <tr>
+                        <td>CPF</td>
+                        <td>Formulário de viagem personalizada</td>
+                        <td>Sim (para reservas)</td>
+                    </tr>
+                    <tr>
+                        <td>Número de WhatsApp</td>
+                        <td>Formulário de viagem personalizada</td>
+                        <td>Sim (para reservas)</td>
+                    </tr>
+                    <tr>
+                        <td>Preferências de viagem</td>
+                        <td>Formulário de viagem personalizada</td>
+                        <td>Não</td>
+                    </tr>
+                    <tr>
+                        <td>Dados de navegação (logs)</td>
+                        <td>Automaticamente ao usar a plataforma</td>
+                        <td>Automático</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="alerta-sucesso">
+                <i class="fas fa-check-circle"></i>
+                <p>
+                    A Partiu Destino <strong>não coleta</strong> dados sensíveis (saúde, biometria, origem racial,
+                    convicção religiosa ou política). As senhas são armazenadas com criptografia e
+                    <strong>nunca</strong> em texto puro.
+                </p>
+            </div>
+        </div>
+
+        <!-- 3. Finalidade -->
+        <div class="politica-secao" id="finalidade">
+            <div class="secao-header">
+                <div class="secao-numero">3</div>
+                <h2>Finalidade do Tratamento</h2>
+            </div>
+            <p>Os dados coletados são utilizados exclusivamente para as seguintes finalidades:</p>
+            <ul class="lista-politica">
+                <li><i class="fas fa-check-circle" style="color:var(--success);"></i> Criação e gerenciamento da conta do usuário na plataforma;</li>
+                <li><i class="fas fa-check-circle" style="color:var(--success);"></i> Processamento, confirmação e gerenciamento de reservas e pacotes de viagem;</li>
+                <li><i class="fas fa-check-circle" style="color:var(--success);"></i> Personalização de roteiros e recomendações de destinos conforme preferências informadas;</li>
+                <li><i class="fas fa-check-circle" style="color:var(--success);"></i> Comunicação com o usuário sobre suas reservas, alterações e cancelamentos;</li>
+                <li><i class="fas fa-check-circle" style="color:var(--success);"></i> Envio de comunicações de marketing, quando o usuário optar por recebê-las;</li>
+                <li><i class="fas fa-check-circle" style="color:var(--success);"></i> Cumprimento de obrigações legais e regulatórias;</li>
+                <li><i class="fas fa-check-circle" style="color:var(--success);"></i> Melhoria contínua dos serviços, segurança e experiência da plataforma.</li>
+            </ul>
+        </div>
+
+        <!-- 4. Base Legal -->
+        <div class="politica-secao" id="base-legal">
+            <div class="secao-header">
+                <div class="secao-numero">4</div>
+                <h2>Base Legal para o Tratamento</h2>
+            </div>
+            <p>
+                Em conformidade com o art. 7º da LGPD, o tratamento de dados pela Partiu Destino
+                fundamenta-se nas seguintes bases legais:
+            </p>
+            <ul class="lista-politica">
+                <li><i class="fas fa-gavel" style="color:var(--primary);"></i> <strong>Consentimento (art. 7º, I):</strong> para envio de comunicações de marketing e uso de cookies não essenciais;</li>
+                <li><i class="fas fa-gavel" style="color:var(--primary);"></i> <strong>Execução de contrato (art. 7º, V):</strong> para processar reservas, pacotes e viagens personalizadas contratadas;</li>
+                <li><i class="fas fa-gavel" style="color:var(--primary);"></i> <strong>Cumprimento de obrigação legal (art. 7º, II):</strong> para atendimento de exigências fiscais e regulatórias;</li>
+                <li><i class="fas fa-gavel" style="color:var(--primary);"></i> <strong>Legítimo interesse (art. 7º, IX):</strong> para segurança da plataforma, prevenção a fraudes e melhoria dos serviços.</li>
+            </ul>
+        </div>
+
+        <!-- 5. Compartilhamento -->
+        <div class="politica-secao" id="compartilhamento">
+            <div class="secao-header">
+                <div class="secao-numero">5</div>
+                <h2>Compartilhamento de Dados</h2>
+            </div>
+            <p>
+                A Partiu Destino <strong>não vende</strong> dados pessoais de seus usuários.
+                O compartilhamento ocorre apenas nas hipóteses abaixo, com terceiros que atuam como
+                <strong>operadores</strong> de dados em nome da plataforma:
+            </p>
+            <ul class="lista-politica">
+                <li><i class="fas fa-plane" style="color:var(--accent);"></i> <strong>Fornecedores de serviços de viagem</strong> (hotéis, companhias aéreas, transportadoras): apenas os dados necessários para concluir a reserva contratada;</li>
+                <li><i class="fas fa-credit-card" style="color:var(--accent);"></i> <strong>Processadores de pagamento:</strong> para viabilizar as transações financeiras de forma segura;</li>
+                <li><i class="fas fa-balance-scale" style="color:var(--accent);"></i> <strong>Autoridades competentes:</strong> quando exigido por lei, ordem judicial ou regulamentação aplicável.</li>
+            </ul>
+            <div class="alerta-info">
+                <i class="fas fa-info-circle"></i>
+                <p>
+                    Todos os terceiros com quem compartilhamos dados são contratualmente obrigados a
+                    tratá-los com o mesmo nível de proteção que a Partiu Destino, em conformidade com a LGPD.
+                </p>
+            </div>
+        </div>
+
+        <!-- 6. Retenção -->
+        <div class="politica-secao" id="retencao">
+            <div class="secao-header">
+                <div class="secao-numero">6</div>
+                <h2>Período de Retenção dos Dados</h2>
+            </div>
+            <p>
+                Os dados pessoais são mantidos pelo prazo necessário para cumprir as finalidades
+                para as quais foram coletados, observando os seguintes critérios:
+            </p>
+            <ul class="lista-politica">
+                <li><i class="fas fa-clock" style="color:var(--accent);"></i> <strong>Conta ativa:</strong> os dados são mantidos enquanto a conta do usuário estiver ativa na plataforma;</li>
+                <li><i class="fas fa-clock" style="color:var(--accent);"></i> <strong>Após encerramento da conta:</strong> os dados são anonimizados ou excluídos em até <strong>90 dias</strong>, salvo obrigação legal que exija retenção por prazo maior;</li>
+                <li><i class="fas fa-clock" style="color:var(--accent);"></i> <strong>Dados de reservas:</strong> mantidos por até <strong>5 anos</strong> para fins fiscais e legais, conforme exigência da legislação tributária brasileira;</li>
+                <li><i class="fas fa-clock" style="color:var(--accent);"></i> <strong>Logs de acesso:</strong> mantidos por <strong>6 meses</strong>, conforme o Marco Civil da Internet (Lei nº 12.965/2014).</li>
+            </ul>
+        </div>
+
+        <!-- 7. Segurança -->
+        <div class="politica-secao" id="seguranca">
+            <div class="secao-header">
+                <div class="secao-numero">7</div>
+                <h2>Segurança dos Dados</h2>
+            </div>
+            <p>
+                A Partiu Destino adota medidas técnicas e organizacionais para proteger os dados
+                pessoais dos usuários contra acesso não autorizado, alteração, divulgação ou destruição:
+            </p>
+            <ul class="lista-politica">
+                <li><i class="fas fa-lock" style="color:var(--success);"></i> Transmissão de dados protegida por protocolo HTTPS com criptografia TLS;</li>
+                <li><i class="fas fa-lock" style="color:var(--success);"></i> Senhas armazenadas com hash criptográfico, nunca em texto legível;</li>
+                <li><i class="fas fa-lock" style="color:var(--success);"></i> Controle de acesso por perfis (usuário e administrador), com autenticação por sessão;</li>
+                <li><i class="fas fa-lock" style="color:var(--success);"></i> Proteção contra SQL Injection e outros ataques por meio de consultas parametrizadas;</li>
+                <li><i class="fas fa-lock" style="color:var(--success);"></i> Monitoramento de logs de acesso e atividades suspeitas na plataforma.</li>
+            </ul>
+            <p>
+                Apesar de todos os esforços, nenhum sistema é completamente invulnerável. Em caso de
+                incidente de segurança que afete dados pessoais, os titulares afetados e a Autoridade
+                Nacional de Proteção de Dados (ANPD) serão notificados conforme os prazos legais.
+            </p>
+        </div>
+
+        <!-- 8. Direitos -->
+        <div class="politica-secao" id="direitos">
+            <div class="secao-header">
+                <div class="secao-numero">8</div>
+                <h2>Direitos do Titular dos Dados</h2>
+            </div>
+            <p>
+                Nos termos do art. 18 da LGPD, o titular dos dados pessoais tem os seguintes direitos,
+                que podem ser exercidos a qualquer momento mediante solicitação à Partiu Destino:
+            </p>
+            <div class="direitos-grid">
+                <div class="direito-card">
+                    <div class="direito-icone"><i class="fas fa-eye"></i></div>
+                    <div class="direito-texto">
+                        <h4>Acesso</h4>
+                        <p>Confirmar a existência de tratamento e acessar seus dados pessoais.</p>
+                    </div>
+                </div>
+                <div class="direito-card">
+                    <div class="direito-icone"><i class="fas fa-edit"></i></div>
+                    <div class="direito-texto">
+                        <h4>Correção</h4>
+                        <p>Solicitar a correção de dados incompletos, inexatos ou desatualizados.</p>
+                    </div>
+                </div>
+                <div class="direito-card">
+                    <div class="direito-icone"><i class="fas fa-trash-alt"></i></div>
+                    <div class="direito-texto">
+                        <h4>Exclusão</h4>
+                        <p>Requerer a exclusão de dados desnecessários ou tratados em desconformidade.</p>
+                    </div>
+                </div>
+                <div class="direito-card">
+                    <div class="direito-icone"><i class="fas fa-times-circle"></i></div>
+                    <div class="direito-texto">
+                        <h4>Revogação do Consentimento</h4>
+                        <p>Revogar o consentimento dado a qualquer momento, sem ônus.</p>
+                    </div>
+                </div>
+                <div class="direito-card">
+                    <div class="direito-icone"><i class="fas fa-file-export"></i></div>
+                    <div class="direito-texto">
+                        <h4>Portabilidade</h4>
+                        <p>Receber seus dados em formato estruturado e interoperável.</p>
+                    </div>
+                </div>
+                <div class="direito-card">
+                    <div class="direito-icone"><i class="fas fa-info-circle"></i></div>
+                    <div class="direito-texto">
+                        <h4>Informação</h4>
+                        <p>Ser informado sobre compartilhamentos realizados com terceiros.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="alerta-info" style="margin-top: 20px;">
+                <i class="fas fa-info-circle"></i>
+                <p>
+                    Para exercer qualquer um destes direitos, entre em contato pelo e-mail oficial da Partiu Destino
+                    ou pelo formulário de contato disponível na plataforma. Responderemos em até <strong>15 dias úteis</strong>.
+                </p>
+            </div>
+        </div>
+
+        <!-- 9. Cookies -->
+        <div class="politica-secao" id="cookies">
+            <div class="secao-header">
+                <div class="secao-numero">9</div>
+                <h2>Cookies e Tecnologias de Rastreamento</h2>
+            </div>
+            <p>
+                A Partiu Destino utiliza cookies e tecnologias similares para garantir o funcionamento
+                adequado da plataforma e melhorar a experiência do usuário. Os cookies utilizados são:
+            </p>
+            <ul class="lista-politica">
+                <li><i class="fas fa-cookie-bite" style="color:#f59e0b;"></i> <strong>Cookies essenciais:</strong> necessários para o funcionamento básico da plataforma (autenticação, sessão do usuário). Não podem ser desativados;</li>
+                <li><i class="fas fa-cookie-bite" style="color:#f59e0b;"></i> <strong>Cookies de desempenho:</strong> utilizados para analisar o uso da plataforma e identificar melhorias. Requerem consentimento;</li>
+                <li><i class="fas fa-cookie-bite" style="color:#f59e0b;"></i> <strong>Cookies de preferência:</strong> armazenam configurações e preferências do usuário para personalizar a experiência.</li>
+            </ul>
+            <p>
+                O usuário pode gerenciar as preferências de cookies diretamente nas configurações do
+                navegador. A desativação de cookies essenciais pode comprometer o funcionamento da plataforma.
+            </p>
+        </div>
+
+        <!-- 10. Menores -->
+        <div class="politica-secao" id="menores">
+            <div class="secao-header">
+                <div class="secao-numero">10</div>
+                <h2>Menores de Idade</h2>
+            </div>
+            <p>
+                A plataforma Partiu Destino <strong>não é destinada a menores de 18 anos</strong>.
+                Não coletamos intencionalmente dados pessoais de crianças ou adolescentes.
+            </p>
+            <p>
+                Caso um responsável legal identifique que um menor forneceu dados à nossa plataforma
+                sem o devido consentimento, solicitamos que entre em contato imediatamente para que
+                os dados sejam excluídos, conforme o art. 14 da LGPD e o Estatuto da Criança e do
+                Adolescente (Lei nº 8.069/1990).
+            </p>
+        </div>
+
+        <!-- 11. Alterações -->
+        <div class="politica-secao" id="alteracoes">
+            <div class="secao-header">
+                <div class="secao-numero">11</div>
+                <h2>Alterações nesta Política</h2>
+            </div>
+            <p>
+                Esta Política de Privacidade pode ser atualizada periodicamente para refletir mudanças
+                nos nossos serviços, na legislação aplicável ou em nossas práticas de tratamento de dados.
+            </p>
+            <p>
+                Alterações relevantes serão comunicadas ao usuário por e-mail cadastrado ou por aviso
+                destacado na plataforma, com antecedência mínima de <strong>15 dias</strong> antes da
+                entrada em vigor das novas condições. O uso continuado da plataforma após esse prazo
+                implica aceitação das alterações.
+            </p>
+        </div>
+
+        <!-- 12. DPO / Contato -->
+        <div class="politica-secao" id="dpo">
+            <div class="secao-header">
+                <div class="secao-numero">12</div>
+                <h2>Encarregado de Dados (DPO) e Contato</h2>
+            </div>
+            <p>
+                Em conformidade com o art. 41 da LGPD, a Partiu Destino designou um
+                <strong>Encarregado pelo Tratamento de Dados Pessoais (DPO)</strong>
+                como canal de comunicação entre os titulares, a empresa e a ANPD.
+            </p>
+
+            <div class="dpo-card">
+                <div class="dpo-icone">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <div class="dpo-info">
+                    <h4>Encarregado de Dados — Partiu Destino</h4>
+                    <p><i class="fas fa-envelope" style="margin-right:6px;"></i> E-mail: <a href="mailto:privacidade@partiudestino.com.br">privacidade@partiudestino.com.br</a></p>
+                    <p><i class="fas fa-clock" style="margin-right:6px;"></i> Prazo de resposta: até 15 dias úteis</p>
+                    <p><i class="fas fa-map-marker-alt" style="margin-right:6px;"></i> São Paulo — SP, Brasil</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Contato -->
+        <div class="contato-card">
+            <h3>Dúvidas sobre sua privacidade?</h3>
+            <p>Estamos comprometidos com a transparência e proteção dos seus dados.</p>
+            <a href="/#contate">Fale com Nossa Equipe</a>
+        </div>
+
+    </div>
+</div>

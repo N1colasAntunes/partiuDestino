@@ -1,0 +1,609 @@
+@{
+    ViewData["Title"] = "Termos de Uso - Partiu Destino";
+}
+
+<style>
+    :root {
+        --primary: #1e3a8a;
+        --accent: #3b82f6;
+        --text-main: #1f2937;
+        --text-muted: #6b7280;
+        --bg-body: #f8fafc;
+        --white: #ffffff;
+        --border: #e5e7eb;
+    }
+
+    .termos-page {
+        background: var(--bg-body);
+        min-height: 100vh;
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+        padding-bottom: 80px;
+    }
+
+    /* Hero */
+    .termos-hero {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+        padding: 60px 0 70px;
+        color: white;
+        text-align: center;
+    }
+
+    .termos-hero .badge-top {
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+        padding: 6px 18px;
+        border-radius: 50px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        display: inline-block;
+        margin-bottom: 16px;
+    }
+
+    .termos-hero h1 {
+        font-size: 2.4rem;
+        font-weight: 900;
+        margin-bottom: 12px;
+    }
+
+    .termos-hero p {
+        font-size: 1rem;
+        opacity: 0.85;
+        max-width: 550px;
+        margin: 0 auto;
+    }
+
+    /* Atualização badge */
+    .atualizacao-bar {
+        background: #fffbeb;
+        border-bottom: 1px solid #fde68a;
+        padding: 12px 0;
+        text-align: center;
+        font-size: 0.85rem;
+        color: #92400e;
+        font-weight: 600;
+    }
+
+    .atualizacao-bar i {
+        margin-right: 6px;
+        color: #f59e0b;
+    }
+
+    /* Layout principal */
+    .termos-layout {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 50px 20px 0;
+    }
+
+    /* Índice lateral rápido */
+    .indice-rapido {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 28px;
+        margin-bottom: 40px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.04);
+    }
+
+    .indice-rapido h3 {
+        font-size: 0.9rem;
+        font-weight: 800;
+        color: var(--primary);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 16px;
+    }
+
+    .indice-lista {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .indice-lista li a {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.88rem;
+        font-weight: 600;
+        padding: 6px 0;
+        transition: color 0.2s;
+    }
+
+    .indice-lista li a:hover {
+        color: var(--primary);
+    }
+
+    .indice-lista li a i {
+        font-size: 0.75rem;
+        color: var(--accent);
+    }
+
+    /* Seções */
+    .termos-secao {
+        background: white;
+        border-radius: 18px;
+        padding: 36px 40px;
+        margin-bottom: 24px;
+        border: 1px solid var(--border);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        scroll-margin-top: 20px;
+    }
+
+    .secao-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 22px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .secao-numero {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: white;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        font-weight: 800;
+        flex-shrink: 0;
+    }
+
+    .secao-header h2 {
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: var(--text-main);
+        margin: 0;
+    }
+
+    .termos-secao p {
+        font-size: 0.95rem;
+        color: #374151;
+        line-height: 1.75;
+        margin-bottom: 14px;
+    }
+
+    .termos-secao p:last-child {
+        margin-bottom: 0;
+    }
+
+    /* Lista de itens */
+    .lista-termos {
+        list-style: none;
+        padding: 0;
+        margin: 14px 0;
+    }
+
+    .lista-termos li {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        font-size: 0.93rem;
+        color: #374151;
+        line-height: 1.65;
+        padding: 8px 0;
+        border-bottom: 1px solid #f9fafb;
+    }
+
+    .lista-termos li:last-child {
+        border-bottom: none;
+    }
+
+    .lista-termos li i {
+        color: var(--accent);
+        margin-top: 3px;
+        font-size: 0.85rem;
+        flex-shrink: 0;
+    }
+
+    /* Destaque / Alerta */
+    .alerta-info {
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin: 16px 0;
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+    }
+
+    .alerta-info i {
+        color: var(--accent);
+        font-size: 1.1rem;
+        margin-top: 2px;
+        flex-shrink: 0;
+    }
+
+    .alerta-info p {
+        margin: 0 !important;
+        font-size: 0.9rem;
+        color: #1e3a8a;
+        font-weight: 500;
+        line-height: 1.6;
+    }
+
+    .alerta-aviso {
+        background: #fff7ed;
+        border: 1px solid #fed7aa;
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin: 16px 0;
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+    }
+
+    .alerta-aviso i {
+        color: #f97316;
+        font-size: 1.1rem;
+        margin-top: 2px;
+        flex-shrink: 0;
+    }
+
+    .alerta-aviso p {
+        margin: 0 !important;
+        font-size: 0.9rem;
+        color: #7c2d12;
+        font-weight: 500;
+        line-height: 1.6;
+    }
+
+    /* Contato Card */
+    .contato-card {
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        border-radius: 18px;
+        padding: 36px 40px;
+        text-align: center;
+        color: white;
+        margin-top: 10px;
+    }
+
+    .contato-card h3 {
+        font-size: 1.3rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+    }
+
+    .contato-card p {
+        opacity: 0.9;
+        font-size: 0.95rem;
+        margin-bottom: 20px;
+    }
+
+    .contato-card a {
+        background: white;
+        color: var(--primary);
+        padding: 12px 28px;
+        border-radius: 10px;
+        font-weight: 700;
+        text-decoration: none;
+        font-size: 0.95rem;
+        transition: all 0.2s;
+        display: inline-block;
+    }
+
+    .contato-card a:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }
+
+    @@media (max-width: 768px) {
+        .indice-lista { grid-template-columns: 1fr; }
+        .termos-secao { padding: 24px 20px; }
+        .termos-hero h1 { font-size: 1.8rem; }
+    }
+</style>
+
+<div class="termos-page">
+
+    <!-- Hero -->
+    <div class="termos-hero">
+        <span class="badge-top">Documento Legal</span>
+        <h1>Termos de Uso</h1>
+        <p>Leia com atenção antes de utilizar os serviços da Partiu Destino.</p>
+    </div>
+
+    <!-- Barra de atualização -->
+    <div class="atualizacao-bar">
+        <i class="fas fa-clock"></i>
+        Última atualização: <strong>junho de 2026</strong> &nbsp;|&nbsp;
+        Versão 1.0 &nbsp;|&nbsp; Válido a partir de 01/06/2026
+    </div>
+
+    <div class="termos-layout">
+
+        <!-- Índice -->
+        <div class="indice-rapido">
+            <h3><i class="fas fa-list"></i> Índice Rápido</h3>
+            <ul class="indice-lista">
+                <li><a href="#aceitacao"><i class="fas fa-chevron-right"></i> 1. Aceitação dos Termos</a></li>
+                <li><a href="#servicos"><i class="fas fa-chevron-right"></i> 2. Descrição dos Serviços</a></li>
+                <li><a href="#cadastro"><i class="fas fa-chevron-right"></i> 3. Cadastro e Conta</a></li>
+                <li><a href="#responsabilidades"><i class="fas fa-chevron-right"></i> 4. Responsabilidades</a></li>
+                <li><a href="#reservas"><i class="fas fa-chevron-right"></i> 5. Reservas e Pagamentos</a></li>
+                <li><a href="#cancelamento"><i class="fas fa-chevron-right"></i> 6. Cancelamentos</a></li>
+                <li><a href="#propriedade"><i class="fas fa-chevron-right"></i> 7. Propriedade Intelectual</a></li>
+                <li><a href="#privacidade"><i class="fas fa-chevron-right"></i> 8. Privacidade de Dados</a></li>
+                <li><a href="#conduta"><i class="fas fa-chevron-right"></i> 9. Conduta do Usuário</a></li>
+                <li><a href="#limitacao"><i class="fas fa-chevron-right"></i> 10. Limitação de Responsabilidade</a></li>
+                <li><a href="#alteracoes"><i class="fas fa-chevron-right"></i> 11. Alterações nos Termos</a></li>
+                <li><a href="#legislacao"><i class="fas fa-chevron-right"></i> 12. Legislação Aplicável</a></li>
+            </ul>
+        </div>
+
+        <!-- 1. Aceitação -->
+        <div class="termos-secao" id="aceitacao">
+            <div class="secao-header">
+                <div class="secao-numero">1</div>
+                <h2>Aceitação dos Termos</h2>
+            </div>
+            <p>
+                Ao acessar, navegar ou utilizar a plataforma <strong>Partiu Destino</strong> — seja por meio do
+                site ou do aplicativo móvel —, o usuário declara ter lido, compreendido e concordado integralmente
+                com os presentes Termos de Uso e com a nossa Política de Privacidade.
+            </p>
+            <p>
+                Caso o usuário não concorde com qualquer disposição aqui prevista, deverá se abster de utilizar
+                os serviços da plataforma. O uso continuado após eventuais alterações implica aceitação tácita
+                das novas condições.
+            </p>
+            <div class="alerta-info">
+                <i class="fas fa-info-circle"></i>
+                <p>
+                    Para criar uma conta na Partiu Destino, o usuário deve ter ao menos <strong>18 anos de idade</strong>
+                    ou estar sob supervisão e autorização de um responsável legal.
+                </p>
+            </div>
+        </div>
+
+        <!-- 2. Serviços -->
+        <div class="termos-secao" id="servicos">
+            <div class="secao-header">
+                <div class="secao-numero">2</div>
+                <h2>Descrição dos Serviços</h2>
+            </div>
+            <p>
+                A <strong>Partiu Destino</strong> é uma plataforma digital de agência de viagens que oferece os
+                seguintes serviços ao usuário cadastrado:
+            </p>
+            <ul class="lista-termos">
+                <li><i class="fas fa-check-circle"></i> Pesquisa e visualização de destinos nacionais e internacionais;</li>
+                <li><i class="fas fa-check-circle"></i> Consulta e contratação de pacotes de viagem com datas, preços e disponibilidade;</li>
+                <li><i class="fas fa-check-circle"></i> Solicitação de viagens personalizadas conforme preferências do usuário;</li>
+                <li><i class="fas fa-check-circle"></i> Gerenciamento de reservas por meio de painel pessoal;</li>
+                <li><i class="fas fa-check-circle"></i> Canal de contato direto com a equipe da agência;</li>
+                <li><i class="fas fa-check-circle"></i> Acesso a informações de destinos, hospedagens, transporte e roteiros.</li>
+            </ul>
+            <p>
+                A Partiu Destino reserva-se o direito de modificar, suspender ou encerrar qualquer serviço,
+                funcionalidade ou conteúdo da plataforma a qualquer momento, sem aviso prévio, desde que tal
+                decisão não prejudique contratos já firmados com os usuários.
+            </p>
+        </div>
+
+        <!-- 3. Cadastro -->
+        <div class="termos-secao" id="cadastro">
+            <div class="secao-header">
+                <div class="secao-numero">3</div>
+                <h2>Cadastro e Conta do Usuário</h2>
+            </div>
+            <p>
+                Para acessar as funcionalidades completas da plataforma, o usuário deverá realizar o
+                cadastro informando: nome completo, endereço de e-mail válido e senha pessoal.
+            </p>
+            <ul class="lista-termos">
+                <li><i class="fas fa-shield-alt"></i> O usuário é o único e exclusivo responsável por manter o sigilo de suas credenciais de acesso (e-mail e senha);</li>
+                <li><i class="fas fa-shield-alt"></i> É expressamente proibido o compartilhamento de conta entre diferentes pessoas;</li>
+                <li><i class="fas fa-shield-alt"></i> Em caso de suspeita de uso indevido, o usuário deve comunicar imediatamente a equipe da Partiu Destino;</li>
+                <li><i class="fas fa-shield-alt"></i> A Partiu Destino não será responsável por danos decorrentes do uso não autorizado da conta do usuário.</li>
+            </ul>
+            <div class="alerta-aviso">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>
+                    O fornecimento de informações falsas, incompletas ou desatualizadas no cadastro pode resultar
+                    no bloqueio ou encerramento permanente da conta, sem direito a reembolso de valores pagos.
+                </p>
+            </div>
+        </div>
+
+        <!-- 4. Responsabilidades -->
+        <div class="termos-secao" id="responsabilidades">
+            <div class="secao-header">
+                <div class="secao-numero">4</div>
+                <h2>Responsabilidades das Partes</h2>
+            </div>
+            <p><strong>São responsabilidades da Partiu Destino:</strong></p>
+            <ul class="lista-termos">
+                <li><i class="fas fa-check-circle"></i> Disponibilizar a plataforma de forma estável e segura, buscando a máxima disponibilidade do serviço;</li>
+                <li><i class="fas fa-check-circle"></i> Manter as informações de destinos, pacotes e preços atualizadas na plataforma;</li>
+                <li><i class="fas fa-check-circle"></i> Proteger os dados pessoais dos usuários conforme a Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018);</li>
+                <li><i class="fas fa-check-circle"></i> Responder às solicitações e dúvidas dos usuários em prazo razoável.</li>
+            </ul>
+            <p><strong>São responsabilidades do usuário:</strong></p>
+            <ul class="lista-termos">
+                <li><i class="fas fa-user-check"></i> Fornecer informações verdadeiras e atualizadas no cadastro e nas reservas;</li>
+                <li><i class="fas fa-user-check"></i> Utilizar a plataforma exclusivamente para fins lícitos e conforme os presentes Termos;</li>
+                <li><i class="fas fa-user-check"></i> Verificar a documentação necessária (passaporte, vistos, vacinas) para a realização das viagens contratadas;</li>
+                <li><i class="fas fa-user-check"></i> Arcar com todos os custos adicionais não previstos nos pacotes contratados.</li>
+            </ul>
+        </div>
+
+        <!-- 5. Reservas -->
+        <div class="termos-secao" id="reservas">
+            <div class="secao-header">
+                <div class="secao-numero">5</div>
+                <h2>Reservas e Pagamentos</h2>
+            </div>
+            <p>
+                As reservas de pacotes de viagem realizadas na plataforma Partiu Destino estão sujeitas
+                à disponibilidade de vagas no momento da contratação.
+            </p>
+            <ul class="lista-termos">
+                <li><i class="fas fa-credit-card"></i> Os preços exibidos na plataforma são por pessoa e podem sofrer variações sem aviso prévio até a confirmação da reserva;</li>
+                <li><i class="fas fa-credit-card"></i> A reserva é considerada confirmada somente após o pagamento integral ou do sinal acordado;</li>
+                <li><i class="fas fa-credit-card"></i> São aceitas as formas de pagamento disponíveis no momento da contratação: cartão de crédito, boleto bancário e PIX;</li>
+                <li><i class="fas fa-credit-card"></i> O parcelamento em cartão de crédito está sujeito às condições da operadora e ao limite disponível no cartão do usuário.</li>
+            </ul>
+            <div class="alerta-info">
+                <i class="fas fa-info-circle"></i>
+                <p>
+                    Para viagens internacionais, o <strong>seguro viagem</strong> já está incluso no valor do pacote
+                    e é obrigatório. Para viagens nacionais, o seguro é opcional e pode ser adquirido como serviço adicional.
+                </p>
+            </div>
+        </div>
+
+        <!-- 6. Cancelamento -->
+        <div class="termos-secao" id="cancelamento">
+            <div class="secao-header">
+                <div class="secao-numero">6</div>
+                <h2>Cancelamentos e Reembolsos</h2>
+            </div>
+            <p>
+                A política de cancelamento da Partiu Destino segue os prazos e condições abaixo, em
+                conformidade com o Código de Defesa do Consumidor (Lei nº 8.078/1990):
+            </p>
+            <ul class="lista-termos">
+                <li><i class="fas fa-calendar-times"></i> <strong>Cancelamento com mais de 30 dias de antecedência:</strong> reembolso integral do valor pago;</li>
+                <li><i class="fas fa-calendar-times"></i> <strong>Cancelamento entre 15 e 30 dias de antecedência:</strong> reembolso de 50% do valor pago;</li>
+                <li><i class="fas fa-calendar-times"></i> <strong>Cancelamento com menos de 15 dias de antecedência:</strong> sem direito a reembolso, salvo em casos de força maior devidamente comprovados;</li>
+                <li><i class="fas fa-calendar-times"></i> Alterações de data estão sujeitas à disponibilidade e podem gerar taxas adicionais conforme o fornecedor.</li>
+            </ul>
+            <p>
+                Solicitações de cancelamento devem ser realizadas diretamente pelo painel do usuário na
+                plataforma ou por meio dos canais de atendimento oficiais da Partiu Destino.
+            </p>
+        </div>
+
+        <!-- 7. Propriedade Intelectual -->
+        <div class="termos-secao" id="propriedade">
+            <div class="secao-header">
+                <div class="secao-numero">7</div>
+                <h2>Propriedade Intelectual</h2>
+            </div>
+            <p>
+                Todo o conteúdo disponível na plataforma Partiu Destino — incluindo, mas não se limitando a:
+                textos, imagens, logotipos, ícones, vídeos, layouts, identidade visual e código-fonte — é
+                de propriedade exclusiva da Partiu Destino ou de seus licenciantes, sendo protegido pelas leis
+                brasileiras de propriedade intelectual (Lei nº 9.610/1998).
+            </p>
+            <p>
+                É expressamente proibido ao usuário reproduzir, distribuir, modificar, criar obras derivadas
+                ou utilizar comercialmente qualquer conteúdo da plataforma sem autorização prévia e por
+                escrito da Partiu Destino.
+            </p>
+        </div>
+
+        <!-- 8. Privacidade -->
+        <div class="termos-secao" id="privacidade">
+            <div class="secao-header">
+                <div class="secao-numero">8</div>
+                <h2>Privacidade e Proteção de Dados</h2>
+            </div>
+            <p>
+                O tratamento dos dados pessoais coletados pela Partiu Destino é regido pela nossa
+                <a href="/Home/PoliticaDePrivacidade" style="color: var(--accent); font-weight: 700;">Política de Privacidade</a>,
+                em conformidade com a Lei Geral de Proteção de Dados Pessoais (LGPD — Lei nº 13.709/2018).
+            </p>
+            <p>
+                Ao aceitar estes Termos de Uso, o usuário consente expressamente com a coleta, uso e
+                armazenamento de seus dados pessoais conforme descrito na Política de Privacidade.
+            </p>
+        </div>
+
+        <!-- 9. Conduta -->
+        <div class="termos-secao" id="conduta">
+            <div class="secao-header">
+                <div class="secao-numero">9</div>
+                <h2>Conduta do Usuário</h2>
+            </div>
+            <p>O usuário compromete-se a não utilizar a plataforma Partiu Destino para:</p>
+            <ul class="lista-termos">
+                <li><i class="fas fa-times-circle" style="color:#ef4444;"></i> Violar qualquer lei ou regulamento aplicável;</li>
+                <li><i class="fas fa-times-circle" style="color:#ef4444;"></i> Transmitir ou publicar conteúdo ilegal, ofensivo, difamatório ou que infrinja direitos de terceiros;</li>
+                <li><i class="fas fa-times-circle" style="color:#ef4444;"></i> Tentar acessar sistemas, servidores ou dados sem autorização (hacking, engenharia reversa);</li>
+                <li><i class="fas fa-times-circle" style="color:#ef4444;"></i> Utilizar robôs, scrapers ou ferramentas automatizadas para acessar ou coletar dados da plataforma;</li>
+                <li><i class="fas fa-times-circle" style="color:#ef4444;"></i> Criar múltiplas contas com o objetivo de burlar regras ou obter vantagens indevidas.</li>
+            </ul>
+            <p>
+                O descumprimento das normas de conduta poderá resultar na suspensão ou exclusão permanente
+                da conta, além de responsabilização civil e criminal conforme a legislação brasileira.
+            </p>
+        </div>
+
+        <!-- 10. Limitação -->
+        <div class="termos-secao" id="limitacao">
+            <div class="secao-header">
+                <div class="secao-numero">10</div>
+                <h2>Limitação de Responsabilidade</h2>
+            </div>
+            <p>
+                A Partiu Destino não será responsabilizada por danos indiretos, incidentais, especiais
+                ou consequentes decorrentes do uso da plataforma, incluindo, sem limitação:
+            </p>
+            <ul class="lista-termos">
+                <li><i class="fas fa-info-circle" style="color: var(--accent);"></i> Interrupções, falhas técnicas ou indisponibilidade temporária da plataforma;</li>
+                <li><i class="fas fa-info-circle" style="color: var(--accent);"></i> Alterações de preços, disponibilidade ou cancelamento de serviços por parte de fornecedores terceiros (companhias aéreas, hotéis, transportadoras);</li>
+                <li><i class="fas fa-info-circle" style="color: var(--accent);"></i> Eventos de força maior ou caso fortuito (desastres naturais, pandemias, greves, atos governamentais);</li>
+                <li><i class="fas fa-info-circle" style="color: var(--accent);"></i> Decisões tomadas pelo usuário com base em informações obtidas na plataforma.</li>
+            </ul>
+        </div>
+
+        <!-- 11. Alterações -->
+        <div class="termos-secao" id="alteracoes">
+            <div class="secao-header">
+                <div class="secao-numero">11</div>
+                <h2>Alterações nos Termos</h2>
+            </div>
+            <p>
+                A Partiu Destino reserva-se o direito de modificar estes Termos de Uso a qualquer momento.
+                Alterações relevantes serão comunicadas ao usuário por e-mail cadastrado ou por meio de
+                aviso destacado na plataforma.
+            </p>
+            <p>
+                O uso continuado da plataforma após a publicação das alterações constitui aceitação tácita
+                dos novos Termos. Caso o usuário não concorde com as alterações, deverá encerrar sua conta
+                antes da data de vigência das novas condições.
+            </p>
+        </div>
+
+        <!-- 12. Legislação -->
+        <div class="termos-secao" id="legislacao">
+            <div class="secao-header">
+                <div class="secao-numero">12</div>
+                <h2>Legislação Aplicável e Foro</h2>
+            </div>
+            <p>
+                Estes Termos de Uso são regidos pelas leis da República Federativa do Brasil. Para a
+                resolução de quaisquer conflitos oriundos da utilização da plataforma Partiu Destino,
+                fica eleito o foro da Comarca de São Paulo — SP, com renúncia expressa a qualquer outro,
+                por mais privilegiado que seja.
+            </p>
+            <p>
+                Aplicam-se, subsidiariamente, as disposições do Código de Defesa do Consumidor
+                (Lei nº 8.078/1990), da Lei Geral de Proteção de Dados (Lei nº 13.709/2018) e
+                do Código Civil Brasileiro (Lei nº 10.406/2002).
+            </p>
+        </div>
+
+        <!-- Card Contato -->
+        <div class="contato-card">
+            <h3>Alguma dúvida sobre os Termos?</h3>
+            <p>Nossa equipe está pronta para esclarecê-las.</p>
+            <a href="/#contate">Fale Conosco</a>
+        </div>
+
+    </div>
+</div>
