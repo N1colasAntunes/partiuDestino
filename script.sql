@@ -43,7 +43,8 @@ CREATE TABLE destinos (
     origem_pais VARCHAR(100) NOT NULL,
     origem_estado VARCHAR(100) NOT NULL,
     pais VARCHAR(100) NOT NULL,
-    estado VARCHAR(100) NOT NULL
+    estado VARCHAR(100) NOT NULL,
+    imagem_url VARCHAR(500)
 );
 
 INSERT INTO destinos (origem_pais, origem_estado, pais, estado) VALUES
@@ -203,6 +204,10 @@ VALUES
     19990.00,
     5
 );
+
+UPDATE destinos SET imagem_url = 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e' WHERE id = 1;
+UPDATE destinos SET imagem_url = 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34' WHERE id = 2;
+UPDATE destinos SET imagem_url = 'https://images.unsplash.com/photo-1526772662000-3f88f10405ff' WHERE id = 3;
 
 -- consultas
 SELECT * FROM usuarios;

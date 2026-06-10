@@ -1,8 +1,7 @@
-﻿@model projectPartiuDestino.Models.Destinos
+﻿@model List<projectPartiuDestino.Models.Destinos>
 @{
     ViewData["Title"] = "Home - Partiu Destino";
 }
-
 <style>
     :root {
     --azul-escuro: #1e3a8a;
@@ -604,210 +603,56 @@
 
         <div class="carrossel-scroll" id="carrosselDestinos">
 
-            @if (Context.Session.GetString("UserName") != null)
+            @foreach (var destino in Model)
             {
-                <a asp-controller="Pacotes" asp-action="Index" class="card-destino-link">
-                    <div class="card-destino">
-                        <img src="/images/heibe-rio-1303951_1920.jpg" alt="Rio de Janeiro" />
-                        <div class="card-body">
-                            <h4>Rio de Janeiro, 7 dias</h4>
-                            <p class="info">A partir de</p>
-                            <p class="preco">R$ 1.800</p>
-                            <a asp-controller="Pacotes" asp-action="Detalhes class="btn btn-primary">
-                                Saiba mais
-                            </a>
+                @if (Context.Session.GetString("UserName") != null)
+                {
+                    <a asp-controller="Pacotes"
+                       asp-action="Index"
+                       class="card-destino-link">
 
-                        </div>
-                    </div>
-                </a>
-            }
-            else
-            {
+                        <div class="card-destino">
+                            <img src="/images/destino-padrao.jpg" alt="@destino.Estado" />
 
-                <a asp-controller="Login" asp-action="Index" class="card-destino-link">
+                            <div class="card-body">
+                                <h4>@destino.Estado - @destino.Pais</h4>
 
-                    <div class="card-destino">
-                        <img src="/images/heibe-rio-1303951_1920.jpg" alt="Rio de Janeiro" />
-                        <div class="card-body">
-                            <h4>Rio de Janeiro, 7 dias</h4>
-                            <p class="info">A partir de</p>
-                            <p class="preco">R$ 1.800</p>
-                            <a asp-controller="Login" asp-action="Index class="btn btn-primary">
-                                Saiba mais
-                            </a>
-                        </div>
-                    </div>
-                </a>
-            }
-            @if (Context.Session.GetString("UserName") != null)
-            {
-                <a asp-controller="Pacotes" asp-action="Index" class="card-destino-link">
-                    <div class="card-destino">
-                        <img src="~/images/floripa.jpg" alt="Florianópolis" />
-                        <div class="card-body">
-                            <h4>Florianópolis, 5 dias</h4>
-                            <p class="info">A partir de</p>
-                            <p class="preco">R$ 1.200</p
-                            <a asp-controller="Pacotes" asp-action="Detalhes class="btn btn-primary">
-                                Saiba mais
-                            </a>
+                                <p class="info">
+                                    Saindo de @destino.OrigemEstado - @destino.OrigemPais
+                                </p>
 
-                        </div>
-                    </div>
-                </a>
-            }
-            else
-            {
-                <a asp-controller="Login" asp-action="Index" class="card-destino-link">
-                    <div class="card-destino">
-                        <img src="~/images/floripa.jpg" alt="Florianópolis" />
-                        <div class="card-body">
-                            <h4>Florianópolis, 5 dias</h4>
-                            <p class="info">A partir de</p>
-                            <p class="preco">R$ 1.200</p>
-                            <a asp-controller="Login" asp-action="Index class="btn btn-primary">
-                                Saiba mais
-                            </a>
-                        </div>
-                    </div>
-                </a>
-            }
-            @if (Context.Session.GetString("UserName") != null)
-            {
-                <a asp-controller="Pacotes" asp-action="Index" class="card-destino-link">
-                    <div class="card-destino">
-                        <img src="~/images/soel84-salvador-2379443_1920.jpg" alt="Salvador" />
-                        <div class="card-body">
-                            <h4>Salvador, 10 dias</h4>
-                            <p class="info">A partir de</p>
-                            <p class="preco">R$ 2.500</p>
-                             <a asp-controller="Pacotes" asp-action="Detalhes class="btn btn-primary">
-                                Saiba mais
-                            </a>
-                        </div>
-                    </div>
-                </a>
-            }
-            else
-            {
-                <a asp-controller="Login" asp-action="Index" class="card-destino-link">
-                    <div class="card-destino">
-                        <img src="~/images/soel84-salvador-2379443_1920.jpg" alt="Salvador" />
-                        <div class="card-body">
-                            <h4>Salvador, 10 dias</h4>
-                            <p class="info">A partir de</p>
-                            <p class="preco">R$ 2.500</p>
-                            <a asp-controller="Login" asp-action="Index class="btn btn-primary">
-                                Saiba mais
-                            </a>
-                        </div>
-                    </div>
-                </a>
-
-            }
-
-            @if (Context.Session.GetString("UserName") != null)
-            {
-                <a asp-controller="Pacotes" asp-action="Index" class="card-destino-link">
-                    <div class="card-destino">
-                        <img src="~/images/nuno_lopes-eiffel-tower-975004_1920.jpg" alt="Paris" />
-                        <div class="card-body">
-                            <h4>Paris, 10 dias</h4>
-                            <p class="info">A partir de</p>
-                            <p class="preco">R$ 5.800</p>
-                             <a asp-controller="Pacotes" asp-action="Detalhes class="btn btn-primary">
-                                Saiba mais
-                            </a>
-                        </div>
-                    </div>
-                </a>
-            }
-            else
-            {
-                <a asp-controller="Login" asp-action="Index" class="card-destino-link">
-                    <div class="card-destino">
-                        <img src="~/images/nuno_lopes-eiffel-tower-975004_1920.jpg" alt="Paris" />
-                        <div class="card-body">
-                            <h4>Paris, 10 dias</h4>
-                            <p class="info">A partir de</p>
-                            <p class="preco">R$ 5.800</p>
-                            <a asp-controller="Login" asp-action="Index class="btn btn-primary">
-                                Saiba mais
-                            </a>
-                        </div>
-                    </div>
-                </a>
-
-            }
-
-            @if (Context.Session.GetString("UserName") != null)
-            {
-                <a asp-controller="Pacotes" asp-action="Index" class="card-destino-link">
-                    <div class="card-destino">
-                        <img src="~/images/mailtotobi-people-4259948_1920.jpg" alt="Tóquio" />
-                        <div class="card-body">
-                            <h4>Tóquio, 12 dias</h4>
-                            <p class="info">A partir de</p>
-                            <p class="preco">R$ 8.900</p>
-                             <a asp-controller="Pacotes" asp-action="Detalhes class="btn btn-primary">
-                                Saiba mais
-                            </a>
-                        </div>
-                    </div>
-                </a>
-            }
-            else
-            {
-                <a asp-controller="Login" asp-action="Index" class="card-destino-link">
-                    <div class="card-destino">
-                        <img src="~/images/mailtotobi-people-4259948_1920.jpg" alt="Tóquio" />
-                        <div class="card-body">
-                            <h4>Tóquio, 12 dias</h4>
-                            <p class="info">A partir de</p>
-                            <p class="preco">R$ 8.900</p>
-                            <a asp-controller="Login" asp-action="Index class="btn btn-primary">
-                                Saiba mais
-                            </a>
+                                <button class="btn btn-primary">
+                                    Saiba mais
+                                </button>
+                            </div>
                         </div>
 
-                    </div>
-                </a>
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="Login"
+                       asp-action="Index"
+                       class="card-destino-link">
 
-            }
+                        <div class="card-destino">
+                            <img src="@destino.ImagemUrl" alt="@destino.Estado" />
 
+                            <div class="card-body">
+                                <h4>@destino.Estado - @destino.Pais</h4>
 
-            @if (Context.Session.GetString("UserName") != null)
-            {
-                <a asp-controller="Pacotes" asp-action="Index" class="card-destino-link">
-                    <div class="card-destino">
-                        <img src="~/images/martinophuc-italy-9505450_1920.jpg" alt="Roma" />
-                        <div class="card-body">
-                            <h4>Roma, 8 dias</h4>
-                            <p class="info">A partir de</p>
-                            <p class="preco">R$ 4.200</p>
-                             <a asp-controller="Pacotes" asp-action="Detalhes class="btn btn-primary">
-                                Saiba mais
-                            </a>
+                                <p class="info">
+                                    Saindo de @destino.OrigemEstado - @destino.OrigemPais
+                                </p>
+
+                                <button class="btn btn-primary">
+                                    Saiba mais
+                                </button>
+                            </div>
                         </div>
 
-                    </div>
-                </a>
-            }
-            else
-            {
-                <a asp-controller="Login" asp-action="Index" class="card-destino-link">
-                    <div class="card-destino">
-                        <img src="~/images/martinophuc-italy-9505450_1920.jpg" alt="Roma" />
-                        <div class="card-body">
-                            <h4>Roma, 8 dias</h4>
-                            <p class="info">A partir de</p>
-                            <p class="preco">R$ 4.200</p>
-                            <a asp-controller="Login" asp-action="Index class="btn btn-primary">
-                                Saiba mais
-                            </a>
-                        </div>
-                    </div>
-                </a>
+                    </a>
+                }
             }
 
         </div>
@@ -1046,7 +891,9 @@
             <span>Siga nossas redes:</span>
             <a href="https://www.instagram.com/_partiu.destino/"><i class="fab fa-instagram"></i></a>
             <a href="https://www.facebook.com/people/Partiu-Destino/61590693054759/"><i class="fab fa-facebook"></i></a>
-            <span>| Whatsapp: (11) 98112-5234</span>
+            <a href="https://wa.me/5511981125234" target="_blank">
+               <i class="fab fa-whatsapp"></i>
+</a>
         </div>
         <p>
            &copy; 2026 Partiu Destino. Todos os direitos reservados. |

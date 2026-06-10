@@ -18,14 +18,7 @@ namespace projectPartiuDestino.Controllers
             {
                 conn.Open();
 
-                string sql = @"
-                    SELECT 
-                        id,
-                        pais,
-                        estado,
-                        origem_pais,
-                        origem_estado
-                    FROM destinos";
+                string sql = "SELECT id, origem_pais, origem_estado, pais, estado, imagem_url FROM destinos";
 
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
 
@@ -39,7 +32,8 @@ namespace projectPartiuDestino.Controllers
                             Pais = reader["pais"].ToString(),
                             Estado = reader["estado"].ToString(),
                             OrigemPais = reader["origem_pais"].ToString(),
-                            OrigemEstado = reader["origem_estado"].ToString()
+                            OrigemEstado = reader["origem_estado"].ToString(),
+                            ImagemUrl = reader["imagem_url"].ToString()
                         });
                     }
                 }

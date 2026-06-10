@@ -7,5 +7,6 @@
         public string OrigemEstado { get; set; }
         public string Pais { get; set; }
         public string Estado { get; set; }
+        public string ImagemUrl { get; set; }
     }
 }
