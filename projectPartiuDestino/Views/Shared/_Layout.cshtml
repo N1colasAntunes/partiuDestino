@@ -136,7 +136,7 @@
                                 <a class="nav-link nav-link-figma" asp-controller="Pacotes" asp-action="Index">Pacotes</a>
                             </li>
                         }
-                        
+
                         @if (Context.Session.GetString("UserRole") == "admin")
                         {
                             <li class="nav-item">
@@ -146,18 +146,62 @@
 
                     </ul>
 
-                    <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center gap-3">
+
                         @if (Context.Session.GetString("UserName") != null)
                         {
-                            <span style="color:#1e3a8a; font-weight:600; margin-right:15px;">
+                            @* ícone do carrinho com contador *@
+
+                            int totalCarrinho = 0;
+
+                            try
+                            {
+                                string connStr = "server=localhost;database=bdpartiudestino;uid=root;pwd=12345678;";
+                                int? uid = Context.Session.GetInt32("UserId");
+
+                                if (uid != null)
+                                {
+                                    using var conn = new MySql.Data.MySqlClient.MySqlConnection(connStr);
+                                    conn.Open();
+
+                                    var cmd = new MySql.Data.MySqlClient.MySqlCommand(
+                                    "SELECT COALESCE(SUM(quantidade),0) FROM carrinho WHERE usuario_id = @uid",
+                                    conn);
+
+                                    cmd.Parameters.AddWithValue("@uid", uid);
+                                    totalCarrinho = Convert.ToInt32(cmd.ExecuteScalar());
+                                }
+                            }
+                            catch { }
+
+                            <a asp-controller="Carrinho"
+                               asp-action="Index"
+                               style="position:relative;color:#1e3a8a;font-size:1.3rem;text-decoration:none;"
+                               title="Meu Carrinho">
+                                <i class="fas fa-shopping-cart"></i>
+                                @if (totalCarrinho > 0)
+                                {
+                                    <span style="position:absolute;top:-8px;right:-10px;
+                                             background:#ef4444;color:white;
+                                             font-size:.6rem;font-weight:800;
+                                             width:18px;height:18px;border-radius:50%;
+                                             display:flex;align-items:center;justify-content:center;">
+                                        @(totalCarrinho > 9 ? "9+" : totalCarrinho.ToString())
+                                    </span>
+                                }
+                            </a>
+
+                            <span style="color:#1e3a8a;font-weight:600;">
                                 Olá, @Context.Session.GetString("UserName")
                             </span>
+
                             <a asp-controller="Login" asp-action="Logout" class="btn-entrar-nav">Sair</a>
                         }
                         else
                         {
                             <a asp-controller="Login" asp-action="Index" class="btn-entrar-nav">Entrar</a>
                         }
+
                     </div>
 
 

@@ -8,8 +8,8 @@
 
 <style>
     /* ============================================
-           ESTILO PÁGINA DE PACOTES PREMIUM
-           ============================================ */
+               ESTILO PÁGINA DE PACOTES PREMIUM
+               ============================================ */
 
     :root {
         --primary: #1e3a8a;
@@ -268,9 +268,26 @@
                                 <span class="preco-sub">Por pessoa</span>
                                 <span class="preco-principal">@item.PrecoPorPessoa.ToString("C")</span>
                             </div>
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn-detalhes-pacote">
-                                Adicionar ao Carrinho
-                            </a>
+                            @if (Context.Session.GetString("UserName") != null)
+                            {
+                                <form asp-controller="Carrinho" asp-action="AdicionarPacote" method="post" style="margin:0;">
+                                    <input type="hidden" name="pacoteId" value="@item.Id" />
+
+                                    <button type="submit"
+                                            class="btn-detalhes-pacote"
+                                            style="border:none;cursor:pointer;">
+                                        <i class="fas fa-cart-plus"></i> Adicionar ao Carrinho
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <a asp-controller="Login"
+                                   asp-action="Index"
+                                   class="btn-detalhes-pacote">
+                                    <i class="fas fa-sign-in-alt"></i> Entre para Reservar
+                                </a>
+                            }
                         </div>
                     </div>
                 }

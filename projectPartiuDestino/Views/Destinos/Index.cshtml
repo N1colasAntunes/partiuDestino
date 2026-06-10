@@ -6,8 +6,8 @@
 
 <style>
     /* ============================================
-           ESTILO PÁGINA DE DESTINOS PREMIUM
-           ============================================ */
+                   ESTILO PÁGINA DE DESTINOS PREMIUM
+                   ============================================ */
 
     :root {
         --primary: #1e3a8a;
@@ -313,11 +313,22 @@
                         </div>
 
                         <div class="destino-footer">
-                            <a asp-action="Details"
-                               asp-route-id="@item.Id"
-                               class="btn-detalhes-destino">
-                                Adicionar ao Carrinho
-                            </a>
+                            @if (Context.Session.GetString("UserName") != null)
+                            {
+                                <form asp-controller="Carrinho" asp-action="AdicionarDestino" method="post" style="margin:0;">
+                                    <input type="hidden" name="destinoId" value="@item.Id" />
+                                    <button type="submit" class="btn-detalhes-destino"
+                                            style="border:none;cursor:pointer;">
+                                        <i class="fas fa-cart-plus"></i> Adicionar ao Carrinho
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <a asp-controller="Login" asp-action="Index" class="btn-detalhes-destino">
+                                    <i class="fas fa-sign-in-alt"></i> Entre para Reservar
+                                </a>
+                            }
                         </div>
 
                     </div>

@@ -74,6 +74,21 @@ CREATE TABLE pacotes (
   vagas_disponiveis INT
 );
 
+CREATE TABLE carrinho (
+    id               INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id       INT          NOT NULL,
+    tipo_item        VARCHAR(30)  NOT NULL,   -- 'pacote' | 'destino' | 'viagem_personalizada'
+    item_id          INT          NOT NULL,   -- FK para pacotes.id, destinos.id ou viagem_personalizada.id
+    nome_item        VARCHAR(255) NOT NULL,   -- snapshot do nome no momento da adição
+    preco_unitario   DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    quantidade       INT          NOT NULL DEFAULT 1,
+    data_adicionado  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+);
+ 
+-- Índice para buscas rápidas por usuário
+CREATE INDEX idx_carrinho_usuario ON carrinho(usuario_id);
+
 INSERT INTO pacotes 
 (destino_id, nome, descricao, tipo_viagem, duracao_dias, data_partida, data_retorno, preco_por_pessoa, vagas_disponiveis)
 VALUES
