@@ -1,599 +1,702 @@
 ﻿@model List<projectPartiuDestino.Models.Destinos>
+@using MySql.Data.MySqlClient
 @{
     ViewData["Title"] = "Home - Partiu Destino";
+
+    // ── Busca pacotes em destaque direto aqui ──────────────────────────
+    var pacotesDestaque = new List<projectPartiuDestino.Models.Pacotes>();
+    string connStr = "server=localhost;database=bdpartiudestino;uid=root;pwd=12345678;";
+
+    try
+    {
+        using var conn2 = new MySqlConnection(connStr);
+        conn2.Open();
+        string sqlPacotes = @"
+            SELECT id,
+                destino_id,
+                nome,
+                descricao,
+                tipo_viagem,
+                duracao_dias,
+                data_partida,
+                data_retorno,
+                preco_por_pessoa,
+                vagas_disponiveis,
+                imagem_url
+            FROM pacotes
+            ORDER BY id DESC
+            LIMIT 8";
+        using var cmd2 = new MySqlCommand(sqlPacotes, conn2);
+        using var reader2 = cmd2.ExecuteReader();
+        while (reader2.Read())
+        {
+            pacotesDestaque.Add(new projectPartiuDestino.Models.Pacotes
+            {
+                Id = Convert.ToInt32(reader2["id"]),
+                DestinoId = Convert.ToInt32(reader2["destino_id"]),
+                Nome = reader2["nome"].ToString(),
+                Descricao = reader2["descricao"].ToString(),
+                TipoViagem = reader2["tipo_viagem"].ToString(),
+                DuracaoDias = Convert.ToInt32(reader2["duracao_dias"]),
+                DataPartida = Convert.ToDateTime(reader2["data_partida"]),
+                DataRetorno = Convert.ToDateTime(reader2["data_retorno"]),
+                PrecoPorPessoa = Convert.ToDecimal(reader2["preco_por_pessoa"]),
+                VagasDisponiveis = Convert.ToInt32(reader2["vagas_disponiveis"]),
+                ImagemUrl = reader2["imagem_url"]?.ToString()
+            });
+        }
+    }
+    catch { }
 }
+
 <style>
     :root {
-    --azul-escuro: #1e3a8a;
-    --azul-claro: #3b82f6;
-    --cinza-texto: #4b5563;
-    --cinza-claro: #f3f4f6;
-    --branco: #ffffff;
+        --azul-escuro: #1e3a8a;
+        --azul-claro: #3b82f6;
+        --cinza-texto: #4b5563;
+        --cinza-claro: #f3f4f6;
+        --branco: #ffffff;
     }
 
     html {
-    scroll-behavior: smooth;
+        scroll-behavior: smooth;
     }
 
     body {
-    font-family: 'Inter', 'Segoe UI', sans-serif;
-    color: #111827;
-    background-color: var(--branco);
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+        color: #111827;
+        background-color: var(--branco);
     }
 
-    /* ===== HERO COM VÍDEO ===== */
+    /* ── HERO ── */
     .hero-container {
-    position: relative;
-    height: 600px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    text-align: center;
-    overflow: hidden;
+        position: relative;
+        height: 600px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-align: center;
+        overflow: hidden;
     }
 
     .hero-video-bg {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    min-width: 100%;
-    min-height: 100%;
-    width: auto;
-    height: auto;
-    object-fit: cover;
-    z-index: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        min-width: 100%;
+        min-height: 100%;
+        object-fit: cover;
+        z-index: 0;
     }
 
     .hero-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0.6));
-    z-index: 1;
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom, rgba(0,0,0,.25), rgba(0,0,0,.6));
+        z-index: 1;
     }
 
     .hero-content {
-    position: relative;
-    z-index: 2;
-    animation: heroEntrada 1.2s ease both;
+        position: relative;
+        z-index: 2;
+        animation: heroEntrada 1.2s ease both;
     }
 
     @@keyframes heroEntrada {
-    from {
-    opacity: 0;
-    transform: translateY(30px);
-    }
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
 
-    to {
-    opacity: 1;
-    transform: translateY(0);
-    }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     .hero-content h1 {
-    font-size: 3rem;
-    font-weight: 800;
-    margin-bottom: 14px;
-    text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 14px;
+        text-shadow: 0 2px 12px rgba(0,0,0,.5);
     }
 
     .hero-content p {
-    font-size: 1.2rem;
-    margin-bottom: 30px;
-    opacity: 0.92;
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+        opacity: .92;
     }
 
-    /* Barra de Busca */
-    .busca-frame {
-    position: relative;
-    z-index: 10;
-    background: white;
-    max-width: 950px;
-    margin: -80px auto 80px;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    }
-
-    .busca-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr) 1fr;
-    gap: 15px;
-    align-items: flex-end;
-    }
-
-    .btn-busca-azul {
-    grid-column: 1 / -1;
-    width: fit-content;
-    min-width: 150px;
-    padding: 12px 40px;
-    margin: 10px auto 0;
-    display: block;
-    background-color: var(--azul-escuro);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 1rem;
-    }
-
-    .busca-item {
-    display: flex;
-    flex-direction: column;
-    }
-
-    .busca-item label {
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: #374151;
-    margin-bottom: 8px;
-    }
-
-    .busca-item input, .busca-item select {
-    border: 1px solid #d1d5db;
-    padding: 10px;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    color: #6b7280;
-    }
-
-    /* Seção Destinos */
+    /* ── SEÇÃO GENÉRICA ── */
     .secao-destinos {
-    text-align: center;
-    padding: 40px 0;
+        text-align: center;
+        padding: 60px 0 40px;
     }
 
-    .secao-destinos h2 {
-    font-size: 2.2rem;
-    font-weight: 600;
-    margin-bottom: 10px;
-    }
+        .secao-destinos h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
 
-    .secao-destinos p {
-    color: var(--cinza-texto);
-    margin-bottom: 50px;
-    }
+        .secao-destinos p {
+            color: var(--cinza-texto);
+            margin-bottom: 40px;
+            font-size: .95rem;
+        }
 
+    /* ── CARROSSEL ── */
     .carrossel-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
     }
 
     .carrossel-scroll {
-    display: flex;
-    gap: 20px;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    padding: 20px 10px;
-    scrollbar-width: none;
+        display: flex;
+        gap: 24px;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        padding: 16px 8px 24px;
+        scrollbar-width: none;
     }
 
-    .carrossel-scroll::-webkit-scrollbar {
-    display: none;
+        .carrossel-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+    .seta-carrossel {
+        font-size: 1.5rem;
+        color: #d1d5db;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: color .2s;
     }
 
+        .seta-carrossel:hover {
+            color: var(--azul-escuro);
+        }
+
+    /* ── CARD DESTINO ── */
     .card-destino-link {
-    text-decoration: none;
-    color: inherit;
-    transition: transform 0.3s ease;
-    }
-
-    .card-destino-link:hover {
-    transform: translateY(-10px);
+        text-decoration: none;
+        color: inherit;
     }
 
     .card-destino {
-    width: 300px;
-    flex-shrink: 0;
-    background: white;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        width: 280px;
+        flex-shrink: 0;
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(0,0,0,.08);
+        transition: transform .3s, box-shadow .3s;
     }
 
-    .card-destino img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
+        .card-destino:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 28px rgba(0,0,0,.14);
+        }
+
+    .card-destino-img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        display: block;
+        background: #dbeafe; /* placeholder azul claro enquanto carrega */
     }
 
     .card-body {
-    padding: 15px;
+        padding: 16px 18px 20px;
     }
 
-    .card-body h4 {
-    font-size: 1rem;
-    font-weight: 700;
-    margin-bottom: 5px;
+        .card-body h4 {
+            font-size: .95rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+            color: #111827;
+        }
+
+        .card-body .info {
+            font-size: .78rem;
+            color: #6b7280;
+            margin-bottom: 6px;
+        }
+
+        .card-body .preco-destino-label {
+            font-size: .65rem;
+            color: #9ca3af;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .card-body .preco-destino-valor {
+            font-size: 1rem;
+            font-weight: 900;
+            color: #1e3a8a;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+    /* ── CARD PACOTE (IGUAL AO DESTINO) ── */
+    .card-pacote {
+        width: 280px;
+        flex-shrink: 0;
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(0,0,0,.08);
+        transition: transform .3s, box-shadow .3s;
     }
 
-    .card-body .info {
-    font-size: 0.8rem;
-    color: #6b7280;
-    margin-bottom: 10px;
+        .card-pacote:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 28px rgba(0,0,0,.14);
+        }
+
+    .card-pacote-img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        display: block;
+        background: #dbeafe;
     }
 
-    .card-body .preco {
-    font-weight: 800;
-    color: #111827;
-    font-size: 1.1rem;
+    .card-pacote-body {
+        padding: 16px 18px 20px;
     }
 
-    .seta-carrossel {
-    font-size: 1.5rem;
-    color: #d1d5db;
-    cursor: pointer;
+        .card-pacote-body h4 {
+            font-size: .95rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+            color: #111827;
+        }
+
+    .pacote-mini-info {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin-bottom: 8px;
     }
 
-    /* Quem Somos */
+    .pacote-mini-tag {
+        font-size: .7rem;
+        background: #f3f4f6;
+        color: #6b7280;
+        border-radius: 6px;
+        padding: 3px 8px;
+        font-weight: 600;
+    }
+
+    .card-pacote-body p {
+        font-size: .78rem;
+        color: #6b7280;
+        margin-bottom: 10px;
+        line-height: 1.4;
+    }
+
+    .pacote-footer-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+    }
+
+    .pacote-preco-label {
+        font-size: .65rem;
+        color: #9ca3af;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
+    .pacote-preco-valor {
+        font-size: 1rem;
+        font-weight: 900;
+        color: #1e3a8a;
+    }
+
+    .btn-reservar {
+        background: #1e3a8a;
+        color: white;
+        border: none;
+        padding: 8px 14px;
+        border-radius: 8px;
+        font-size: .75rem;
+        font-weight: 700;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        transition: .2s;
+    }
+
+        .btn-reservar:hover {
+            background: #1e40af;
+            color: white;
+        }
+
+        .btn-reservar.esgotado {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+    /* ── QUEM SOMOS ── */
     .quem-somos-secao {
-    padding: 100px 0;
-    display: flex;
-    justify-content: space-between;
-    gap: 60px;
+        padding: 80px 0;
+        display: flex;
+        justify-content: space-between;
+        gap: 60px;
     }
 
     .quem-somos-texto {
-    flex: 1;
+        flex: 1;
     }
 
-    .quem-somos-texto h2 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 25px;
-    }
+        .quem-somos-texto h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
 
-    .quem-somos-texto p {
-    color: var(--cinza-texto);
-    line-height: 1.7;
-    font-size: 0.95rem;
-    }
+        .quem-somos-texto p {
+            color: var(--cinza-texto);
+            line-height: 1.7;
+            font-size: .95rem;
+        }
 
     .quem-somos-cards {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
     }
 
     .missao-card {
-    display: flex;
-    gap: 15px;
-    padding: 20px;
-    background: white;
+        display: flex;
+        gap: 15px;
+        padding: 20px;
+        background: white;
     }
 
     .missao-icon {
-    width: 50px;
-    height: 50px;
-    background: #f3f4f6;
-    border-radius: 8px;
-    flex-shrink: 0;
+        width: 50px;
+        height: 50px;
+        background: #f3f4f6;
+        border-radius: 8px;
+        flex-shrink: 0;
     }
 
     .missao-info h4 {
-    font-size: 1rem;
-    font-weight: 700;
-    margin-bottom: 5px;
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 5px;
     }
 
     .missao-info p {
-    font-size: 0.85rem;
-    color: var(--cinza-texto);
+        font-size: .85rem;
+        color: var(--cinza-texto);
     }
 
-    /* ===== MAPA COM SEDES ===== */
+    /* ── MAPA ── */
     .mapa-secao {
-    padding: 80px 0;
-    background: var(--cinza-claro);
+        padding: 80px 0;
+        background: var(--cinza-claro);
     }
 
     .mapa-secao-titulo {
-    text-align: center;
-    margin-bottom: 50px;
+        text-align: center;
+        margin-bottom: 50px;
     }
 
-    .mapa-secao-titulo h2 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 10px;
-    color: #111827;
-    }
+        .mapa-secao-titulo h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #111827;
+        }
 
-    .mapa-secao-titulo p {
-    color: var(--cinza-texto);
-    font-size: 0.95rem;
-    }
+        .mapa-secao-titulo p {
+            color: var(--cinza-texto);
+            font-size: .95rem;
+        }
 
     .mapa-layout {
-    display: flex;
-    gap: 30px;
-    align-items: stretch;
-    max-width: 1100px;
-    margin: 0 auto;
+        display: flex;
+        gap: 30px;
+        align-items: stretch;
+        max-width: 1100px;
+        margin: 0 auto;
     }
 
     .mapa-wrapper {
-    flex: 2;
-    border-radius: 18px;
-    overflow: hidden;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.13);
+        flex: 2;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 8px 30px rgba(0,0,0,.13);
     }
 
-    .mapa-wrapper iframe {
-    width: 100%;
-    height: 420px;
-    border: none;
-    display: block;
-    }
+        .mapa-wrapper iframe {
+            width: 100%;
+            height: 420px;
+            border: none;
+            display: block;
+        }
 
     .sedes-lista {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
     }
 
     .sede-card {
-    background: white;
-    border-radius: 14px;
-    padding: 18px 20px;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.07);
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    cursor: default;
+        background: white;
+        border-radius: 14px;
+        padding: 18px 20px;
+        box-shadow: 0 3px 12px rgba(0,0,0,.07);
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        transition: transform .2s, box-shadow .2s;
     }
 
-    .sede-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(30,58,138,0.13);
-    }
+        .sede-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(30,58,138,.13);
+        }
 
     .sede-icone {
-    width: 42px;
-    height: 42px;
-    background: linear-gradient(135deg, var(--azul-escuro), var(--azul-claro));
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    color: white;
-    font-size: 1.1rem;
+        width: 42px;
+        height: 42px;
+        background: linear-gradient(135deg,var(--azul-escuro),var(--azul-claro));
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        color: white;
+        font-size: 1.1rem;
     }
 
     .sede-info h4 {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: #111827;
-    margin: 0 0 4px;
+        font-size: .95rem;
+        font-weight: 700;
+        color: #111827;
+        margin: 0 0 4px;
     }
 
     .sede-info p {
-    font-size: 0.8rem;
-    color: var(--cinza-texto);
-    margin: 0;
-    line-height: 1.5;
+        font-size: .8rem;
+        color: var(--cinza-texto);
+        margin: 0;
+        line-height: 1.5;
     }
 
     .sede-badge {
-    display: inline-block;
-    margin-top: 6px;
-    font-size: 0.7rem;
-    font-weight: 600;
-    background: #eff6ff;
-    color: var(--azul-escuro);
-    padding: 2px 8px;
-    border-radius: 20px;
+        display: inline-block;
+        margin-top: 6px;
+        font-size: .7rem;
+        font-weight: 600;
+        background: #eff6ff;
+        color: var(--azul-escuro);
+        padding: 2px 8px;
+        border-radius: 20px;
     }
 
-    /* FAQ */
+    /* ── FAQ ── */
     .faq-secao {
-    padding: 80px 0;
-    background: white;
+        padding: 80px 0;
+        background: white;
     }
 
-    .faq-secao h2 {
-    font-size: 2rem;
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 10px;
-    }
+        .faq-secao h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 10px;
+        }
 
     .faq-subtitulo {
-    text-align: center;
-    color: var(--cinza-texto);
-    margin-bottom: 50px;
-    font-size: 0.95rem;
+        text-align: center;
+        color: var(--cinza-texto);
+        margin-bottom: 50px;
+        font-size: .95rem;
     }
 
     .faq-lista {
-    max-width: 750px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+        max-width: 750px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
     }
 
     .faq-item {
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    overflow: hidden;
-    background: white;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    transition: box-shadow 0.2s;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        overflow: hidden;
+        background: white;
+        box-shadow: 0 2px 8px rgba(0,0,0,.04);
     }
 
-    .faq-item:hover {
-    box-shadow: 0 4px 16px rgba(30,58,138,0.1);
-    }
+        .faq-item:hover {
+            box-shadow: 0 4px 16px rgba(30,58,138,.1);
+        }
 
     .faq-pergunta {
-    width: 100%;
-    background: none;
-    border: none;
-    padding: 20px 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 600;
-    color: #111827;
-    text-align: left;
+        width: 100%;
+        background: none;
+        border: none;
+        padding: 20px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #111827;
+        text-align: left;
     }
 
-    .faq-pergunta .faq-icone {
-    font-size: 1.2rem;
-    color: var(--azul-escuro);
-    transition: transform 0.3s ease;
-    flex-shrink: 0;
-    margin-left: 16px;
-    }
+        .faq-pergunta .faq-icone {
+            font-size: 1.2rem;
+            color: var(--azul-escuro);
+            transition: transform .3s;
+            flex-shrink: 0;
+            margin-left: 16px;
+        }
 
-    .faq-pergunta[aria-expanded="true"] .faq-icone {
-    transform: rotate(45deg);
-    }
+        .faq-pergunta[aria-expanded="true"] .faq-icone {
+            transform: rotate(45deg);
+        }
 
     .faq-resposta {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s ease, padding 0.3s ease;
-    padding: 0 24px;
-    color: var(--cinza-texto);
-    font-size: 0.93rem;
-    line-height: 1.7;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height .4s ease, padding .3s ease;
+        padding: 0 24px;
+        color: var(--cinza-texto);
+        font-size: .93rem;
+        line-height: 1.7;
     }
 
-    .faq-resposta.aberta {
-    max-height: 300px;
-    padding: 0 24px 20px;
-    }
+        .faq-resposta.aberta {
+            max-height: 300px;
+            padding: 0 24px 20px;
+        }
 
-    /* Contato */
+    /* ── CONTATO ── */
     .contato-secao {
-    text-align: center;
-    padding: 80px 0;
+        text-align: center;
+        padding: 80px 0;
     }
 
-    .contato-secao h2 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 10px;
-    }
+        .contato-secao h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
 
-    .contato-secao p {
-    color: var(--cinza-texto);
-    margin-bottom: 40px;
-    }
+        .contato-secao p {
+            color: var(--cinza-texto);
+            margin-bottom: 40px;
+        }
 
     .form-contato {
-    max-width: 550px;
-    margin: 0 auto;
-    text-align: left;
+        max-width: 550px;
+        margin: 0 auto;
+        text-align: left;
     }
 
     .form-group {
-    margin-bottom: 20px;
+        margin-bottom: 20px;
     }
 
-    .form-group label {
-    display: block;
-    font-size: 0.8rem;
-    font-weight: 700;
-    margin-bottom: 8px;
-    }
+        .form-group label {
+            display: block;
+            font-size: .8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
 
-    .form-group textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #d1d5db;
-    border-radius: 5px;
-    resize: vertical;
-    min-height: 120px;
-}
-    .form-group input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #d1d5db;
-    border-radius: 5px;
-    }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 5px;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
 
     .btn-enviar-azul {
-    width: 100%;
-    background-color: var(--azul-escuro);
-    color: white;
-    border: none;
-    padding: 15px;
-    border-radius: 5px;
-    font-weight: 700;
-    cursor: pointer;
-    margin-top: 10px;
+        width: 100%;
+        background-color: var(--azul-escuro);
+        color: white;
+        border: none;
+        padding: 15px;
+        border-radius: 5px;
+        font-weight: 700;
+        cursor: pointer;
+        margin-top: 10px;
     }
 
-    /* Footer */
+    /* ── FOOTER ── */
     .footer-figma {
-    background-color: var(--azul-escuro);
-    color: white;
-    padding: 30px 0;
-    text-align: center;
-    font-size: 0.85rem;
+        background-color: var(--azul-escuro);
+        color: white;
+        padding: 30px 0;
+        text-align: center;
+        font-size: .85rem;
     }
 
     .footer-links-sociais {
-    margin-bottom: 15px;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    align-items: center;
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        align-items: center;
     }
 
-    .footer-links-sociais a {
-    color: white;
-    text-decoration: none;
-    }
+        .footer-links-sociais a {
+            color: white;
+            text-decoration: none;
+        }
 </style>
 
-<!-- ===== HERO COM VÍDEO ===== -->
+<!-- ══════════════════════════════════════════════════════════════════════
+     HERO COM VÍDEO
+     ══════════════════════════════════════════════════════════════════════ -->
 <section class="hero-container">
-
     <video class="hero-video-bg" autoplay muted loop playsinline>
         <source src="~/images/14424420_1920_1080_30fps.mp4" type="video/mp4" />
     </video>
-
     <div class="hero-overlay"></div>
-
     <div class="hero-content">
         <h1>Seu destino começa aqui</h1>
         <p>Viaje do seu jeito, com roteiros exclusivos e personalizados. Reserve agora.</p>
-
         @if (Context.Session.GetString("UserName") != null)
         {
-            <a asp-controller="Personalizada" asp-action="Index" class="btn btn-primary">
-                Monte sua viagem
-            </a>
+            <a asp-controller="Personalizada" asp-action="Index" class="btn btn-primary">Monte sua viagem</a>
         }
         else
         {
-            <a asp-controller="Login" asp-action="Index" class="btn btn-primary">
-                Monte sua viagem
-            </a>
+            <a asp-controller="Login" asp-action="Index" class="btn btn-primary">Monte sua viagem</a>
         }
     </div>
 </section>
 
-<!-- Seção Destinos com Carrossel -->
+<!-- ══════════════════════════════════════════════════════════════════════
+     CARROSSEL — DESTINOS
+     ══════════════════════════════════════════════════════════════════════ -->
 <section class="container secao-destinos">
     <h2>Conheça alguns de nossos destinos!</h2>
     <p>Veja nossos pacotes mais populares e escolha sua próxima aventura!</p>
@@ -602,66 +705,127 @@
         <i class="fas fa-chevron-left seta-carrossel" onclick="scrollCarrossel(-1)"></i>
 
         <div class="carrossel-scroll" id="carrosselDestinos">
-
             @foreach (var destino in Model)
             {
-                @if (Context.Session.GetString("UserName") != null)
-                {
-                    <a asp-controller="Pacotes"
-                       asp-action="Index"
-                       class="card-destino-link">
+                string imgUrl = string.IsNullOrEmpty(destino.ImagemUrl)
+                ? "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=600&q=80"
+                : destino.ImagemUrl + (destino.ImagemUrl.Contains("unsplash.com") && !destino.ImagemUrl.Contains("?") ? "?w=600&q=80" : "");
 
-                        <div class="card-destino">
-                            <img src="/images/destino-padrao.jpg" alt="@destino.Estado" />
+                string ctrl = Context.Session.GetString("UserName") != null ? "Pacotes" : "Login";
 
-                            <div class="card-body">
-                                <h4>@destino.Estado - @destino.Pais</h4>
-
-                                <p class="info">
-                                    Saindo de @destino.OrigemEstado - @destino.OrigemPais
-                                </p>
-
-                                <button class="btn btn-primary">
-                                    Saiba mais
-                                </button>
-                            </div>
+                <a asp-controller="@ctrl" asp-action="Index" class="card-destino-link">
+                    <div class="card-destino">
+                        <img class="card-destino-img"
+                             src="@imgUrl"
+                             alt="@destino.Estado - @destino.Pais"
+                             loading="lazy"
+                             onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=600&q=80'" />
+                        <div class="card-body">
+                            <h4>@destino.Estado – @destino.Pais</h4>
+                            <p class="info">Saindo de @destino.OrigemEstado – @destino.OrigemPais</p>
+                            @if (destino.PrecoPorPessoa > 0)
+                            {
+                                <span class="preco-destino-label">A partir de</span>
+                                <span class="preco-destino-valor">@destino.PrecoPorPessoa.ToString("C")</span>
+                            }
+                            <button class="btn btn-primary">Saiba mais</button>
                         </div>
-
-                    </a>
-                }
-                else
-                {
-                    <a asp-controller="Login"
-                       asp-action="Index"
-                       class="card-destino-link">
-
-                        <div class="card-destino">
-                            <img src="@destino.ImagemUrl" alt="@destino.Estado" />
-
-                            <div class="card-body">
-                                <h4>@destino.Estado - @destino.Pais</h4>
-
-                                <p class="info">
-                                    Saindo de @destino.OrigemEstado - @destino.OrigemPais
-                                </p>
-
-                                <button class="btn btn-primary">
-                                    Saiba mais
-                                </button>
-                            </div>
-                        </div>
-
-                    </a>
-                }
+                    </div>
+                </a>
             }
-
         </div>
 
         <i class="fas fa-chevron-right seta-carrossel" onclick="scrollCarrossel(1)"></i>
     </div>
 </section>
 
-<!-- Quem Somos -->
+<!-- ══════════════════════════════════════════════════════════════════════
+     CARROSSEL — PACOTES EM DESTAQUE
+     ══════════════════════════════════════════════════════════════════════ -->
+@if (pacotesDestaque.Any())
+{
+    <section class="container secao-destinos" style="padding-top:20px;">
+        <h2>Pacotes em Destaque</h2>
+        <p>Ofertas especiais selecionadas para a sua próxima aventura.</p>
+
+        <div class="carrossel-container">
+            <i class="fas fa-chevron-left seta-carrossel" onclick="scrollCarrossel2(-1)"></i>
+
+            <div class="carrossel-scroll" id="carrosselPacotes">
+                @foreach (var p in pacotesDestaque)
+                {
+                    string imgUrl = string.IsNullOrEmpty(p.ImagemUrl)
+                    ? "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=600&q=80"
+                    : p.ImagemUrl + (p.ImagemUrl.Contains("unsplash.com") && !p.ImagemUrl.Contains("?")
+                    ? "?w=600&q=80"
+                    : "");
+
+                    string vagasCss = p.VagasDisponiveis > 5 ? "vagas-ok"
+                    : p.VagasDisponiveis > 0 ? "vagas-alerta"
+                    : "vagas-esgotado";
+
+                    string vagasTxt = p.VagasDisponiveis > 5 ? $"{p.VagasDisponiveis} vagas"
+                    : p.VagasDisponiveis > 0 ? $"Últimas {p.VagasDisponiveis}!"
+                    : "Esgotado";
+
+                    bool esgotado = p.VagasDisponiveis == 0;
+
+                    <div class="card-pacote">
+                        <img class="card-pacote-img"
+                             src="@imgUrl"
+                             alt="@p.Nome"
+                             loading="lazy"
+                             onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=600&q=80'" />
+
+                        <div class="card-pacote-body">
+                            <h4>@p.Nome</h4>
+                            <div class="pacote-mini-info">
+                                <span class="pacote-mini-tag"><i class="fas fa-clock"></i> @p.DuracaoDias dias</span>
+                                <span class="pacote-mini-tag"><i class="fas fa-calendar"></i> @p.DataPartida.ToString("dd/MM/yy")</span>
+                            </div>
+                            <p>@(p.Descricao?.Length > 75 ? p.Descricao.Substring(0, 75) + "…" : p.Descricao)</p>
+                            <div class="pacote-footer-row">
+                                <div>
+                                    <div class="pacote-preco-label">Por pessoa</div>
+                                    <div class="pacote-preco-valor">@p.PrecoPorPessoa.ToString("C")</div>
+                                </div>
+                                @if (Context.Session.GetString("UserName") != null)
+                                {
+                                    if (!esgotado)
+                                    {
+                                        <form asp-controller="Carrinho" asp-action="AdicionarPacote"
+                                              method="post" style="margin:0;">
+                                            <input type="hidden" name="pacoteId" value="@p.Id" />
+                                            <button type="submit" class="btn-reservar">
+                                                <i class="fas fa-cart-plus"></i> Reservar
+                                            </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <span class="btn-reservar esgotado">Esgotado</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <a asp-controller="Login" asp-action="Index" class="btn-reservar">
+                                        <i class="fas fa-sign-in-alt"></i> Entrar
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <i class="fas fa-chevron-right seta-carrossel" onclick="scrollCarrossel2(1)"></i>
+        </div>
+    </section>
+}
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     QUEM SOMOS
+     ══════════════════════════════════════════════════════════════════════ -->
 <section class="container quem-somos-secao">
     <div class="quem-somos-texto">
         <h2>Quem Somos</h2>
@@ -685,14 +849,14 @@
     </div>
 </section>
 
-<!-- FAQ -->
+<!-- ══════════════════════════════════════════════════════════════════════
+     FAQ
+     ══════════════════════════════════════════════════════════════════════ -->
 <section class="faq-secao">
     <div class="container">
         <h2>Perguntas Frequentes</h2>
         <p class="faq-subtitulo">Tire suas dúvidas antes de viajar!</p>
-
         <div class="faq-lista">
-
             <div class="faq-item">
                 <button class="faq-pergunta" aria-expanded="false" onclick="toggleFaq(this)">
                     Como funciona a montagem de um pacote personalizado?
@@ -702,7 +866,6 @@
                     Você acessa a seção "Monte sua viagem", escolhe o destino, datas, número de passageiros e preferências. Nossa equipe entra em contato em até 24h com uma proposta exclusiva para você.
                 </div>
             </div>
-
             <div class="faq-item">
                 <button class="faq-pergunta" aria-expanded="false" onclick="toggleFaq(this)">
                     Quais formas de pagamento são aceitas?
@@ -712,7 +875,6 @@
                     Aceitamos cartão de crédito (em até 12x), boleto bancário, PIX e transferência. Para pacotes internacionais, o pagamento pode ser parcelado em etapas conforme o contrato.
                 </div>
             </div>
-
             <div class="faq-item">
                 <button class="faq-pergunta" aria-expanded="false" onclick="toggleFaq(this)">
                     É possível cancelar ou alterar uma reserva?
@@ -722,7 +884,6 @@
                     Sim! Cancelamentos com mais de 30 dias de antecedência têm reembolso integral. Alterações de data estão sujeitas à disponibilidade e podem gerar pequenas taxas, dependendo do fornecedor.
                 </div>
             </div>
-
             <div class="faq-item">
                 <button class="faq-pergunta" aria-expanded="false" onclick="toggleFaq(this)">
                     Os pacotes incluem seguro viagem?
@@ -732,7 +893,6 @@
                     Para destinos internacionais, o seguro viagem é obrigatório e já está incluso no pacote. Para viagens nacionais, oferecemos como opcional com cobertura completa.
                 </div>
             </div>
-
             <div class="faq-item">
                 <button class="faq-pergunta" aria-expanded="false" onclick="toggleFaq(this)">
                     Como entro em contato para tirar dúvidas?
@@ -742,185 +902,119 @@
                     Você pode nos contatar pelo formulário abaixo, pelo WhatsApp (11) 95511-2233 ou pelas nossas redes sociais. Atendemos de segunda a sexta, das 9h às 18h.
                 </div>
             </div>
-
         </div>
     </div>
 </section>
 
-<!-- ===== MAPA COM SEDES ===== -->
+<!-- ══════════════════════════════════════════════════════════════════════
+     MAPA COM SEDES
+     ══════════════════════════════════════════════════════════════════════ -->
 <section class="mapa-secao">
     <div class="container">
         <div class="mapa-secao-titulo">
             <h2>Nossas Sedes</h2>
             <p>Estamos presentes em diversas cidades para atender você de perto.</p>
         </div>
-
         <div class="mapa-layout">
-
-            <!-- Mapa -->
             <div class="mapa-wrapper">
                 <iframe src="https://www.google.com/maps/d/embed?mid=1gy6dVeN-GqzZx-6SGrkTOp4z9T7FtpM&ehbc=2E312F&noprof=1"
-                        allowfullscreen
-                        loading="lazy"
-                        referrerpolicy="no-referrer-when-downgrade">
-                </iframe>
+                        allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
-
-            <!-- Cards das Sedes -->
             <div class="sedes-lista">
-
                 <div class="sede-card">
-                    <div class="sede-icone">
-                        <i class="fas fa-map-marker-alt"></i>
-                    </div>
+                    <div class="sede-icone"><i class="fas fa-map-marker-alt"></i></div>
                     <div class="sede-info">
                         <h4>São Paulo — Sede Principal</h4>
                         <p>Av. Paulista, 1000 — Bela Vista<br>São Paulo, SP</p>
                         <span class="sede-badge">Sede Principal</span>
                     </div>
                 </div>
-
                 <div class="sede-card">
-                    <div class="sede-icone">
-                        <i class="fas fa-map-marker-alt"></i>
-                    </div>
+                    <div class="sede-icone"><i class="fas fa-map-marker-alt"></i></div>
                     <div class="sede-info">
                         <h4>Rio de Janeiro</h4>
                         <p>Rua das Laranjeiras, 450 — Laranjeiras<br>Rio de Janeiro, RJ</p>
                         <span class="sede-badge">Filial</span>
                     </div>
                 </div>
-
                 <div class="sede-card">
-                    <div class="sede-icone">
-                        <i class="fas fa-map-marker-alt"></i>
-                    </div>
+                    <div class="sede-icone"><i class="fas fa-map-marker-alt"></i></div>
                     <div class="sede-info">
                         <h4>Florianópolis</h4>
                         <p>Rua Felipe Schmidt, 300 — Centro<br>Florianópolis, SC</p>
                         <span class="sede-badge">Filial</span>
                     </div>
                 </div>
-
-
             </div>
         </div>
     </div>
 </section>
 
-<!-- Contate-nos -->
+<!-- ══════════════════════════════════════════════════════════════════════
+     CONTATE-NOS
+     ══════════════════════════════════════════════════════════════════════ -->
 <section id="contate" class="container contato-secao">
     <h2>Contate-nos</h2>
     <p>Tem alguma dúvida? Mande uma mensagem!</p>
 
-    <!-- Alerta de sucesso -->
-    <div id="alerta-sucesso"
-         style="display:none;
-                background:#dcfce7;
-                border:1px solid #86efac;
-                color:#166534;
-                padding:14px 18px;
-                border-radius:10px;
-                max-width:550px;
-                margin:0 auto 20px;
-                font-weight:600;
-                text-align:center;">
+    <div id="alerta-sucesso" style="display:none;background:#dcfce7;border:1px solid #86efac;color:#166534;padding:14px 18px;border-radius:10px;max-width:550px;margin:0 auto 20px;font-weight:600;text-align:center;">
         ✅ Mensagem enviada com sucesso! Entraremos em contato em breve.
     </div>
-
-    <!-- Alerta de erro -->
-    <div id="alerta-erro"
-         style="display:none;
-                background:#fee2e2;
-                border:1px solid #f87171;
-                color:#991b1b;
-                padding:14px 18px;
-                border-radius:10px;
-                max-width:550px;
-                margin:0 auto 20px;
-                font-weight:600;
-                text-align:center;">
+    <div id="alerta-erro" style="display:none;background:#fee2e2;border:1px solid #f87171;color:#991b1b;padding:14px 18px;border-radius:10px;max-width:550px;margin:0 auto 20px;font-weight:600;text-align:center;">
         ❌ Erro ao enviar. Tente novamente.
     </div>
 
     <div class="form-contato">
-
         <div class="form-group">
             <label>Seu Nome</label>
-            <input type="text"
-                   id="contato-nome"
-                   placeholder="Digite seu nome"
-                   required>
+            <input type="text" id="contato-nome" placeholder="Digite seu nome" required>
         </div>
-
         <div class="form-group">
             <label>Email</label>
-            <input type="email"
-                   id="contato-email"
-                   placeholder="seu@email.com"
-                   required>
+            <input type="email" id="contato-email" placeholder="seu@email.com" required>
         </div>
-
         <div class="form-group">
             <label>Diga aqui!</label>
-            <textarea id="contato-mensagem"
-                      placeholder="Sua mensagem aqui..."
-                      rows="5"
-                      required></textarea>
+            <textarea id="contato-mensagem" placeholder="Sua mensagem aqui..." rows="5" required></textarea>
         </div>
-
-        <button type="button"
-                id="btn-enviar-contato"
-                class="btn-enviar-azul"
-                onclick="enviarEmailJS()">
+        <button type="button" id="btn-enviar-contato" class="btn-enviar-azul" onclick="enviarEmailJS()">
             Enviar mensagem
         </button>
-
     </div>
 </section>
 
-<!-- EmailJS SDK -->
+<!-- EmailJS -->
 <script src="https://cdn.jsdelivr.net/npm/@@emailjs/browser@@4/dist/email.min.js"></script>
-
-<!-- Script do formulário de contato -->
 <script src="~/js/contato-emailjs.js"></script>
 
+<!-- ══════════════════════════════════════════════════════════════════════
+     FOOTER
+     ══════════════════════════════════════════════════════════════════════ -->
 <footer class="footer-figma">
     <div class="container">
         <div class="footer-links-sociais">
             <span>Siga nossas redes:</span>
             <a href="https://www.instagram.com/_partiu.destino/"><i class="fab fa-instagram"></i></a>
             <a href="https://www.facebook.com/people/Partiu-Destino/61590693054759/"><i class="fab fa-facebook"></i></a>
-            <a href="https://wa.me/5511981125234" target="_blank">
-               <i class="fab fa-whatsapp"></i>
-</a>
+            <a href="https://wa.me/5511981125234" target="_blank"><i class="fab fa-whatsapp"></i></a>
         </div>
         <p>
-           &copy; 2026 Partiu Destino. Todos os direitos reservados. |
-           <a href="/Legal/PoliticaDePrivacidade" style="color: white;">
-               Política de Privacidade
-           </a> |
-           <a href="/Legal/TermosDeUso" style="color: white;">
-              Termos de Uso
-           </a>
-        </p>    
+            &copy; 2026 Partiu Destino. Todos os direitos reservados. |
+            <a href="/Legal/PoliticaDePrivacidade" style="color:white;">Política de Privacidade</a> |
+            <a href="/Legal/TermosDeUso" style="color:white;">Termos de Uso</a>
+        </p>
     </div>
 </footer>
 
 <script>
-    function scrollCarrossel(direcao) {
-        const carrossel = document.getElementById('carrosselDestinos');
-        carrossel.scrollBy({ left: direcao * 320, behavior: 'smooth' });
-    }
+    function scrollCarrossel(d)  { document.getElementById('carrosselDestinos').scrollBy({ left: d * 320, behavior: 'smooth' }); }
+    function scrollCarrossel2(d) { document.getElementById('carrosselPacotes').scrollBy({ left: d * 320, behavior: 'smooth' }); }
 
     function toggleFaq(btn) {
-        const resposta = btn.nextElementSibling;
-        const aberta = resposta.classList.contains('aberta');
-        document.querySelectorAll('.faq-resposta.aberta').forEach(r => r.classList.remove('aberta'));
-        document.querySelectorAll('.faq-pergunta').forEach(b => b.setAttribute('aria-expanded', 'false'));
-        if (!aberta) {
-            resposta.classList.add('aberta');
-            btn.setAttribute('aria-expanded', 'true');
-        }
+        const r = btn.nextElementSibling;
+        const aberta = r.classList.contains('aberta');
+        document.querySelectorAll('.faq-resposta.aberta').forEach(x => x.classList.remove('aberta'));
+        document.querySelectorAll('.faq-pergunta').forEach(b => b.setAttribute('aria-expanded','false'));
+        if (!aberta) { r.classList.add('aberta'); btn.setAttribute('aria-expanded','true'); }
     }
 </script>

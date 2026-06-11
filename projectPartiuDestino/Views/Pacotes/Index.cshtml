@@ -1,16 +1,10 @@
 ﻿@model IEnumerable<projectPartiuDestino.Models.Pacotes>
 
-
-
 @{
     ViewData["Title"] = "Pacotes de Viagem - Partiu Destino";
 }
 
 <style>
-    /* ============================================
-               ESTILO PÁGINA DE PACOTES PREMIUM
-               ============================================ */
-
     :root {
         --primary: #1e3a8a;
         --accent: #3b82f6;
@@ -27,7 +21,7 @@
     .pacotes-container {
         background-color: var(--bg-body);
         padding: 60px 0;
-        font-family: 'Inter', 'Segoe UI', sans-serif;
+        font-family: 'Inter','Segoe UI',sans-serif;
     }
 
     .header-secao {
@@ -49,20 +43,20 @@
             margin: 0 auto;
         }
 
-    /* Grid de Cards */
     .pacotes-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
         gap: 30px;
     }
 
+    /* ── Card ── */
     .card-pacote-premium {
         background: var(--white);
         border-radius: 20px;
         overflow: hidden;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 4px 6px rgba(0,0,0,.05);
         border: 1px solid var(--border);
-        transition: all 0.3s ease;
+        transition: transform .3s, box-shadow .3s;
         display: flex;
         flex-direction: column;
         position: relative;
@@ -70,77 +64,109 @@
 
         .card-pacote-premium:hover {
             transform: translateY(-10px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 25px rgba(0,0,0,.10);
         }
 
-    /* Badge de Vagas */
-    .badge-vagas {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        padding: 6px 12px;
-        border-radius: 50px;
-        font-size: 0.75rem;
-        font-weight: 700;
-        z-index: 10;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-
-    .vagas-ok {
-        background: var(--success);
-        color: white;
-    }
-
-    .vagas-alerta {
-        background: var(--warning);
-        color: white;
-    }
-
-    .vagas-esgotado {
-        background: var(--danger);
-        color: white;
-    }
-
-    .pacote-imagem-topo {
+    /* ── Topo com imagem própria do pacote ── */
+    .pacote-topo {
         height: 200px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .pacote-topo-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform .4s ease;
+    }
+
+    .card-pacote-premium:hover .pacote-topo-img {
+        transform: scale(1.06);
+    }
+
+    .pacote-topo-fallback {
+        width: 100%;
+        height: 100%;
         background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
         display: flex;
         align-items: center;
         justify-content: center;
-        color: rgba(255,255,255,0.3);
-        font-size: 4rem;
     }
 
+        .pacote-topo-fallback i {
+            font-size: 4rem;
+            color: rgba(255,255,255,.25);
+        }
+
+    .pacote-topo-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom, rgba(0,0,0,.18) 0%, rgba(0,0,0,0) 55%);
+    }
+
+    .badge-vagas {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        padding: 6px 12px;
+        border-radius: 50px;
+        font-size: .72rem;
+        font-weight: 700;
+        color: white;
+        z-index: 2;
+        backdrop-filter: blur(4px);
+        box-shadow: 0 2px 8px rgba(0,0,0,.2);
+    }
+
+    .vagas-ok {
+        background: rgba(16,185,129,.9);
+    }
+
+    .vagas-alerta {
+        background: rgba(245,158,11,.9);
+    }
+
+    .vagas-esgotado {
+        background: rgba(239,68,68,.9);
+    }
+
+    .badge-tipo {
+        position: absolute;
+        bottom: 14px;
+        left: 14px;
+        background: rgba(255,255,255,.2);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: .68rem;
+        font-weight: 700;
+        backdrop-filter: blur(4px);
+        z-index: 2;
+    }
+
+    /* ── Conteúdo ── */
     .pacote-conteudo {
-        padding: 25px;
+        padding: 22px 24px;
         flex-grow: 1;
     }
 
-    .pacote-destino-tag {
-        font-size: 0.75rem;
-        font-weight: 800;
-        color: var(--accent);
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-bottom: 8px;
-        display: block;
-    }
-
     .pacote-titulo {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
         font-weight: 800;
         color: var(--text-main);
-        margin-bottom: 15px;
-        line-height: 1.2;
+        margin-bottom: 14px;
+        line-height: 1.25;
     }
 
     .pacote-detalhes-rapidos {
         display: flex;
         justify-content: space-between;
         background: #f9fafb;
-        padding: 12px;
+        padding: 11px 14px;
         border-radius: 12px;
-        margin-bottom: 20px;
+        margin-bottom: 16px;
     }
 
     .detalhe-item {
@@ -149,7 +175,7 @@
 
     .detalhe-label {
         display: block;
-        font-size: 0.65rem;
+        font-size: .62rem;
         color: var(--text-muted);
         text-transform: uppercase;
         font-weight: 700;
@@ -157,20 +183,21 @@
     }
 
     .detalhe-valor {
-        font-size: 0.85rem;
+        font-size: .82rem;
         font-weight: 700;
         color: var(--text-main);
     }
 
-    .pacote-descricao-curta {
-        font-size: 0.9rem;
+    .pacote-descricao {
+        font-size: .87rem;
         color: var(--text-muted);
-        line-height: 1.5;
-        margin-bottom: 20px;
+        line-height: 1.55;
+        margin-bottom: 16px;
     }
 
+    /* ── Footer ── */
     .pacote-footer {
-        padding: 20px 25px;
+        padding: 18px 24px;
         background: #fcfcfd;
         border-top: 1px solid var(--border);
         display: flex;
@@ -184,40 +211,57 @@
     }
 
     .preco-sub {
-        font-size: 0.7rem;
+        font-size: .68rem;
         color: var(--text-muted);
     }
 
     .preco-principal {
-        font-size: 1.5rem;
+        font-size: 1.45rem;
         font-weight: 900;
         color: var(--primary);
     }
 
-    .btn-detalhes-pacote {
+    .btn-reservar {
         background: var(--primary);
         color: white;
         padding: 10px 20px;
         border-radius: 10px;
         font-weight: 700;
+        font-size: .88rem;
+        border: none;
+        cursor: pointer;
         text-decoration: none;
-        transition: all 0.3s;
-        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        transition: background .25s, transform .2s;
     }
 
-        .btn-detalhes-pacote:hover {
+        .btn-reservar:hover {
             background: var(--accent);
             color: white;
-            transform: scale(1.05);
+            transform: scale(1.04);
+        }
+
+        .btn-reservar.disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            pointer-events: none;
         }
 
     .lista-vazia {
-        grid-column: 1 / -1;
+        grid-column: 1/-1;
         text-align: center;
         padding: 100px 20px;
         background: white;
         border-radius: 20px;
         border: 2px dashed var(--border);
+    }
+
+    @@media (max-width:768px) {
+        .pacotes-grid {
+            grid-template-columns: 1fr;
+        }
     }
 </style>
 
@@ -230,77 +274,125 @@
         </div>
 
         <div class="pacotes-grid">
+
             @if (Model != null && Model.Any())
             {
                 @foreach (var item in Model)
                 {
+                    // Imagem própria do pacote — sem precisar buscar do destino
+                    string imgUrl = string.IsNullOrEmpty(item.ImagemUrl) ? "" :
+                    item.ImagemUrl + (item.ImagemUrl.Contains("unsplash.com") && !item.ImagemUrl.Contains("?") ? "?w=700&q=80" : "");
+                    bool temImagem = !string.IsNullOrEmpty(imgUrl);
+
+                    string vagasCss = item.VagasDisponiveis > 5 ? "vagas-ok"
+                    : item.VagasDisponiveis > 0 ? "vagas-alerta"
+                    : "vagas-esgotado";
+                    string vagasTxt = item.VagasDisponiveis > 5 ? $"{item.VagasDisponiveis} vagas"
+                    : item.VagasDisponiveis > 0 ? $"Últimas {item.VagasDisponiveis}!"
+                    : "Esgotado";
+                    bool esgotado = item.VagasDisponiveis == 0;
+
                     <div class="card-pacote-premium">
 
-                        <div class="pacote-imagem-topo">
-                            <i class="fas fa-plane-departure"></i>
-                        </div>
+                        <!-- Topo com imagem própria do pacote -->
+                        <div class="pacote-topo">
+                            @if (temImagem)
+                            {
+                                <img class="pacote-topo-img"
+                                     src="@imgUrl"
+                                     alt="@item.Nome"
+                                     loading="lazy"
+                                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+                                <div class="pacote-topo-fallback" style="display:none;">
+                                    <i class="fas fa-plane-departure"></i>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="pacote-topo-fallback">
+                                    <i class="fas fa-plane-departure"></i>
+                                </div>
+                            }
+                            <div class="pacote-topo-overlay"></div>
+                            <span class="badge-vagas @vagasCss">@vagasTxt</span>
+                            @if (!string.IsNullOrEmpty(item.TipoViagem))
+                            {
+                                <span class="badge-tipo">@item.TipoViagem</span>
+                            }
+                    </div>
 
-                        <div class="pacote-conteudo">
-                            <h3 class="pacote-titulo">@item.Nome</h3>
+                    <!-- Conteúdo -->
+                    <div class="pacote-conteudo">
+                        <h3 class="pacote-titulo">@item.Nome</h3>
 
-                            <div class="pacote-detalhes-rapidos">
-                                <div class="detalhe-item">
-                                    <span class="detalhe-label">Duração</span>
-                                    <span class="detalhe-valor">@item.DuracaoDias Dias</span>
-                                </div>
-                                <div class="detalhe-item">
-                                    <span class="detalhe-label">Partida</span>
-                                    <span class="detalhe-valor">@item.DataPartida.ToString("dd/MM/yy")</span>
-                                </div>
-                                <div class="detalhe-item">
-                                    <span class="detalhe-label">Retorno</span>
-                                    <span class="detalhe-valor">@item.DataRetorno.ToString("dd/MM/yy")</span>
-                                </div>
+                        <div class="pacote-detalhes-rapidos">
+                            <div class="detalhe-item">
+                                <span class="detalhe-label">Duração</span>
+                                <span class="detalhe-valor">@item.DuracaoDias dias</span>
                             </div>
-
-                            <p class="pacote-descricao-curta">
-                                @(item.Descricao?.Length > 120 ? item.Descricao.Substring(0, 120) + "..." : item.Descricao)
-                            </p>
+                            <div class="detalhe-item">
+                                <span class="detalhe-label">Partida</span>
+                                <span class="detalhe-valor">@item.DataPartida.ToString("dd/MM/yy")</span>
+                            </div>
+                            <div class="detalhe-item">
+                                <span class="detalhe-label">Retorno</span>
+                                <span class="detalhe-valor">@item.DataRetorno.ToString("dd/MM/yy")</span>
+                            </div>
                         </div>
 
+                        <p class="pacote-descricao">
+                            @(item.Descricao?.Length > 120
+                                                    ? item.Descricao.Substring(0, 120) + "…"
+                                                    : item.Descricao)
+                    </p>
+                </div>
+
+                        <!-- Footer com preço -->
                         <div class="pacote-footer">
                             <div class="pacote-preco-box">
                                 <span class="preco-sub">Por pessoa</span>
                                 <span class="preco-principal">@item.PrecoPorPessoa.ToString("C")</span>
                             </div>
-                            @if (Context.Session.GetString("UserName") != null)
-                            {
-                                <form asp-controller="Carrinho" asp-action="AdicionarPacote" method="post" style="margin:0;">
-                                    <input type="hidden" name="pacoteId" value="@item.Id" />
 
-                                    <button type="submit"
-                                            class="btn-detalhes-pacote"
-                                            style="border:none;cursor:pointer;">
-                                        <i class="fas fa-cart-plus"></i> Adicionar ao Carrinho
-                                    </button>
-                                </form>
+                    @if (Context.Session.GetString("UserName") != null)
+                            {
+                                if (!esgotado)
+                                {
+                                    <form asp-controller="Carrinho" asp-action="AdicionarPacote"
+                                          method="post" style="margin:0;">
+                                        <input type="hidden" name="pacoteId" value="@item.Id" />
+                                        <button type="submit" class="btn-reservar">
+                                            <i class="fas fa-cart-plus"></i> Adicionar ao Carrinho
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <span class="btn-reservar disabled">Esgotado</span>
+                                }
                             }
                             else
                             {
-                                <a asp-controller="Login"
-                                   asp-action="Index"
-                                   class="btn-detalhes-pacote">
+                                <a asp-controller="Login" asp-action="Index" class="btn-reservar">
                                     <i class="fas fa-sign-in-alt"></i> Entre para Reservar
                                 </a>
                             }
                         </div>
+
                     </div>
                 }
             }
             else
             {
                 <div class="lista-vazia">
-                    <i class="fas fa-suitcase-rolling fa-4x mb-4" style="color: #cbd5e1;"></i>
+                    <i class="fas fa-suitcase-rolling fa-4x mb-4" style="color:#cbd5e1;"></i>
                     <h3>Nenhum pacote encontrado</h3>
                     <p>Estamos preparando novas aventuras. Volte em breve!</p>
-                    <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-3 px-4 py-2 rounded-pill">Voltar ao Início</a>
+                    <a asp-controller="Home" asp-action="Index"
+                       class="btn btn-primary mt-3 px-4 py-2 rounded-pill">Voltar ao Início</a>
                 </div>
             }
+
         </div>
     </div>
 </div>

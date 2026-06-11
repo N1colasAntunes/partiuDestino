@@ -8,7 +8,6 @@ namespace projectPartiuDestino.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
         private string conexao = "server=localhost;database=bdpartiudestino;uid=root;pwd=12345678;";
 
         public HomeController(ILogger<HomeController> logger)
@@ -24,23 +23,25 @@ namespace projectPartiuDestino.Controllers
             {
                 conn.Open();
 
-                string sql = "SELECT * FROM destinos";
+                string sql = @"SELECT id, origem_pais, origem_estado,
+                                      pais, estado, imagem_url, preco_por_pessoa
+                               FROM destinos";
 
-                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                using MySqlCommand cmd = new MySqlCommand(sql, conn);
+                using MySqlDataReader reader = cmd.ExecuteReader();
 
-                using (MySqlDataReader reader = cmd.ExecuteReader())
+                while (reader.Read())
                 {
-                    while (reader.Read())
+                    listaDestinos.Add(new Destinos
                     {
-                        listaDestinos.Add(new Destinos
-                        {
-                            Id = Convert.ToInt32(reader["id"]),
-                            OrigemPais = reader["origem_pais"].ToString(),
-                            OrigemEstado = reader["origem_estado"].ToString(),
-                            Pais = reader["pais"].ToString(),
-                            Estado = reader["estado"].ToString()
-                        });
-                    }
+                        Id = Convert.ToInt32(reader["id"]),
+                        OrigemPais = reader["origem_pais"].ToString(),
+                        OrigemEstado = reader["origem_estado"].ToString(),
+                        Pais = reader["pais"].ToString(),
+                        Estado = reader["estado"].ToString(),
+                        ImagemUrl = reader["imagem_url"]?.ToString() ?? "",
+                        PrecoPorPessoa = Convert.ToDecimal(reader["preco_por_pessoa"])
+                    });
                 }
             }
 

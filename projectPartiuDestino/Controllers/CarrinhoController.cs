@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
 using projectPartiuDestino.Models;
-using System.Collections.Generic;
 
 namespace projectPartiuDestino.Controllers
 {
@@ -10,7 +9,7 @@ namespace projectPartiuDestino.Controllers
         private string conexao = "server=localhost;database=bdpartiudestino;uid=root;pwd=12345678;";
 
         // ============================================================
-        // GET: /Carrinho/Index — exibe todos os itens do carrinho
+        // GET: /Carrinho/Index
         // ============================================================
         public IActionResult Index()
         {
@@ -24,12 +23,11 @@ namespace projectPartiuDestino.Controllers
             {
                 conn.Open();
 
-                string sql = @"
-                    SELECT id, usuario_id, tipo_item, item_id,
-                           nome_item, preco_unitario, quantidade, data_adicionado
-                    FROM carrinho
-                    WHERE usuario_id = @uid
-                    ORDER BY data_adicionado DESC";
+                string sql = @"SELECT id, usuario_id, tipo_item, item_id,
+                                      nome_item, preco_unitario, quantidade, data_adicionado
+                               FROM carrinho
+                               WHERE usuario_id = @uid
+                               ORDER BY data_adicionado DESC";
 
                 using MySqlCommand cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@uid", usuarioId);
@@ -67,6 +65,7 @@ namespace projectPartiuDestino.Controllers
             using MySqlConnection conn = new MySqlConnection(conexao);
             conn.Open();
 
+            // Busca nome, preco E imagem do pacote
             string sqlPacote = "SELECT nome, preco_por_pessoa FROM pacotes WHERE id = @id";
             using MySqlCommand cmdP = new MySqlCommand(sqlPacote, conn);
             cmdP.Parameters.AddWithValue("@id", pacoteId);
@@ -83,13 +82,14 @@ namespace projectPartiuDestino.Controllers
                 }
                 else
                 {
-                    TempData["Erro"] = "Pacote nao encontrado.";
+                    TempData["Erro"] = "Pacote não encontrado.";
                     return RedirectToAction("Index", "Pacotes");
                 }
             }
 
+            // Verifica se já existe no carrinho
             string sqlCheck = @"SELECT id FROM carrinho
-                                 WHERE usuario_id = @uid AND tipo_item = 'pacote' AND item_id = @iid";
+                                WHERE usuario_id = @uid AND tipo_item = 'pacote' AND item_id = @iid";
             using MySqlCommand cmdCheck = new MySqlCommand(sqlCheck, conn);
             cmdCheck.Parameters.AddWithValue("@uid", usuarioId);
             cmdCheck.Parameters.AddWithValue("@iid", pacoteId);
@@ -115,12 +115,13 @@ namespace projectPartiuDestino.Controllers
                 cmdIns.ExecuteNonQuery();
             }
 
-            TempData["Sucesso"] = nomePacote + " adicionado ao carrinho!";
+            TempData["Sucesso"] = $"{nomePacote} adicionado ao carrinho!";
             return RedirectToAction("Index", "Carrinho");
         }
 
         // ============================================================
         // POST: /Carrinho/AdicionarDestino
+        // ATUALIZADO: agora salva o preco_por_pessoa do destino
         // ============================================================
         [HttpPost]
         public IActionResult AdicionarDestino(int destinoId)
@@ -132,25 +133,31 @@ namespace projectPartiuDestino.Controllers
             using MySqlConnection conn = new MySqlConnection(conexao);
             conn.Open();
 
-            string sqlD = "SELECT pais, estado FROM destinos WHERE id = @id";
+            // ATUALIZADO: busca nome E preco_por_pessoa do destino
+            string sqlD = "SELECT pais, estado, preco_por_pessoa FROM destinos WHERE id = @id";
             using MySqlCommand cmdD = new MySqlCommand(sqlD, conn);
             cmdD.Parameters.AddWithValue("@id", destinoId);
 
             string nomeDestino = "";
+            decimal preco = 0;
 
             using (MySqlDataReader r = cmdD.ExecuteReader())
             {
                 if (r.Read())
-                    nomeDestino = r["estado"].ToString() + " - " + r["pais"].ToString();
+                {
+                    nomeDestino = $"{r["estado"]} - {r["pais"]}";
+                    preco = Convert.ToDecimal(r["preco_por_pessoa"]);  // ADICIONADO
+                }
                 else
                 {
-                    TempData["Erro"] = "Destino nao encontrado.";
+                    TempData["Erro"] = "Destino não encontrado.";
                     return RedirectToAction("Index", "Destinos");
                 }
             }
 
+            // Verifica se já existe no carrinho
             string sqlCheck = @"SELECT id FROM carrinho
-                                 WHERE usuario_id = @uid AND tipo_item = 'destino' AND item_id = @iid";
+                                WHERE usuario_id = @uid AND tipo_item = 'destino' AND item_id = @iid";
             using MySqlCommand cmdCheck = new MySqlCommand(sqlCheck, conn);
             cmdCheck.Parameters.AddWithValue("@uid", usuarioId);
             cmdCheck.Parameters.AddWithValue("@iid", destinoId);
@@ -165,17 +172,19 @@ namespace projectPartiuDestino.Controllers
             }
             else
             {
+                // ATUALIZADO: preco agora vem do banco em vez de 0.00
                 string sqlIns = @"INSERT INTO carrinho
                                   (usuario_id, tipo_item, item_id, nome_item, preco_unitario, quantidade)
-                                  VALUES (@uid, 'destino', @iid, @nome, 0.00, 1)";
+                                  VALUES (@uid, 'destino', @iid, @nome, @preco, 1)";
                 using MySqlCommand cmdIns = new MySqlCommand(sqlIns, conn);
                 cmdIns.Parameters.AddWithValue("@uid", usuarioId);
                 cmdIns.Parameters.AddWithValue("@iid", destinoId);
                 cmdIns.Parameters.AddWithValue("@nome", nomeDestino);
+                cmdIns.Parameters.AddWithValue("@preco", preco);         // ATUALIZADO
                 cmdIns.ExecuteNonQuery();
             }
 
-            TempData["Sucesso"] = nomeDestino + " adicionado ao carrinho!";
+            TempData["Sucesso"] = $"{nomeDestino} adicionado ao carrinho!";
             return RedirectToAction("Index", "Carrinho");
         }
 
@@ -202,16 +211,16 @@ namespace projectPartiuDestino.Controllers
             using (MySqlDataReader r = cmdV.ExecuteReader())
             {
                 if (r.Read())
-                    nomeViagem = "Viagem personalizada - " + r["destino"].ToString();
+                    nomeViagem = $"Viagem personalizada - {r["destino"]}";
                 else
                 {
-                    TempData["Erro"] = "Viagem personalizada nao encontrada.";
+                    TempData["Erro"] = "Viagem personalizada não encontrada.";
                     return RedirectToAction("Index");
                 }
             }
 
             string sqlCheck = @"SELECT id FROM carrinho
-                                 WHERE usuario_id = @uid AND tipo_item = 'viagem_personalizada' AND item_id = @iid";
+                                WHERE usuario_id = @uid AND tipo_item = 'viagem_personalizada' AND item_id = @iid";
             using MySqlCommand cmdCheck = new MySqlCommand(sqlCheck, conn);
             cmdCheck.Parameters.AddWithValue("@uid", usuarioId);
             cmdCheck.Parameters.AddWithValue("@iid", viagemId);
@@ -278,6 +287,7 @@ namespace projectPartiuDestino.Controllers
             if (res != null)
             {
                 int novaQtd = Convert.ToInt32(res) + delta;
+
                 if (novaQtd <= 0)
                 {
                     string sqlDel = "DELETE FROM carrinho WHERE id = @id AND usuario_id = @uid";
@@ -312,6 +322,7 @@ namespace projectPartiuDestino.Controllers
 
             using MySqlConnection conn = new MySqlConnection(conexao);
             conn.Open();
+
             string sql = "DELETE FROM carrinho WHERE usuario_id = @uid";
             using MySqlCommand cmd = new MySqlCommand(sql, conn);
             cmd.Parameters.AddWithValue("@uid", usuarioId);
