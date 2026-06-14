@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
 using projectPartiuDestino.Models;
+using BCrypt.Net;
 
 namespace projectPartiuDestino.Controllers
 {
@@ -31,12 +32,15 @@ namespace projectPartiuDestino.Controllers
                     return Content("Email já cadastrado");
                 }
 
+                string senhaHash = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
+
                 string sql = "INSERT INTO usuarios(nome, email, senha) VALUES (@Nome, @Email, @Senha)";
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
 
                 cmd.Parameters.AddWithValue("@Nome", usuario.Nome);
                 cmd.Parameters.AddWithValue("@Email", usuario.Email);
-                cmd.Parameters.AddWithValue("@Senha", usuario.Senha);
+
+                cmd.Parameters.AddWithValue("@Senha", senhaHash);
 
                 cmd.ExecuteNonQuery();
             }

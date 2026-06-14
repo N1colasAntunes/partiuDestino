@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
 using projectPartiuDestino.Autenticacao;
+using BCrypt.Net;
 
 namespace projectPartiuDestino.Controllers
 {
@@ -12,6 +13,10 @@ namespace projectPartiuDestino.Controllers
         {
             return View();
         }
+        public IActionResult GerarHash()
+        {
+            return Content(BCrypt.Net.BCrypt.HashPassword("12345"));
+        }
 
         [HttpPost]
         public IActionResult Entrar(string email, string senha)
@@ -20,34 +25,40 @@ namespace projectPartiuDestino.Controllers
             {
                 conn.Open();
 
-                string sql = "SELECT id, nome, email, tipo FROM usuarios WHERE email = @Email AND senha = @Senha";
+                string sql = @"SELECT id, nome, email, senha, tipo
+                       FROM usuarios
+                       WHERE email = @Email";
 
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
 
                 cmd.Parameters.AddWithValue("@Email", email);
-                cmd.Parameters.AddWithValue("@Senha", senha);
 
                 MySqlDataReader reader = cmd.ExecuteReader();
 
                 if (reader.Read())
                 {
-                    int id = Convert.ToInt32(reader["id"]);
-                    string nome = reader["nome"].ToString();
-                    string emailUsuario = reader["email"].ToString();
-                    string tipo = reader["tipo"].ToString();
+                    string senhaBanco = reader["senha"].ToString();
 
-                    // SALVANDO SESSÃO
-                    HttpContext.Session.SetInt32("UserId", id);
-                    HttpContext.Session.SetString("UserName", nome);
-                    HttpContext.Session.SetString("UserEmail", emailUsuario);
-                    HttpContext.Session.SetString("UserRole", tipo);
+                    bool senhaCorreta =
+                        BCrypt.Net.BCrypt.Verify(senha, senhaBanco);
 
-                    if (tipo == "admin")
+                    if (senhaCorreta)
                     {
-                        return RedirectToAction("Index", "Admin");
-                    }
-                    else
-                    {
+                        int id = Convert.ToInt32(reader["id"]);
+                        string nome = reader["nome"].ToString();
+                        string emailUsuario = reader["email"].ToString();
+                        string tipo = reader["tipo"].ToString();
+
+                        HttpContext.Session.SetInt32("UserId", id);
+                        HttpContext.Session.SetString("UserName", nome);
+                        HttpContext.Session.SetString("UserEmail", emailUsuario);
+                        HttpContext.Session.SetString("UserRole", tipo);
+
+                        if (tipo == "admin")
+                        {
+                            return RedirectToAction("Index", "Admin");
+                        }
+
                         return RedirectToAction("Index", "Home");
                     }
                 }
@@ -57,6 +68,7 @@ namespace projectPartiuDestino.Controllers
 
             return View("Index");
         }
+
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();

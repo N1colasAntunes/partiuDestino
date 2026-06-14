@@ -115,7 +115,7 @@ CREATE TABLE carrinho (
 -- 3.1 Usuário administrador padrão
 -- ------------------------------------------------------------
 INSERT INTO usuarios (nome, email, senha, tipo) VALUES
-    ('Julia Costa', 'julia@gmail.com', '12345', 'admin');
+    ('Julia Costa', 'julia@gmail.com', '$2a$11$KG8AxkIziG2A6C9aOIzWkeD82eW96KTcXrDiM2JMYZGlSmLVoU2am', 'admin');
 
 -- ------------------------------------------------------------
 -- 3.2 Destinos (com imagem_url e preco_por_pessoa)
@@ -358,4 +358,5 @@ SELECT
     (SELECT COUNT(*) FROM viagem_personalizada) AS total_viagens_personalizadas,
     (SELECT COUNT(*) FROM carrinho)             AS total_itens_carrinho;
     
-    SELECT * FROM pacotes
+    SELECT * FROM pacotes;
+    SELECT * FROM usuarios;
