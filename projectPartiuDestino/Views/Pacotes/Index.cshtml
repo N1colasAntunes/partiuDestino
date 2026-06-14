@@ -263,10 +263,48 @@
             grid-template-columns: 1fr;
         }
     }
+
+    .search-container {
+        position: relative;
+        max-width: 500px;
+        margin: 30px auto;
+    }
+
+        .search-container input {
+            width: 100%;
+            padding: 14px 20px;
+            padding-right: 50px;
+            border: none;
+            border-radius: 50px;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,.1);
+            font-size: 16px;
+            outline: none;
+            transition: .3s;
+        }
+
+            .search-container input:focus {
+                box-shadow: 0 5px 20px rgba(59,130,246,.3);
+            }
+
+        .search-container i {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #3b82f6;
+        }
 </style>
 
 <div class="pacotes-container">
     <div class="container">
+        <div class="search-container">
+            <input type="text"
+                   id="campoBuscaPacotes"
+                   placeholder="Pesquisar pacote, descrição ou tipo de viagem...">
+
+            <i class="fas fa-search"></i>
+        </div>
 
         <div class="header-secao">
             <h1>Nossos Pacotes</h1>
@@ -396,3 +434,34 @@
         </div>
     </div>
 </div>
+<script>
+    const pesquisaPacote =
+        document.getElementById("campoBuscaPacotes");
+
+    pesquisaPacote.addEventListener("keyup", function () {
+
+        let termo = this.value.trim();
+
+        if (termo.length < 2) {
+            document.getElementById(
+                "resultadoPesquisaPacotes"
+            ).innerHTML = "";
+
+            return;
+        }
+
+        fetch('/Pacotes/Buscar?termo=' +
+              encodeURIComponent(termo))
+
+            .then(response => response.text())
+
+            .then(html => {
+
+                document.getElementById(
+                    "resultadoPesquisaPacotes"
+                ).innerHTML = html;
+
+            });
+
+    });
+</script>

@@ -670,6 +670,59 @@
             color: white;
             text-decoration: none;
         }
+
+    #btnTopo {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 60px;
+        height: 60px;
+        border: none;
+        border-radius: 50%;
+        background: linear-gradient( 135deg, var(--azul-claro), var(--azul-escuro) );
+        color: var(--branco);
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 10px 25px rgba(30, 58, 138, 0.35), 0 4px 10px rgba(0, 0, 0, 0.15);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(20px);
+        transition: all 0.35s ease;
+    }
+
+        #btnTopo.mostrar {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        #btnTopo:hover {
+            transform: translateY(-5px) scale(1.08);
+            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.45), 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #btnTopo:active {
+            transform: scale(0.95);
+        }
+
+        #btnTopo::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        #btnTopo:hover::before {
+            opacity: 1;
+        }
 </style>
 
 <!-- ══════════════════════════════════════════════════════════════════════
@@ -983,28 +1036,13 @@
     </div>
 </section>
 
+<button id="btnTopo" title="Voltar ao topo">
+    ↑
+</button>
+
 <!-- EmailJS -->
 <script src="https://cdn.jsdelivr.net/npm/@@emailjs/browser@@4/dist/email.min.js"></script>
 <script src="~/js/contato-emailjs.js"></script>
-
-<!-- ══════════════════════════════════════════════════════════════════════
-     FOOTER
-     ══════════════════════════════════════════════════════════════════════ -->
-<footer class="footer-figma">
-    <div class="container">
-        <div class="footer-links-sociais">
-            <span>Siga nossas redes:</span>
-            <a href="https://www.instagram.com/_partiu.destino/"><i class="fab fa-instagram"></i></a>
-            <a href="https://www.facebook.com/people/Partiu-Destino/61590693054759/"><i class="fab fa-facebook"></i></a>
-            <a href="https://wa.me/5511981125234" target="_blank"><i class="fab fa-whatsapp"></i></a>
-        </div>
-        <p>
-            &copy; 2026 Partiu Destino. Todos os direitos reservados. |
-            <a href="/Legal/PoliticaDePrivacidade" style="color:white;">Política de Privacidade</a> |
-            <a href="/Legal/TermosDeUso" style="color:white;">Termos de Uso</a>
-        </p>
-    </div>
-</footer>
 
 <script>
     function scrollCarrossel(d)  { document.getElementById('carrosselDestinos').scrollBy({ left: d * 320, behavior: 'smooth' }); }
@@ -1017,4 +1055,23 @@
         document.querySelectorAll('.faq-pergunta').forEach(b => b.setAttribute('aria-expanded','false'));
         if (!aberta) { r.classList.add('aberta'); btn.setAttribute('aria-expanded','true'); }
     }
+
+
+    // botao do topo
+    const btnTopo = document.getElementById("btnTopo");
+
+    window.addEventListener("scroll", () => {
+        if (window.scrollY > 300) {
+            btnTopo.classList.add("mostrar");
+        } else {
+            btnTopo.classList.remove("mostrar");
+        }
+    });
+
+    btnTopo.addEventListener("click", () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    });
 </script>

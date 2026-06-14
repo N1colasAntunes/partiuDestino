@@ -89,34 +89,56 @@
     }
     /* Nome */
 
-    /* Estilo para o botão Voltar */
-    .sidebar-item {
+    /* Barra Lateral (Sidebar) */
+    .admin-sidebar {
+        width: 260px;
+        background-color: #1e3a8a;
+        color: white;
+        padding: 30px 20px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .sidebar-header {
+        font-size: 1.25rem;
+        font-weight: 800;
+        margin-bottom: 40px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .sidebar-menu {
         list-style: none;
-        margin-top: 10px;
+        padding: 0;
+        margin: 0;
+        flex-grow: 1;
+    }
+
+    .sidebar-item {
+        margin-bottom: 10px;
     }
 
     .sidebar-link {
-        display: inline-flex;
+        display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 12px;
+        padding: 12px 15px;
+        color: white;
         text-decoration: none;
-        color: #1e3a8a;
-        font-weight: 600;
-        font-family: 'Segoe UI', sans-serif;
-        padding: 10px 20px;
-        border: 2px solid #1e3a8a;
-        border-radius: 8px;
-        transition: all 0.3s ease;
+        border-radius: 10px;
+        transition: all 0.3s;
+        font-weight: 500;
     }
 
-        .sidebar-link:hover {
-            background-color: #1e3a8a;
-            color: #ffffff;
-            transform: translateX(-5px);
+        .sidebar-link:hover, .sidebar-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
         }
 
         .sidebar-link i {
-            font-size: 0.9rem;
+            width: 20px;
+            text-align: center;
         }
 
     /* Ajuste para tabelas com muitas colunas (scroll horizontal se necessário) */
@@ -126,6 +148,50 @@
     }
 </style>
 
+
+<aside class="admin-sidebar">
+    <ul class="sidebar-menu">
+        <li class="sidebar-item">
+            <a href="/Admin/Index" class="sidebar-link active">
+                <i class="fas fa-chart-pie"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+
+        <li class="sidebar-item">
+            <a href="/DestinosAdmin/Index" class="sidebar-link">
+                <i class="fas fa-map-marked-alt"></i>
+                <span>Destinos</span>
+            </a>
+        </li>
+
+        <li class="sidebar-item">
+            <a href="/PacotesAdmin/Index" class="sidebar-link">
+                <i class="fas fa-suitcase-rolling"></i>
+                <span>Pacotes</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a href="/ViagemPersonalizadaAdmin/Index" class="sidebar-link">
+                <i class="fas fa-users"></i>
+                <span>Viagens Personalizadas</span>
+            </a>
+        </li>
+
+        <li class="sidebar-item">
+            <a href="/Usuarios/Index" class="sidebar-link">
+                <i class="fas fa-users"></i>
+                <span>Usuários</span>
+            </a>
+        </li>
+    </ul>
+    <div class="sidebar-footer">
+        <a href="/" class="sidebar-link">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Sair do Painel</span>
+        </a>
+    </div>
+</aside>
 
 <div class="metric-info">
     <h4>Quantidade de Viagens Personalizadas</h4>
@@ -241,12 +307,3 @@
         }
     }
 </table>
-
-<br />
-
-<li class="sidebar-item">
-    <a asp-controller="Admin" asp-action="Index" class="sidebar-link">
-        <i class="fas fa-arrow-left"></i>
-        <span>Voltar</span>
-    </a>
-</li>

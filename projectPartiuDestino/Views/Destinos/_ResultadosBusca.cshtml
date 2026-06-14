@@ -1,0 +1,110 @@
+﻿@model List<projectPartiuDestino.Models.Destinos>
+
+<div class="destinos-grid">
+
+    @if (Model != null && Model.Any())
+    {
+        @foreach (var item in Model)
+        {
+            bool intl = item.OrigemPais != item.Pais;
+            string imgUrl = string.IsNullOrEmpty(item.ImagemUrl) ? "" :
+            item.ImagemUrl + (item.ImagemUrl.Contains("unsplash.com") && !item.ImagemUrl.Contains("?") ? "?w=700&q=80" : "");
+
+            <div class="card-destino-premium">
+
+                <!-- Topo com imagem real -->
+                <div class="destino-topo">
+                    @if (!string.IsNullOrEmpty(imgUrl))
+                    {
+                        <img class="destino-topo-img"
+                             src="@imgUrl"
+                             alt="@item.Estado, @item.Pais"
+                             loading="lazy"
+                             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+                        <div class="destino-topo-fallback" style="display:none;">
+                            <i class="fas fa-earth-americas"></i>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="destino-topo-fallback">
+                            <i class="fas fa-earth-americas"></i>
+                        </div>
+                    }
+                    <div class="destino-topo-overlay"></div>
+                    @if (intl)
+                    {
+                        <span class="badge-internacional">Internacional</span>
+                    }
+                    else
+                    {
+
+                        <span class="badge-nacional">Nacional</span>
+                    }
+                </div>
+
+                <!-- Conteúdo -->
+                <div class="destino-conteudo">
+                    <span class="rota-tag">Rota de Viagem</span>
+                    <h3 class="destino-titulo">@item.Pais – @item.Estado</h3>
+
+                    <div class="rota-box">
+                        <div class="rota-item">
+                            <div class="rota-local">
+                                <span class="rota-label">Origem</span>
+                                <span class="rota-valor">@item.OrigemPais – @item.OrigemEstado</span>
+                            </div>
+                            <div class="rota-seta"><i class="fas fa-arrow-right"></i></div>
+                            <div class="rota-local">
+                                <span class="rota-label">Destino</span>
+                                <span class="rota-valor">@item.Pais – @item.Estado</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="descricao-destino">
+                        Descubra experiências incríveis em @item.Estado, @item.Pais,
+                        com roteiros cuidadosamente planejados para sua próxima aventura.
+                    </p>
+                </div>
+
+                <!-- Footer com preço + botão -->
+                <div class="destino-footer">
+                    <div class="destino-preco-box">
+                        <span class="destino-preco-label">A partir de</span>
+                        <span class="destino-preco-valor">@item.PrecoPorPessoa.ToString("C")</span>
+                    </div>
+
+                    @if (Context.Session.GetString("UserName") != null)
+                    {
+                        <form asp-controller="Carrinho" asp-action="AdicionarDestino"
+                              method="post" style="margin:0;">
+                            <input type="hidden" name="destinoId" value="@item.Id" />
+                            <button type="submit" class="btn-adicionar-destino">
+                                <i class="fas fa-cart-plus"></i> Adicionar ao Carrinho
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a asp-controller="Login" asp-action="Index" class="btn-adicionar-destino">
+                            <i class="fas fa-sign-in-alt"></i> Entre para Reservar
+                        </a>
+                    }
+                </div>
+
+            </div>
+        }
+    }
+    else
+    {
+        <div class="lista-vazia">
+            <i class="fas fa-map-location-dot fa-4x mb-4" style="color:#cbd5e1;"></i>
+            <h3>Nenhum destino encontrado</h3>
+            <p>Estamos adicionando novos destinos incríveis. Volte em breve!</p>
+            <a asp-controller="Home" asp-action="Index"
+               class="btn btn-primary mt-3 px-4 py-2 rounded-pill">Voltar ao Início</a>
+        </div>
+    }
+
+</div>

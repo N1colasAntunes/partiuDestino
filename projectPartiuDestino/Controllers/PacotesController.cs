@@ -50,5 +50,49 @@ namespace projectPartiuDestino.Controllers
         {
             return View();
         }
+        public IActionResult Buscar(string termo)
+        {
+            List<Pacotes> pacotes = new();
+
+            using (MySqlConnection conn = new MySqlConnection(conexao))
+            {
+                conn.Open();
+
+                string sql = @"
+            SELECT *
+            FROM pacotes
+            WHERE nome LIKE @termo
+               OR descricao LIKE @termo
+               OR tipo_viagem LIKE @termo";
+
+                MySqlCommand cmd = new(sql, conn);
+
+                cmd.Parameters.AddWithValue(
+                    "@termo",
+                    "%" + termo + "%");
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    pacotes.Add(new Pacotes
+                    {
+                        Id = Convert.ToInt32(reader["id"]),
+                        DestinoId = Convert.ToInt32(reader["destino_id"]),
+                        Nome = reader["nome"].ToString(),
+                        Descricao = reader["descricao"].ToString(),
+                        TipoViagem = reader["tipo_viagem"].ToString(),
+                        DuracaoDias = Convert.ToInt32(reader["duracao_dias"]),
+                        DataPartida = Convert.ToDateTime(reader["data_partida"]),
+                        DataRetorno = Convert.ToDateTime(reader["data_retorno"]),
+                        PrecoPorPessoa = Convert.ToDecimal(reader["preco_por_pessoa"]),
+                        VagasDisponiveis = Convert.ToInt32(reader["vagas_disponiveis"]),
+                        ImagemUrl = reader["imagem_url"]?.ToString() ?? ""
+                    });
+                }
+            }
+
+            return PartialView("_ResultadosBuscaPacotes", pacotes);
+        }
     }
 }

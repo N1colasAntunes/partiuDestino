@@ -1,0 +1,123 @@
+﻿@model List<projectPartiuDestino.Models.Pacotes>
+
+<div class="pacotes-grid">
+
+    @if (Model != null && Model.Any())
+    {
+        @foreach (var item in Model)
+        {
+            // Imagem própria do pacote — sem precisar buscar do destino
+            string imgUrl = string.IsNullOrEmpty(item.ImagemUrl) ? "" :
+            item.ImagemUrl + (item.ImagemUrl.Contains("unsplash.com") && !item.ImagemUrl.Contains("?") ? "?w=700&q=80" : "");
+            bool temImagem = !string.IsNullOrEmpty(imgUrl);
+
+            string vagasCss = item.VagasDisponiveis > 5 ? "vagas-ok"
+            : item.VagasDisponiveis > 0 ? "vagas-alerta"
+            : "vagas-esgotado";
+            string vagasTxt = item.VagasDisponiveis > 5 ? $"{item.VagasDisponiveis} vagas"
+            : item.VagasDisponiveis > 0 ? $"Últimas {item.VagasDisponiveis}!"
+            : "Esgotado";
+            bool esgotado = item.VagasDisponiveis == 0;
+
+            <div class="card-pacote-premium">
+
+                <!-- Topo com imagem própria do pacote -->
+                <div class="pacote-topo">
+                    @if (temImagem)
+                    {
+                        <img class="pacote-topo-img"
+                             src="@imgUrl"
+                             alt="@item.Nome"
+                             loading="lazy"
+                             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+                        <div class="pacote-topo-fallback" style="display:none;">
+                            <i class="fas fa-plane-departure"></i>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="pacote-topo-fallback">
+                            <i class="fas fa-plane-departure"></i>
+                        </div>
+                    }
+                    <div class="pacote-topo-overlay"></div>
+                    <span class="badge-vagas @vagasCss">@vagasTxt</span>
+                    @if (!string.IsNullOrEmpty(item.TipoViagem))
+                    {
+                        <span class="badge-tipo">@item.TipoViagem</span>
+                    }
+            </div>
+
+            <!-- Conteúdo -->
+            <div class="pacote-conteudo">
+                <h3 class="pacote-titulo">@item.Nome</h3>
+
+                <div class="pacote-detalhes-rapidos">
+                    <div class="detalhe-item">
+                        <span class="detalhe-label">Duração</span>
+                        <span class="detalhe-valor">@item.DuracaoDias dias</span>
+                    </div>
+                    <div class="detalhe-item">
+                        <span class="detalhe-label">Partida</span>
+                        <span class="detalhe-valor">@item.DataPartida.ToString("dd/MM/yy")</span>
+                    </div>
+                    <div class="detalhe-item">
+                        <span class="detalhe-label">Retorno</span>
+                        <span class="detalhe-valor">@item.DataRetorno.ToString("dd/MM/yy")</span>
+                    </div>
+                </div>
+
+                <p class="pacote-descricao">
+                    @(item.Descricao?.Length > 120
+                                    ? item.Descricao.Substring(0, 120) + "…"
+                                    : item.Descricao)
+            </p>
+        </div>
+
+                <!-- Footer com preço -->
+                <div class="pacote-footer">
+                    <div class="pacote-preco-box">
+                        <span class="preco-sub">Por pessoa</span>
+                        <span class="preco-principal">@item.PrecoPorPessoa.ToString("C")</span>
+                    </div>
+
+            @if (Context.Session.GetString("UserName") != null)
+                    {
+                        if (!esgotado)
+                        {
+                            <form asp-controller="Carrinho" asp-action="AdicionarPacote"
+                                  method="post" style="margin:0;">
+                                <input type="hidden" name="pacoteId" value="@item.Id" />
+                                <button type="submit" class="btn-reservar">
+                                    <i class="fas fa-cart-plus"></i> Adicionar ao Carrinho
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <span class="btn-reservar disabled">Esgotado</span>
+                        }
+                    }
+                    else
+                    {
+                        <a asp-controller="Login" asp-action="Index" class="btn-reservar">
+                            <i class="fas fa-sign-in-alt"></i> Entre para Reservar
+                        </a>
+                    }
+                </div>
+
+            </div>
+        }
+    }
+    else
+    {
+        <div class="lista-vazia">
+            <i class="fas fa-suitcase-rolling fa-4x mb-4" style="color:#cbd5e1;"></i>
+            <h3>Nenhum pacote encontrado</h3>
+            <p>Estamos preparando novas aventuras. Volte em breve!</p>
+            <a asp-controller="Home" asp-action="Index"
+               class="btn btn-primary mt-3 px-4 py-2 rounded-pill">Voltar ao Início</a>
+        </div>
+    }
+
+</div>
