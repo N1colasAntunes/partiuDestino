@@ -368,7 +368,8 @@ SELECT
     (SELECT COUNT(*) FROM destinos)             AS total_destinos,
     (SELECT COUNT(*) FROM pacotes)              AS total_pacotes,
     (SELECT COUNT(*) FROM viagem_personalizada) AS total_viagens_personalizadas,
-    (SELECT COUNT(*) FROM carrinho)             AS total_itens_carrinho;
+    (SELECT COUNT(*) FROM carrinho)             AS total_itens_carrinho,
+    (SELECT COUNT(*) FROM pedidos)             AS total_pedidos;
     
     SELECT * FROM pacotes;
     SELECT * FROM usuarios;
