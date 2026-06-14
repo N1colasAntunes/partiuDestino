@@ -723,6 +723,50 @@
         #btnTopo:hover::before {
             opacity: 1;
         }
+
+    .barra-busca-home {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 15px 40px rgba(0,0,0,.12);
+        margin-top: -60px;
+        position: relative;
+        z-index: 10;
+    }
+
+        .barra-busca-home .form-label {
+            font-weight: 600;
+            color: #1e3a8a;
+        }
+
+        .barra-busca-home .form-control,
+        .barra-busca-home .form-select {
+            height: 55px;
+            border-radius: 12px;
+            border: 2px solid #e5e7eb;
+            transition: .3s;
+        }
+
+            .barra-busca-home .form-control:focus,
+            .barra-busca-home .form-select:focus {
+                border-color: #3b82f6;
+                box-shadow: 0 0 0 0.2rem rgba(59,130,246,.2);
+            }
+
+    .btn-buscar-home {
+        height: 55px;
+        border: none;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+        color: white;
+        font-weight: 700;
+        transition: .3s;
+    }
+
+        .btn-buscar-home:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59,130,246,.35);
+        }
 </style>
 
 <!-- ══════════════════════════════════════════════════════════════════════
@@ -746,6 +790,67 @@
         }
     </div>
 </section>
+
+
+ @* BARRA DE PESQUISA  *@
+<form method="get" asp-controller="Destinos" asp-action="Index">
+<section class="container mt-5 mb-5">
+    <div class="barra-busca-home">
+        <div class="row g-3">
+
+            <div class="col-md-2">
+                <label class="form-label">Origem</label>
+                <select class="form-select" name="origem">
+                    <option selected>Selecione</option>
+
+                    @foreach (string origem in ViewBag.Origens)
+                    {
+                        <option>@origem</option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <label class="form-label">Destino</label>
+                <select class="form-select" name="destino">
+                    <option selected>Selecione</option>
+
+                    @foreach (string destino in ViewBag.Destinos)
+                    {
+                        <option>@destino</option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <label class="form-label">Entrada</label>
+                <input type="date" class="form-control">
+            </div>
+
+            <div class="col-md-2">
+                <label class="form-label">Saída</label>
+                <input type="date" class="form-control">
+            </div>
+
+            <div class="col-md-2">
+                <label class="form-label">Pessoas</label>
+                <select class="form-select">
+                    <option>1 Pessoa</option>
+                    <option>2 Pessoas</option>
+                    <option>3 Pessoas</option>
+                    <option>4 Pessoas</option>
+                </select>
+            </div>
+
+            <div class="col-md-2 d-flex align-items-end">
+                <button class="btn-buscar-home w-100">
+                    Buscar
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+</form>
 
 <!-- ══════════════════════════════════════════════════════════════════════
      CARROSSEL — DESTINOS

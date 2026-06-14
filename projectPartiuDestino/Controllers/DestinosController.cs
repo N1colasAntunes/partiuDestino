@@ -8,8 +8,9 @@ namespace projectPartiuDestino.Controllers
     {
         private string conexao = "server=localhost;database=bdpartiudestino;uid=root;pwd=12345678;";
 
-        public IActionResult Index()
+        public IActionResult Index(string origem, string destino)
         {
+
             List<Destinos> listaDestinos = new List<Destinos>();
 
             using (MySqlConnection conn = new MySqlConnection(conexao))
@@ -17,10 +18,31 @@ namespace projectPartiuDestino.Controllers
                 conn.Open();
 
                 string sql = @"SELECT id, origem_pais, origem_estado,
-                                      pais, estado, imagem_url, preco_por_pessoa
-                               FROM destinos";
+                                   pais, estado, imagem_url, preco_por_pessoa
+                                   FROM destinos
+                                   WHERE 1=1";
+
+                if (!string.IsNullOrEmpty(origem))
+                {
+                    sql += " AND CONCAT(origem_pais, ' - ', origem_estado) = @origem";
+                }
+
+                if (!string.IsNullOrEmpty(destino))
+                {
+                    sql += " AND CONCAT(pais, ' - ', estado) = @destino";
+                }
+
 
                 using MySqlCommand cmd = new MySqlCommand(sql, conn);
+                if (!string.IsNullOrEmpty(origem))
+                {
+                    cmd.Parameters.AddWithValue("@origem", origem);
+                }
+
+                if (!string.IsNullOrEmpty(destino))
+                {
+                    cmd.Parameters.AddWithValue("@destino", destino);
+                }
                 using MySqlDataReader reader = cmd.ExecuteReader();
 
                 while (reader.Read())

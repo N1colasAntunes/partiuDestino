@@ -360,3 +360,4 @@ SELECT
     
     SELECT * FROM pacotes;
     SELECT * FROM usuarios;
+    SELECT * FROM destinos;

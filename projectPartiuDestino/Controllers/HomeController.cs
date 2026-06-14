@@ -17,6 +17,7 @@ namespace projectPartiuDestino.Controllers
 
         public IActionResult Index()
         {
+
             List<Destinos> listaDestinos = new List<Destinos>();
 
             using (MySqlConnection conn = new MySqlConnection(conexao))
@@ -44,6 +45,16 @@ namespace projectPartiuDestino.Controllers
                     });
                 }
             }
+            ViewBag.Origens = listaDestinos
+                .Select(d => $"{d.OrigemPais} - {d.OrigemEstado}")
+                .Distinct()
+                .OrderBy(o => o)
+                .ToList();
+            ViewBag.Destinos = listaDestinos
+                .Select(d => $"{d.Pais} - {d.Estado}")
+                .Distinct()
+                .OrderBy(d => d)
+                .ToList();
 
             return View(listaDestinos);
         }
