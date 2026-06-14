@@ -1,0 +1,218 @@
+﻿@model List<projectPartiuDestino.Models.PedidoConfirmado>
+
+@{
+    ViewData["Title"] = "Meu Perfil";
+}
+
+<style>
+    body {
+        background: #f3f4f6;
+    }
+
+    .perfil-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 25px;
+    }
+
+    /* SIDEBAR */
+    .perfil-sidebar {
+        background: white;
+        border-radius: 18px;
+        padding: 25px;
+        height: fit-content;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+        text-align: center;
+    }
+
+    .avatar {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2rem;
+        margin: 0 auto 15px;
+    }
+
+    .perfil-sidebar h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        color: #111827;
+    }
+
+    .perfil-sidebar p {
+        font-size: .85rem;
+        color: #6b7280;
+        margin-top: 5px;
+    }
+
+    .perfil-info-box {
+        margin-top: 20px;
+        text-align: left;
+        font-size: .85rem;
+        color: #374151;
+    }
+
+        .perfil-info-box div {
+            margin-bottom: 10px;
+        }
+
+    /* MAIN */
+    .perfil-main {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .perfil-header {
+        background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+        color: white;
+        padding: 25px;
+        border-radius: 18px;
+    }
+
+        .perfil-header h2 {
+            margin: 0;
+            font-size: 1.6rem;
+        }
+
+        .perfil-header p {
+            margin-top: 5px;
+            opacity: .9;
+        }
+
+    /* compras */
+    .section-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #111827;
+        margin-top: 10px;
+    }
+
+    .cards-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 18px;
+    }
+
+    .pedido-card {
+        background: white;
+        border-radius: 16px;
+        padding: 18px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+        border-left: 5px solid #3b82f6;
+        transition: 0.25s;
+    }
+
+        .pedido-card:hover {
+            transform: translateY(-4px);
+        }
+
+    .pedido-title {
+        font-weight: 800;
+        color: #111827;
+        margin-bottom: 8px;
+    }
+
+    .pedido-info {
+        font-size: .85rem;
+        color: #6b7280;
+        margin-bottom: 5px;
+    }
+
+    .pedido-valor {
+        font-weight: 900;
+        color: #1e3a8a;
+        margin-top: 8px;
+    }
+
+    .empty {
+        background: white;
+        padding: 30px;
+        border-radius: 16px;
+        text-align: center;
+        color: #6b7280;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    }
+
+    /* responsivo */
+    @@media (max-width: 900px) {
+        .perfil-container {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="perfil-container">
+
+    <!-- SIDEBAR -->
+    <div class="perfil-sidebar">
+
+        <div class="avatar">
+            <i class="fas fa-user"></i>
+        </div>
+
+        <h3>@Context.Session.GetString("UserName")</h3>
+        <p>Cliente Partiu Destino</p>
+
+        <div class="perfil-info-box">
+            <div><strong>Email:</strong> @Context.Session.GetString("UserEmail")</div>
+            <div><strong>Status:</strong> Ativo</div>
+        </div>
+
+    </div>
+
+    <!-- MAIN -->
+    <div class="perfil-main">
+
+        <div class="perfil-header">
+            <h2>Meu Perfil</h2>
+            <p>Acompanhe suas viagens e experiências</p>
+        </div>
+
+        <div>
+            <div class="section-title">🧾 Minhas compras</div>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="empty">
+                Nenhuma compra encontrada ainda.
+            </div>
+        }
+        else
+        {
+            <div class="cards-container">
+                @foreach (var p in Model)
+                {
+                    <div class="pedido-card">
+
+                        <div class="pedido-title">
+                            @p.NomeItem
+                        </div>
+
+                        <div class="pedido-info">
+                            📅 @p.DataPedido.ToString("dd/MM/yyyy HH:mm")
+                        </div>
+
+                        <div class="pedido-info">
+                            🔢 Quantidade: @p.Quantidade
+                        </div>
+
+                        <div class="pedido-valor">
+                            💰 @p.Total.ToString("C")
+                        </div>
+
+                    </div>
+                }
+            </div>
+        }
+
+    </div>
+</div>

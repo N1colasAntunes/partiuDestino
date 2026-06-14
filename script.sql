@@ -106,7 +106,19 @@ CREATE TABLE carrinho (
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
-
+-- ------------------------------------------------------------
+-- 2.6 Tabela: pedidos
+-- ------------------------------------------------------------
+CREATE TABLE pedidos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    tipo_item VARCHAR(50) NOT NULL,
+    item_id INT NOT NULL,
+    nome_item VARCHAR(255) NOT NULL,
+    preco_unitario DECIMAL(10,2) DEFAULT 0,
+    quantidade INT DEFAULT 1,
+    data_pedido DATETIME DEFAULT CURRENT_TIMESTAMP
+);
 -- ============================================================
 -- 3. INSERÇÃO DE DADOS
 -- ============================================================
@@ -361,3 +373,4 @@ SELECT
     SELECT * FROM pacotes;
     SELECT * FROM usuarios;
     SELECT * FROM destinos;
+    SELECT * FROM pedidos;

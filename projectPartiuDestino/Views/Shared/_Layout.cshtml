@@ -100,6 +100,17 @@
                 color: white;
                 text-decoration: none;
             }
+
+        .user-icon-nav {
+            color: #1e3a8a;
+            font-size: 1.5rem;
+            transition: 0.25s;
+        }
+
+            .user-icon-nav:hover {
+                transform: scale(1.15);
+                color: #3b82f6;
+            }
     </style>
 </head>
 <body>
@@ -174,23 +185,27 @@
                                style="position:relative;color:#1e3a8a;font-size:1.3rem;text-decoration:none;"
                                title="Meu Carrinho">
                                 <i class="fas fa-shopping-cart"></i>
+
                                 @if (totalCarrinho > 0)
                                 {
                                     <span style="position:absolute;top:-8px;right:-10px;
-                                             background:#ef4444;color:white;
-                                             font-size:.6rem;font-weight:800;
-                                             width:18px;height:18px;border-radius:50%;
-                                             display:flex;align-items:center;justify-content:center;">
+                             background:#ef4444;color:white;
+                             font-size:.6rem;font-weight:800;
+                             width:18px;height:18px;border-radius:50%;
+                             display:flex;align-items:center;justify-content:center;">
                                         @(totalCarrinho > 9 ? "9+" : totalCarrinho.ToString())
                                     </span>
                                 }
                             </a>
-
-                            <span style="color:#1e3a8a;font-weight:600;">
-                                Olá, @Context.Session.GetString("UserName")
-                            </span>
-
-                            <a asp-controller="Login" asp-action="Logout" class="btn-entrar-nav">Sair</a>
+                            <a asp-controller="Perfil"
+                               asp-action="Index"
+                               style="color:#1e3a8a;font-size:1.4rem;text-decoration:none;margin-left:10px;"
+                               title="Meu Perfil">
+                                <i class="fas fa-user-circle"></i>
+                            </a>
+                            <a asp-controller="Login" asp-action="Logout" class="btn-entrar-nav">
+                                Sair
+                            </a>
                         }
                         else
                         {

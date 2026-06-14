@@ -311,7 +311,7 @@
             </li>
             <li class="sidebar-item">
                 <a href="/ViagemPersonalizadaAdmin/Index" class="sidebar-link">
-                    <i class="fas fa-users"></i>
+                    <i class="fas fa-globe-americas"></i>
                     <span>Viagens Personalizadas</span>
                 </a>
             </li>
@@ -320,6 +320,12 @@
                 <a href="/Usuarios/Index" class="sidebar-link">
                     <i class="fas fa-users"></i>
                     <span>Usuários</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="/PedidosFinalizados/Index" class="sidebar-link">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Pedidos Finalizados</span>
                 </a>
             </li>
         </ul>
@@ -462,7 +468,54 @@
                     </p>
                 </div>
             </div>
+            @{
+                int totalCarrinho = 0;
 
+                using (MySqlConnection conn = new MySqlConnection(conexao))
+                {
+                    conn.Open();
+
+                    string sqlCarrinho = "SELECT COUNT(*) FROM carrinho";
+
+                    MySqlCommand cmdCarrinho = new MySqlCommand(sqlCarrinho, conn);
+
+                    totalCarrinho = Convert.ToInt32(cmdCarrinho.ExecuteScalar());
+                }
+            }
+            @{
+                int totalPedidos = 0;
+
+                using (MySqlConnection conn = new MySqlConnection(conexao))
+                {
+                    conn.Open();
+
+                    string sqlPedidos = "SELECT COUNT(*) FROM pedidos";
+
+                    MySqlCommand cmdPedidos = new MySqlCommand(sqlPedidos, conn);
+
+                    totalPedidos = Convert.ToInt32(cmdPedidos.ExecuteScalar());
+                }
+            }
+            <div class="metric-card">
+                <div class="metric-icon icon-blue">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+
+                <div class="metric-info">
+                    <h4>Itens no Carrinho</h4>
+                    <p>@totalCarrinho</p>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon icon-green">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+
+                <div class="metric-info">
+                    <h4>Pedidos Finalizados</h4>
+                    <p>@totalPedidos</p>
+                </div>
+            </div>
         </div>
     </main>
 </div>

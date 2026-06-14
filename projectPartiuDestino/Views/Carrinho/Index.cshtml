@@ -614,11 +614,12 @@
                 }
 
                 <!-- Botão finalizar -->
-                <button class="btn-finalizar"
-                        onclick="alert('Funcionalidade de checkout em desenvolvimento! Nossa equipe entrará em contato para finalizar sua reserva.')">
-                    <i class="fas fa-lock"></i>
-                    Finalizar Reserva
-                </button>
+                <form asp-action="FinalizarPedido" method="post">
+                    <button class="btn-finalizar" type="submit">
+                        <i class="fas fa-lock"></i>
+                        Finalizar Reserva
+                    </button>
+                </form>
 
                 <!-- Limpar carrinho -->
                 <form asp-action="Limpar" method="post"
@@ -656,20 +657,3 @@
     }
 
 </div>
-
-<!-- Footer -->
-<footer class="footer-figma" style="background-color:#1e3a8a;color:white;padding:30px 0;text-align:center;font-size:.85rem;margin-top:60px;">
-    <div class="container">
-        <div style="margin-bottom:15px;display:flex;justify-content:center;gap:20px;align-items:center;">
-            <span>Siga nossas redes:</span>
-            <a href="https://www.instagram.com/_partiu.destino/" style="color:white;"><i class="fab fa-instagram"></i></a>
-            <a href="https://www.facebook.com/people/Partiu-Destino/61590693054759/" style="color:white;"><i class="fab fa-facebook"></i></a>
-            <span>| Whatsapp: (11) 98112-5234</span>
-        </div>
-        <p>
-            &copy; 2026 Partiu Destino. Todos os direitos reservados. |
-            <a href="/Legal/PoliticaDePrivacidade" style="color:white;">Política de Privacidade</a> |
-            <a href="/Legal/TermosDeUso" style="color:white;">Termos de Uso</a>
-        </p>
-    </div>
-</footer>

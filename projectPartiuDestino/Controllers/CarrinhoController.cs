@@ -331,5 +331,71 @@ namespace projectPartiuDestino.Controllers
             TempData["Sucesso"] = "Carrinho esvaziado com sucesso.";
             return RedirectToAction("Index");
         }
+        [HttpPost]
+        public IActionResult FinalizarPedido()
+        {
+            int? usuarioId = HttpContext.Session.GetInt32("UserId");
+
+            if (usuarioId == null)
+                return RedirectToAction("Index", "Login");
+
+            using MySqlConnection conn = new MySqlConnection(conexao);
+            conn.Open();
+
+            // 1. Buscar itens do carrinho
+            string sql = @"SELECT tipo_item, item_id, nome_item, preco_unitario, quantidade
+                   FROM carrinho
+                   WHERE usuario_id = @uid";
+
+            List<CarrinhoItem> itens = new();
+
+            using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@uid", usuarioId);
+
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        itens.Add(new CarrinhoItem
+                        {
+                            TipoItem = reader["tipo_item"].ToString()!,
+                            ItemId = Convert.ToInt32(reader["item_id"]),
+                            NomeItem = reader["nome_item"].ToString()!,
+                            PrecoUnitario = Convert.ToDecimal(reader["preco_unitario"]),
+                            Quantidade = Convert.ToInt32(reader["quantidade"])
+                        });
+                    }
+                }
+            }
+
+            // 2. Inserir no "pedidos"
+            foreach (var item in itens)
+            {
+                string insert = @"INSERT INTO pedidos
+                          (usuario_id, tipo_item, item_id, nome_item, preco_unitario, quantidade)
+                          VALUES
+                          (@uid, @tipo, @itemId, @nome, @preco, @qtd)";
+
+                using MySqlCommand cmdIns = new MySqlCommand(insert, conn);
+                cmdIns.Parameters.AddWithValue("@uid", usuarioId);
+                cmdIns.Parameters.AddWithValue("@tipo", item.TipoItem);
+                cmdIns.Parameters.AddWithValue("@itemId", item.ItemId);
+                cmdIns.Parameters.AddWithValue("@nome", item.NomeItem);
+                cmdIns.Parameters.AddWithValue("@preco", item.PrecoUnitario);
+                cmdIns.Parameters.AddWithValue("@qtd", item.Quantidade);
+
+                cmdIns.ExecuteNonQuery();
+            }
+
+            // 3. Limpar carrinho
+            string delete = "DELETE FROM carrinho WHERE usuario_id = @uid";
+            using MySqlCommand cmdDel = new MySqlCommand(delete, conn);
+            cmdDel.Parameters.AddWithValue("@uid", usuarioId);
+            cmdDel.ExecuteNonQuery();
+
+            TempData["Sucesso"] = "Pedido finalizado com sucesso!";
+            return RedirectToAction("Index");
+        }
     }
 }
