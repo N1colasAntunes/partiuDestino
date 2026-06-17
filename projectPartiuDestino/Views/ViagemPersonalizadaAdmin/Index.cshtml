@@ -1,5 +1,7 @@
 ﻿@{
-    ViewData["Title"] = "Painel Administrativo - Partiu Destino";
+    ViewData["Title"] = "Viagens Personalizadas - Painel Administrativo";
+    ViewData["HideFooter"] = true;
+
 }
 @using MySql.Data.MySqlClient
 
@@ -8,88 +10,12 @@
 }
 
 <style>
-    /* Estilo para a métrica (Card) */
-    .metric-info {
-        background: #ffffff;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        border: 1px solid #e2e8f0;
-        display: inline-block;
-        margin-bottom: 30px;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-        .metric-info h4 {
-            margin: 0;
-            color: #64748b;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .metric-info p {
-            margin: 10px 0 0 0;
-            font-size: 2rem;
-            font-weight: bold;
-            color: #1e3a8a;
-        }
-
-    /* Estilo para o título */
-    h2 {
-        font-family: 'Segoe UI', sans-serif;
-        color: #1e3a8a;
-        margin-bottom: 20px;
-        font-weight: 800;
-    }
-
-    /* Estilo para a tabela (Limpa e Moderna) */
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        background: #ffffff;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        border: none !important; /* Remove o visual do border="1" */
-        font-family: 'Segoe UI', sans-serif;
-        margin-bottom: 30px;
-    }
-
-    th {
-        background-color: #1e3a8a;
-        color: #ffffff;
-        text-align: left;
-        padding: 15px !important;
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    td {
-        padding: 12px 15px !important;
-        border-bottom: 1px solid #f1f5f9;
-        color: #334155;
-        font-size: 0.85rem;
-        line-height: 1.4;
-    }
-
-    tr:hover {
+    .admin-wrapper {
+        display: flex;
+        min-height: 100vh;
         background-color: #f8fafc;
     }
 
-    /* Destaque para colunas importantes */
-    td:nth-child(1) {
-        font-weight: bold;
-        color: #1e3a8a;
-    }
-    /* ID */
-    td:nth-child(2) {
-        font-weight: 600;
-    }
-    /* Nome */
-
-    /* Barra Lateral (Sidebar) */
     .admin-sidebar {
         width: 260px;
         background-color: #1e3a8a;
@@ -97,15 +23,17 @@
         padding: 30px 20px;
         display: flex;
         flex-direction: column;
+        flex-shrink: 0;
     }
 
     .sidebar-header {
-        font-size: 1.25rem;
+        font-size: 1.1rem;
         font-weight: 800;
         margin-bottom: 40px;
         display: flex;
         align-items: center;
         gap: 10px;
+        color: white;
     }
 
     .sidebar-menu {
@@ -131,8 +59,8 @@
         font-weight: 500;
     }
 
-        .sidebar-link:hover, .sidebar-link.active {
-            background-color: rgba(255, 255, 255, 0.1);
+        .sidebar-link:hover, .sidebar-link.ativo {
+            background-color: rgba(255, 255, 255, 0.15);
             color: white;
         }
 
@@ -141,180 +69,270 @@
             text-align: center;
         }
 
-    /* Ajuste para tabelas com muitas colunas (scroll horizontal se necessário) */
-    .table-container {
+    .admin-main {
+        flex-grow: 1;
+        padding: 40px;
         overflow-x: auto;
+    }
+
+    .admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+        .admin-header h2 {
+            font-weight: 800;
+            color: #1e3a8a;
+            margin: 0;
+            font-size: 1.6rem;
+        }
+
+    .metric-card-small {
+        background: white;
+        padding: 20px 25px;
+        border-radius: 14px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        border: 1px solid #f1f5f9;
+        display: inline-flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 28px;
+    }
+
+    .metric-icon-sm {
+        width: 48px;
+        height: 48px;
+        background: #fff7ed;
+        color: #f97316;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+    }
+
+    .metric-info h4 {
+        margin: 0 0 4px;
+        color: #64748b;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .metric-info p {
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: #1e3a8a;
+        line-height: 1;
+    }
+
+    .admin-table-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        border: 1px solid #f1f5f9;
+        overflow-x: auto;
+    }
+
+    .admin-table {
         width: 100%;
+        border-collapse: collapse;
+        min-width: 1100px;
+    }
+
+        .admin-table th {
+            background-color: #1e3a8a;
+            color: white;
+            text-align: left;
+            padding: 14px 14px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .admin-table td {
+            padding: 11px 14px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #334155;
+            font-size: 0.85rem;
+        }
+
+        .admin-table tr:hover td {
+            background-color: #f8fafc;
+        }
+
+    @@media (max-width: 992px) {
+        .admin-sidebar {
+            width: 80px;
+            padding: 30px 10px;
+        }
+
+        .sidebar-header span, .sidebar-link span {
+            display: none;
+        }
+
+        .sidebar-header {
+            justify-content: center;
+        }
+
+        .sidebar-link {
+            justify-content: center;
+        }
     }
 </style>
 
-
-<!-- Sidebar -->
-<aside class="admin-sidebar">
-    <div class="sidebar-header">
-
-        <span>Administração Partiu</span>
-    </div>
-    <ul class="sidebar-menu">
-        <li class="sidebar-item">
-            <a href="/Admin/Index" class="sidebar-link active">
-                <i class="fas fa-chart-pie"></i>
-                <span>Dashboard</span>
+<div class="admin-wrapper">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-plane"></i>
+            <span>Partiu Destino</span>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="sidebar-item">
+                <a href="/Admin/Index" class="sidebar-link">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="/DestinosAdmin/Index" class="sidebar-link">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <span>Destinos</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="/PacotesAdmin/Index" class="sidebar-link">
+                    <i class="fas fa-suitcase-rolling"></i>
+                    <span>Pacotes</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="/ViagemPersonalizadaAdmin/Index" class="sidebar-link ativo">
+                    <i class="fas fa-globe-americas"></i>
+                    <span>Viagens Personalizadas</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="/Usuarios/Index" class="sidebar-link">
+                    <i class="fas fa-users"></i>
+                    <span>Usuários</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="/PedidosFinalizados/Index" class="sidebar-link">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Pedidos Finalizados</span>
+                </a>
+            </li>
+        </ul>
+        <div class="sidebar-footer">
+            <a href="/" class="sidebar-link">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Sair do Painel</span>
             </a>
-        </li>
+        </div>
+    </aside>
 
-        <li class="sidebar-item">
-            <a href="/DestinosAdmin/Index" class="sidebar-link">
-                <i class="fas fa-map-marked-alt"></i>
-                <span>Destinos</span>
-            </a>
-        </li>
+    <!-- Conteúdo Principal -->
+    <main class="admin-main">
+        <div class="admin-header">
+            <h2><i class="fas fa-globe-americas me-2"></i>Viagens Personalizadas</h2>
+        </div>
 
-        <li class="sidebar-item">
-            <a href="/PacotesAdmin/Index" class="sidebar-link">
-                <i class="fas fa-suitcase-rolling"></i>
-                <span>Pacotes</span>
-            </a>
-        </li>
-        <li class="sidebar-item">
-            <a href="/ViagemPersonalizadaAdmin/Index" class="sidebar-link">
-                <i class="fas fa-globe-americas"></i>
-                <span>Viagens Personalizadas</span>
-            </a>
-        </li>
+        <!-- Métrica -->
+        <div class="metric-card-small">
+            <div class="metric-icon-sm"><i class="fas fa-route"></i></div>
+            <div class="metric-info">
+                <h4>Solicitações Recebidas</h4>
+                <p>
+                    @{
+                        int totalPedidos = 0;
+                        using (MySqlConnection conn = new MySqlConnection(conexao))
+                        {
+                            conn.Open();
+                            string sqlPedidos = "SELECT COUNT(*) FROM viagem_personalizada";
+                            MySqlCommand cmdPedidos = new MySqlCommand(sqlPedidos, conn);
+                            totalPedidos = Convert.ToInt32(cmdPedidos.ExecuteScalar());
+                        }
+                    }
+                    @totalPedidos
+                </p>
+            </div>
+        </div>
 
-        <li class="sidebar-item">
-            <a href="/Usuarios/Index" class="sidebar-link">
-                <i class="fas fa-users"></i>
-                <span>Usuários</span>
-            </a>
-        </li>
-        <li class="sidebar-item">
-            <a href="/Usuarios/Index" class="sidebar-link">
-                <i class="fas fa-check-circle"></i>
-                <span>Pedidos Finalizados</span>
-            </a>
-        </li>
-    </ul>
-    <div class="sidebar-footer">
-        <a href="/" class="sidebar-link">
-            <i class="fas fa-sign-out-alt"></i>
-            <span>Sair do Painel</span>
-        </a>
-    </div>
-</aside>
-
-<div class="metric-info">
-    <h4>Quantidade de Viagens Personalizadas</h4>
-
-    <p>
-        @{
-            int totalPedidos = 0;
-
-            using (MySqlConnection conn = new MySqlConnection(conexao))
-            {
-                conn.Open();
-
-                string sqlPedidos = "SELECT COUNT(*) FROM viagem_personalizada";
-
-                MySqlCommand cmdPedidos = new MySqlCommand(sqlPedidos, conn);
-
-                totalPedidos = Convert.ToInt32(cmdPedidos.ExecuteScalar());
-            }
-        }
-
-        @totalPedidos
-    </p>
+        <!-- Tabela -->
+        <div class="admin-table-card">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>ID Usuário</th>
+                        <th>Nome Completo</th>
+                        <th>CPF</th>
+                        <th>Email</th>
+                        <th>WhatsApp</th>
+                        <th>Destino</th>
+                        <th>Hospedagem</th>
+                        <th>Partida</th>
+                        <th>Duração</th>
+                        <th>Clima</th>
+                        <th>Orçamento</th>
+                        <th>Adultos</th>
+                        <th>Crianças</th>
+                        <th>Desejos Especiais</th>
+                        <th>Data Criação</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        using (MySqlConnection conn = new MySqlConnection(conexao))
+                        {
+                            conn.Open();
+                            string sql = "SELECT * FROM viagem_personalizada ORDER BY id DESC";
+                            MySqlCommand cmd = new MySqlCommand(sql, conn);
+                            MySqlDataReader reader = cmd.ExecuteReader();
+                            while (reader.Read())
+                            {
+                                <tr>
+                                    <td>@reader["id"]</td>
+                                    <td>@reader["usuario_id"]</td>
+                                    <td>@reader["nome_completo"]</td>
+                                    <td>@reader["cpf"]</td>
+                                    <td>@reader["email"]</td>
+                                    <td>@reader["whatsapp"]</td>
+                                    <td>@reader["destino"]</td>
+                                    <td>@reader["hospedagem"]</td>
+                                    <td>@Convert.ToDateTime(reader["data_partida"]).ToString("dd/MM/yyyy")</td>
+                                    <td>@reader["duracao_dias"] dias</td>
+                                    <td>@reader["clima_viagem"]</td>
+                                    <td>@reader["orcamento"]</td>
+                                    <td>@reader["adultos"]</td>
+                                    <td>@reader["criancas"]</td>
+                                    <td>@reader["desejos_especiais"]</td>
+                                    <td>@Convert.ToDateTime(reader["data_criacao"]).ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>
+                                        <form asp-action="Delete" asp-controller="ViagemPersonalizadaAdmin" method="post"
+                                              onsubmit="return confirm('Tem certeza que deseja excluir esta viagem?');"
+                                              style="margin:0;">
+                                            <input type="hidden" name="id" value="@reader["id"]" />
+                                            <button type="submit"
+                                                    style="background:#ef4444;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:0.85rem;">
+                                                <i class="fas fa-trash"></i> Excluir
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </main>
 </div>
-
-<h2>Viagens Personalizadas</h2>
-
-<table border="1" cellpadding="10">
-    <tr>
-        <th>ID</th>
-        <th>ID Usuário</th>
-
-        <th>Nome Completo</th>
-        <th>CPF</th>
-        <th>Email</th>
-        <th>WhatsApp</th>
-
-        <th>Destino</th>
-        <th>Hospedagem</th>
-        <th>Data Partida</th>
-        <th>Duração</th>
-
-        <th>Clima da Viagem</th>
-        <th>Orçamento</th>
-
-        <th>Adultos</th>
-        <th>Crianças</th>
-
-        <th>Desejos Especiais</th>
-
-        <th>Data Criação</th>
-
-        <th>Ações</th>
-    </tr>
-
-    @{
-        using (MySqlConnection conn = new MySqlConnection(conexao))
-        {
-            conn.Open();
-
-            string sql = "SELECT * FROM viagem_personalizada ORDER BY id DESC";
-
-            MySqlCommand cmd = new MySqlCommand(sql, conn);
-
-            MySqlDataReader reader = cmd.ExecuteReader();
-
-            while (reader.Read())
-            {
-                <tr>
-                    <td>@reader["id"]</td>
-                    <td>@reader["usuario_id"]</td>
-
-                    <td>@reader["nome_completo"]</td>
-                    <td>@reader["cpf"]</td>
-                    <td>@reader["email"]</td>
-                    <td>@reader["whatsapp"]</td>
-
-                    <td>@reader["destino"]</td>
-                    <td>@reader["hospedagem"]</td>
-
-                    <td>
-                        @Convert.ToDateTime(reader["data_partida"]).ToString("dd/MM/yyyy")
-                    </td>
-
-                    <td>@reader["duracao_dias"] dias</td>
-
-                    <td>@reader["clima_viagem"]</td>
-
-                    <td>@reader["orcamento"]</td>
-
-                    <td>@reader["adultos"]</td>
-                    <td>@reader["criancas"]</td>
-
-                    <td>@reader["desejos_especiais"]</td>
-
-                    <td>
-                        @Convert.ToDateTime(reader["data_criacao"]).ToString("dd/MM/yyyy HH:mm")
-                    </td>
-                    <td>
-                        <form asp-action="Delete" asp-controller="ViagemPersonalizadaAdmin" method="post"
-                              onsubmit="return confirm('Tem certeza que deseja excluir esta viagem?');">
-
-                            <input type="hidden" name="id" value="@reader["id"]" />
-
-                            <button type="submit"
-                                    style="background:#ef4444;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;">
-                                Excluir
-                            </button>
-
-                        </form>
-                    </td>
-                </tr>
-            }
-        }
-    }
-</table>

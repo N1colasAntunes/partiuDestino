@@ -320,6 +320,7 @@
         color: #1e3a8a;
     }
 
+    
     .btn-reservar {
         background: #1e3a8a;
         color: white;
@@ -346,6 +347,7 @@
             cursor: not-allowed;
         }
 
+    /* ── QUEM SOMOS ── */
     /* ── QUEM SOMOS ── */
     .quem-somos-secao {
         padding: 80px 0;
@@ -382,14 +384,28 @@
         gap: 15px;
         padding: 20px;
         background: white;
+        border-radius: 14px;
+        box-shadow: 0 3px 12px rgba(0,0,0,.07);
+        border: 1px solid #f1f5f9;
+        transition: transform .2s, box-shadow .2s;
     }
+
+        .missao-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(30,58,138,.13);
+        }
 
     .missao-icon {
         width: 50px;
         height: 50px;
-        background: #f3f4f6;
-        border-radius: 8px;
+        background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+        border-radius: 12px;
         flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.3rem;
     }
 
     .missao-info h4 {
@@ -402,6 +418,7 @@
         font-size: .85rem;
         color: var(--cinza-texto);
     }
+
 
     /* ── MAPA ── */
     .mapa-secao {
@@ -767,6 +784,66 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(59,130,246,.35);
         }
+
+    /* Footer Azul Escuro */
+    .footer-figma {
+        background-color: #1e3a8a;
+        color: white;
+        padding: 30px 0;
+        text-align: center;
+        font-size: 0.85rem;
+    }
+
+    .footer-links-sociais {
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        align-items: center;
+    }
+
+        .footer-links-sociais a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .btn-monte-viagem{
+        background: #1e3a8a;
+        color: white;
+        border: none;
+        padding: 20px 40px;
+        border-radius: 8px;
+        font-size: 20px;
+        font-weight: 700;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        transition: .2s;
+        
+        }
+
+    .btn-monte-viagem:hover {
+            background: #1e40af;
+            color: white;
+    }
+
+        .btn-saiba-mais{
+        background: #1e3a8a;
+        color: white;
+        border: none;
+        padding: 8px 14px;
+        border-radius: 8px;
+        font-size: .75rem;
+        font-weight: 700;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        transition: .2s;
+        }
 </style>
 
 <!-- ══════════════════════════════════════════════════════════════════════
@@ -782,11 +859,11 @@
         <p>Viaje do seu jeito, com roteiros exclusivos e personalizados. Reserve agora.</p>
         @if (Context.Session.GetString("UserName") != null)
         {
-            <a asp-controller="Personalizada" asp-action="Index" class="btn btn-primary">Monte sua viagem</a>
+            <a asp-controller="Personalizada" asp-action="Index" class="btn-monte-viagem">Monte sua viagem</a>
         }
         else
         {
-            <a asp-controller="Login" asp-action="Index" class="btn btn-primary">Monte sua viagem</a>
+            <a asp-controller="Login" asp-action="Index" class="btn-monte-viagem">Monte sua viagem</a>
         }
     </div>
 </section>
@@ -886,7 +963,7 @@
                                 <span class="preco-destino-label">A partir de</span>
                                 <span class="preco-destino-valor">@destino.PrecoPorPessoa.ToString("C")</span>
                             }
-                            <button class="btn btn-primary">Saiba mais</button>
+                            <button class="btn-saiba-mais">Saiba mais</button>
                         </div>
                     </div>
                 </a>
@@ -981,6 +1058,7 @@
     </section>
 }
 
+
 <!-- ══════════════════════════════════════════════════════════════════════
      QUEM SOMOS
      ══════════════════════════════════════════════════════════════════════ -->
@@ -991,17 +1069,24 @@
     </div>
     <div class="quem-somos-cards">
         <div class="missao-card">
-            <div class="missao-icon"></div>
+            <div class="missao-icon"><i class="fas fa-rocket"></i></div>
             <div class="missao-info">
                 <h4>Nossa Missão</h4>
                 <p>Proporcionar experiências de viagem únicas, conectando pessoas a destinos incríveis com conforto e segurança.</p>
             </div>
         </div>
         <div class="missao-card">
-            <div class="missao-icon"></div>
+            <div class="missao-icon"><i class="fas fa-eye"></i></div>
             <div class="missao-info">
                 <h4>Nossa Visão</h4>
                 <p>Ser a agência de viagens líder em personalização de roteiros, reconhecida pela excelência no atendimento.</p>
+            </div>
+        </div>
+        <div class="missao-card">
+            <div class="missao-icon"><i class="fas fa-heart"></i></div>
+            <div class="missao-info">
+                <h4>Nossos Valores</h4>
+                <p>Transparência, qualidade e atendimento humanizado em cada etapa da sua jornada de viagem.</p>
             </div>
         </div>
     </div>
@@ -1145,6 +1230,21 @@
     ↑
 </button>
 
+<footer class="footer-figma">
+    <div class="container">
+        <div class="footer-links-sociais">
+            <span>Siga nossas redes:</span>
+            <a href="https://www.instagram.com/_partiu.destino/"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.facebook.com/people/Partiu-Destino/61590693054759/"><i class="fab fa-facebook"></i></a>
+            <a href="https://wa.me/5511981125234" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        <p>
+            &copy; 2026 Partiu Destino. Todos os direitos reservados. |
+            <a href="/Legal/PoliticaDePrivacidade" style="color:white;">Política de Privacidade</a> |
+            <a href="/Legal/TermosDeUso" style="color:white;">Termos de Uso</a>
+        </p>
+    </div>
+</footer>
 <!-- EmailJS -->
 <script src="https://cdn.jsdelivr.net/npm/@@emailjs/browser@@4/dist/email.min.js"></script>
 <script src="~/js/contato-emailjs.js"></script>

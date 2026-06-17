@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<projectPartiuDestino.Models.Pedidos>
 
 @{
-    ViewData["Title"] = "Pedidos Finalizados";
+    ViewData["Title"] = "Pedidos Finalizados - Painel Administrativo";
 }
 
 <style>
@@ -16,121 +16,30 @@
         --border: #e5e7eb;
     }
 
-    .pedidos-container {
-        background: var(--bg-body);
-        padding: 60px 0;
-        font-family: 'Inter','Segoe UI',sans-serif;
-    }
-
-    .header-secao {
-        text-align: center;
-        margin-bottom: 50px;
-    }
-
-        .header-secao h1 {
-            font-size: 2.3rem;
-            font-weight: 800;
-            color: var(--primary);
-        }
-
-        .header-secao p {
-            color: var(--text-muted);
-        }
-
-    .pedidos-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-        gap: 25px;
-    }
-
-    .pedido-card {
-        background: white;
-        border-radius: 18px;
-        border: 1px solid var(--border);
-        box-shadow: 0 4px 10px rgba(0,0,0,.05);
-        overflow: hidden;
-        transition: .3s;
-    }
-
-        .pedido-card:hover {
-            transform: translateY(-6px);
-        }
-
-    .pedido-header {
-        padding: 16px 20px;
-        background: linear-gradient(135deg, var(--primary), var(--accent));
-        color: white;
+    .admin-wrapper {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
+        min-height: 100vh;
+        background-color: var(--bg-body);
     }
 
-    .badge {
-        background: rgba(255,255,255,.2);
-        padding: 4px 10px;
-        border-radius: 20px;
-        font-size: .75rem;
-    }
-
-    .pedido-body {
-        padding: 20px;
-    }
-
-    .pedido-titulo {
-        font-size: 1.1rem;
-        font-weight: 800;
-        color: var(--text-main);
-        margin-bottom: 8px;
-    }
-
-    .pedido-info {
-        font-size: .85rem;
-        color: var(--text-muted);
-        margin-bottom: 10px;
-    }
-
-    .pedido-footer {
-        padding: 15px 20px;
-        border-top: 1px solid var(--border);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .preco {
-        font-weight: 900;
-        color: var(--primary);
-    }
-
-    .data {
-        font-size: .75rem;
-        color: var(--text-muted);
-    }
-
-    .vazio {
-        text-align: center;
-        padding: 80px;
-        background: white;
-        border-radius: 20px;
-        border: 2px dashed var(--border);
-    }
-    /* Barra Lateral (Sidebar) */
     .admin-sidebar {
         width: 260px;
-        background-color: #1e3a8a;
+        background-color: var(--primary);
         color: white;
         padding: 30px 20px;
         display: flex;
         flex-direction: column;
+        flex-shrink: 0;
     }
 
     .sidebar-header {
-        font-size: 1.25rem;
+        font-size: 1.1rem;
         font-weight: 800;
         margin-bottom: 40px;
         display: flex;
         align-items: center;
         gap: 10px;
+        color: white;
     }
 
     .sidebar-menu {
@@ -156,8 +65,8 @@
         font-weight: 500;
     }
 
-        .sidebar-link:hover, .sidebar-link.active {
-            background-color: rgba(255, 255, 255, 0.1);
+        .sidebar-link:hover, .sidebar-link.ativo {
+            background-color: rgba(255, 255, 255, 0.15);
             color: white;
         }
 
@@ -165,120 +74,227 @@
             width: 20px;
             text-align: center;
         }
+
+    .admin-main {
+        flex-grow: 1;
+        padding: 40px;
+        overflow-x: auto;
+    }
+
+    .admin-header {
+        margin-bottom: 40px;
+    }
+
+        .admin-header h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 0 0 6px;
+        }
+
+        .admin-header p {
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+    .pedidos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 22px;
+    }
+
+    .pedido-card {
+        background: white;
+        border-radius: 18px;
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 10px rgba(0,0,0,.05);
+        overflow: hidden;
+        transition: .3s;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+        .pedido-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 25px rgba(0,0,0,.1);
+        }
+
+    .pedido-header {
+        padding: 16px 20px;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .badge-tipo {
+        background: rgba(255,255,255,.2);
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: .75rem;
+    }
+
+    .pedido-body {
+        padding: 20px;
+    }
+
+    .pedido-titulo {
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: var(--text-main);
+        margin-bottom: 10px;
+    }
+
+    .pedido-info {
+        font-size: .85rem;
+        color: var(--text-muted);
+        margin-bottom: 6px;
+    }
+
+    .pedido-footer {
+        padding: 14px 20px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .preco {
+        font-weight: 900;
+        color: var(--primary);
+        font-size: 1.1rem;
+    }
+
+    .data {
+        font-size: .78rem;
+        color: var(--text-muted);
+    }
+
+    .vazio {
+        text-align: center;
+        padding: 80px;
+        background: white;
+        border-radius: 20px;
+        border: 2px dashed var(--border);
+        color: var(--text-muted);
+    }
+
+        .vazio i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--border);
+        }
+
+    @@media (max-width: 992px) {
+        .admin-sidebar {
+            width: 80px;
+            padding: 30px 10px;
+        }
+
+        .sidebar-header span, .sidebar-link span {
+            display: none;
+        }
+
+        .sidebar-header {
+            justify-content: center;
+        }
+
+        .sidebar-link {
+            justify-content: center;
+        }
+    }
 </style>
 
-<!-- Sidebar -->
-<aside class="admin-sidebar">
-    <div class="sidebar-header">
-
-        <span>Administração Partiu</span>
-    </div>
-    <ul class="sidebar-menu">
-        <li class="sidebar-item">
-            <a href="/Admin/Index" class="sidebar-link active">
-                <i class="fas fa-chart-pie"></i>
-                <span>Dashboard</span>
+<div class="admin-wrapper">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-plane"></i>
+            <span>Partiu Destino</span>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="sidebar-item">
+                <a href="/Admin/Index" class="sidebar-link">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="/DestinosAdmin/Index" class="sidebar-link">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <span>Destinos</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="/PacotesAdmin/Index" class="sidebar-link">
+                    <i class="fas fa-suitcase-rolling"></i>
+                    <span>Pacotes</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="/ViagemPersonalizadaAdmin/Index" class="sidebar-link">
+                    <i class="fas fa-globe-americas"></i>
+                    <span>Viagens Personalizadas</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="/Usuarios/Index" class="sidebar-link">
+                    <i class="fas fa-users"></i>
+                    <span>Usuários</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="/PedidosFinalizados/Index" class="sidebar-link ativo">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Pedidos Finalizados</span>
+                </a>
+            </li>
+        </ul>
+        <div class="sidebar-footer">
+            <a href="/" class="sidebar-link">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Sair do Painel</span>
             </a>
-        </li>
+        </div>
+    </aside>
 
-        <li class="sidebar-item">
-            <a href="/DestinosAdmin/Index" class="sidebar-link">
-                <i class="fas fa-map-marked-alt"></i>
-                <span>Destinos</span>
-            </a>
-        </li>
-
-        <li class="sidebar-item">
-            <a href="/PacotesAdmin/Index" class="sidebar-link">
-                <i class="fas fa-suitcase-rolling"></i>
-                <span>Pacotes</span>
-            </a>
-        </li>
-        <li class="sidebar-item">
-            <a href="/ViagemPersonalizadaAdmin/Index" class="sidebar-link">
-                <i class="fas fa-globe-americas"></i>
-                <span>Viagens Personalizadas</span>
-            </a>
-        </li>
-
-        <li class="sidebar-item">
-            <a href="/Usuarios/Index" class="sidebar-link">
-                <i class="fas fa-users"></i>
-                <span>Usuários</span>
-            </a>
-        </li>
-        <li class="sidebar-item">
-            <a href="/PedidosFinalizados/Index" class="sidebar-link">
-                <i class="fas fa-check-circle"></i>
-                <span>Pedidos Finalizados</span>
-            </a>
-        </li>
-    </ul>
-    <div class="sidebar-footer">
-        <a href="/" class="sidebar-link">
-            <i class="fas fa-sign-out-alt"></i>
-            <span>Sair do Painel</span>
-        </a>
-    </div>
-</aside>
-
-<div class="pedidos-container">
-    <div class="container">
-
-        <div class="header-secao">
-            <h1>Pedidos Finalizados</h1>
+    <!-- Conteúdo Principal -->
+    <main class="admin-main">
+        <div class="admin-header">
+            <h2><i class="fas fa-check-circle me-2"></i>Pedidos Finalizados</h2>
             <p>Histórico de compras realizadas no sistema</p>
         </div>
 
         @if (Model != null && Model.Any())
         {
             <div class="pedidos-grid">
-
                 @foreach (var item in Model)
                 {
                     <div class="pedido-card">
-
                         <div class="pedido-header">
-                            <span>@item.NomeUsuario</span>
-                            <span class="badge">@item.TipoItem</span>
+                            <span><i class="fas fa-user me-1"></i>@item.NomeUsuario</span>
+                            <span class="badge-tipo">@item.TipoItem</span>
                         </div>
-
                         <div class="pedido-body">
-                            <div class="pedido-titulo">
-                                @item.NomeItem
-                            </div>
-
-                            <div class="pedido-info">
-                                Quantidade: <b>@item.Quantidade</b>
-                            </div>
-
-                            <div class="pedido-info">
-                                Unitário: <b>@item.PrecoUnitario.ToString("C")</b>
-                            </div>
+                            <div class="pedido-titulo">@item.NomeItem</div>
+                            <div class="pedido-info"><i class="fas fa-box me-1"></i>Quantidade: <b>@item.Quantidade</b></div>
+                            <div class="pedido-info"><i class="fas fa-tag me-1"></i>Unitário: <b>@item.PrecoUnitario.ToString("C")</b></div>
                         </div>
-
                         <div class="pedido-footer">
-                            <span class="data">
-                                @item.DataPedido.ToString("dd/MM/yyyy HH:mm")
-                            </span>
-
-                            <span class="preco">
-                                @item.Subtotal.ToString("C")
-                            </span>
+                            <span class="data"><i class="fas fa-calendar me-1"></i>@item.DataPedido.ToString("dd/MM/yyyy HH:mm")</span>
+                            <span class="preco">@item.Subtotal.ToString("C")</span>
                         </div>
-
                     </div>
                 }
-
             </div>
         }
         else
         {
             <div class="vazio">
+                <div><i class="fas fa-inbox"></i></div>
                 <h3>Nenhum pedido finalizado ainda</h3>
                 <p>Quando clientes comprarem, os pedidos aparecerão aqui.</p>
             </div>
         }
-
-    </div>
+    </main>
 </div>

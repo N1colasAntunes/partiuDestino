@@ -20,7 +20,6 @@
 CREATE DATABASE bdpartiudestino;
 USE bdpartiudestino;
 
-
 -- ============================================================
 -- 2. CRIAÇÃO DAS TABELAS
 -- ============================================================
@@ -39,7 +38,12 @@ CREATE TABLE usuarios (
 -- ------------------------------------------------------------
 -- 2.2 Tabela: destinos
 --     preco_por_pessoa: preço base de referência do destino
+
 -- ------------------------------------------------------------
+
+
+
+
 CREATE TABLE destinos (
     id               INT            PRIMARY KEY AUTO_INCREMENT,
     origem_pais      VARCHAR(100)   NOT NULL,
@@ -224,10 +228,6 @@ VALUES
         'Gastronomia', 9, '2026-10-02', '2026-10-11', 15200.00, 10,
         'https://images.unsplash.com/photo-1543429776-2782fc8e3e56?w=700&q=80'),
 
-    (10, 'Patagônia Argentina',
-        'Aventura nas paisagens geladas da Patagônia.',
-        'Aventura', 8, '2026-07-20', '2026-07-28', 8990.00, 14,
-        'https://images.unsplash.com/photo-1501854248509-c7e427ccd5ae?w=700&q=80'),
 
     (8, 'Tóquio Tech Tour',
         'Conheça o Japão moderno e tradicional em uma experiência única.',
@@ -258,21 +258,177 @@ UPDATE usuarios
 SET tipo = 'admin'
 WHERE email = 'julia@gmail.com';
 
+-- ============================================================
+-- PACOTES
+-- ============================================================
+-- Mapa de IDs:
+--   1  → Rio Premium Experience        (destino 1 – RJ)
+--   2  → Bahia All Inclusive           (destino 2 – BA)
+--   3  → Califórnia Dreams             (destino 4 – CA)
+--   4  → Nova York Experience          (destino 4 – NY)
+--   5  → Paris Romântica               (destino 6 – FR)
+--   6  → Toscana Gourmet               (destino 7 – IT)
+--   7  → Patagônia Argentina           (destino 10 – AR)
+--   8  → Tóquio Tech Tour              (destino 8 – JP)
+--   9  → Bali Paradise                 (destino 12 – ID)
+--  10  → Dubai Lux Experience          (destino 12 – AE)
+-- ============================================================
+
+-- 1 · Rio Premium Experience — praia de Copacabana / Ipanema
+UPDATE pacotes
+SET imagem_url = 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=800&q=80'
+WHERE id = 1;
+
+-- 2 · Bahia All Inclusive — praia de Morro de São Paulo / Trancoso
+UPDATE pacotes
+SET imagem_url = 'https://images.unsplash.com/photo-1622040806062-61e02e31f12e?w=800&q=80'
+WHERE id = 2;
+
+-- 3 · Califórnia Dreams — rodovia 1 / costa da Califórnia
+UPDATE pacotes
+SET imagem_url = 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&q=80'
+WHERE id = 3;
+
+-- 4 · Nova York Experience — Times Square / Manhattan skyline
+UPDATE pacotes
+SET imagem_url = 'https://images.unsplash.com/photo-1534430480872-3498386e7856?w=800&q=80'
+WHERE id = 4;
+
+-- 5 · Paris Romântica — Torre Eiffel ao entardecer
+UPDATE pacotes
+SET imagem_url = 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80'
+WHERE id = 5;
+
+-- 6 · Toscana Gourmet — vinhedos e villa toscana
+UPDATE pacotes
+SET imagem_url = 'https://images.unsplash.com/photo-1568797629192-789acf8e4df3?w=800&q=80'
+WHERE id = 6;
+
+-- 7 · Patagônia Argentina — Torres del Paine / Perito Moreno
+UPDATE pacotes
+SET imagem_url = 'https://images.unsplash.com/photo-1501854248509-c7e427ccd5ae?w=800&q=80'
+WHERE id = 7;
+
+-- 8 · Tóquio Tech Tour — Shibuya crossing / templos
+UPDATE pacotes
+SET imagem_url = 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&q=80'
+WHERE id = 8;
+
+-- 9 · Bali Paradise — terraços de arroz / templo Uluwatu
+UPDATE pacotes
+SET imagem_url = 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80'
+WHERE id = 9;
+
+-- 10 · Dubai Lux Experience — Burj Khalifa / skyline Dubai
+UPDATE pacotes
+SET imagem_url = 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80'
+WHERE id = 10;
+
+
+SET SQL_SAFE_UPDATES = 1;
+
+
+-- ============================================================
+-- VERIFICAÇÃO FINAL
+-- ============================================================
+
+-- Destinos com imagem
+SELECT id,
+       CONCAT(pais, ' / ', estado) AS destino,
+       imagem_url
+FROM destinos
+ORDER BY id;
+
+-- Pacotes com imagem
+SELECT p.id,
+       p.nome                           AS pacote,
+       CONCAT(d.pais, ' / ', d.estado) AS destino_vinculado,
+       p.imagem_url
+FROM pacotes p
+JOIN destinos d ON d.id = p.destino_id
+ORDER BY p.id;
+
 -- ------------------------------------------------------------
 -- 4.2 Atualizar imagem_url dos destinos (por id — chave primária)
 -- ------------------------------------------------------------
-UPDATE destinos SET imagem_url = 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=700&q=80' WHERE id = 1;
-UPDATE destinos SET imagem_url = 'https://images.unsplash.com/photo-1590060879041-cfab4e95d716?w=700&q=80' WHERE id = 2;
-UPDATE destinos SET imagem_url = 'https://images.unsplash.com/photo-1538565756327-7e5b9dc67c3f?w=700&q=80' WHERE id = 3;
-UPDATE destinos SET imagem_url = 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=700&q=80' WHERE id = 4;
-UPDATE destinos SET imagem_url = 'https://images.unsplash.com/photo-1533106418989-88406c7cc8ca?w=700&q=80' WHERE id = 5;
-UPDATE destinos SET imagem_url = 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=700&q=80' WHERE id = 6;
-UPDATE destinos SET imagem_url = 'https://images.unsplash.com/photo-1543429776-2782fc8e3e56?w=700&q=80' WHERE id = 7;
-UPDATE destinos SET imagem_url = 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=700&q=80' WHERE id = 8;
-UPDATE destinos SET imagem_url = 'https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=700&q=80' WHERE id = 9;
-UPDATE destinos SET imagem_url = 'https://images.unsplash.com/photo-1583285233058-4a9e6a5e34d8?w=700&q=80' WHERE id = 10;
-UPDATE destinos SET imagem_url = 'https://images.unsplash.com/photo-1554254648-2d58a1bc3fd5?w=700&q=80' WHERE id = 11;
-UPDATE destinos SET imagem_url = 'https://images.unsplash.com/photo-1552074284-5e88ef1aef18?w=700&q=80' WHERE id = 12;
+-- ============================================================
+-- DESTINOS
+-- ============================================================
+-- Mapa de IDs:
+--   1  → Brasil / Rio de Janeiro        (SP → RJ)
+--   2  → Brasil / Bahia                 (SP → BA)
+--   3  → Brasil / Ceará                 (SP → CE)
+--   4  → Estados Unidos / Califórnia    (SP → CA)
+--   5  → Estados Unidos / Flórida       (SP → FL)
+--   6  → França / Provença-Alpes-Costa Azul (SP → FR)
+--   7  → Itália / Toscana              (SP → IT)
+--   8  → Japão / Tóquio               (SP → JP)
+--   9  → Portugal / Lisboa             (RJ → PT)
+--  10  → Argentina / Buenos Aires      (RJ → AR)
+--  11  → Chile / Região Metropolitana  (MG → CL)
+--  12  → México / Quintana Roo         (PR → MX)
+-- ============================================================
+
+-- 1 · Rio de Janeiro — Cristo Redentor e Pão de Açúcar
+UPDATE destinos
+SET imagem_url = 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=800&q=80'
+WHERE id = 1;
+
+-- 2 · Bahia — Pelourinho / Salvador colorido
+UPDATE destinos
+SET imagem_url = 'https://images.unsplash.com/photo-1622040806062-61e02e31f12e?w=800&q=80'
+WHERE id = 2;
+
+-- 3 · Ceará — Jericoacoara / dunas e lagoa
+UPDATE destinos
+SET imagem_url = 'https://images.unsplash.com/photo-1607006344380-b6775a0824a7?w=800&q=80'
+WHERE id = 3;
+
+-- 4 · Califórnia — Golden Gate / São Francisco
+UPDATE destinos
+SET imagem_url = 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&q=80'
+WHERE id = 4;
+
+-- 5 · Flórida — Miami Beach / South Beach
+UPDATE destinos
+SET imagem_url = 'https://images.unsplash.com/photo-1533106418989-88406c7cc8ca?w=800&q=80'
+WHERE id = 5;
+
+-- 6 · França / Provença — Torre Eiffel Paris
+UPDATE destinos
+SET imagem_url = 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80'
+WHERE id = 6;
+
+-- 7 · Itália / Toscana — vinhedos e colinas típicas
+UPDATE destinos
+SET imagem_url = 'https://images.unsplash.com/photo-1568797629192-789acf8e4df3?w=800&q=80'
+WHERE id = 7;
+
+-- 8 · Japão / Tóquio — skyline noturno de Tóquio
+UPDATE destinos
+SET imagem_url = 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&q=80'
+WHERE id = 8;
+
+-- 9 · Portugal / Lisboa — Belém / Torre de Belém
+UPDATE destinos
+SET imagem_url = 'https://images.unsplash.com/photo-1585208798174-6cedd86e019a?w=800&q=80'
+WHERE id = 9;
+
+-- 10 · Argentina / Buenos Aires — obelisco / avenida 9 de Julho
+UPDATE destinos
+SET imagem_url = 'https://images.unsplash.com/photo-1612294037637-ec328d0e075e?w=800&q=80'
+WHERE id = 10;
+
+-- 11 · Chile / Santiago — vista panorâmica cidade + Andes
+UPDATE destinos
+SET imagem_url = 'https://images.unsplash.com/photo-1534294668821-28a3054f4256?w=800&q=80'
+WHERE id = 11;
+
+-- 12 · México / Quintana Roo — Cancún / Riviera Maya praia turquesa
+UPDATE destinos
+SET imagem_url = 'https://images.unsplash.com/photo-1552074284-5e88ef1aef18?w=800&q=80'
+WHERE id = 12;
+
 
 -- ------------------------------------------------------------
 -- 4.3 Atualizar preco_por_pessoa dos destinos (por id)
@@ -293,18 +449,74 @@ UPDATE destinos SET preco_por_pessoa = 6300.00  WHERE id = 12;  -- México
 -- ------------------------------------------------------------
 -- 4.4 Atualizar imagem_url dos pacotes (por id)
 -- ------------------------------------------------------------
-UPDATE pacotes SET imagem_url = 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=700&q=80' WHERE id = 1;  -- Rio
-UPDATE pacotes SET imagem_url = 'https://images.unsplash.com/photo-1590060879041-cfab4e95d716?w=700&q=80' WHERE id = 2;  -- Bahia
-UPDATE pacotes SET imagem_url = 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=700&q=80' WHERE id = 3;  -- Califórnia
-UPDATE pacotes SET imagem_url = 'https://images.unsplash.com/photo-1490644658840-3f2e3f8c5625?w=700&q=80' WHERE id = 4;  -- Nova York
-UPDATE pacotes SET imagem_url = 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=700&q=80' WHERE id = 5;  -- Paris
-UPDATE pacotes SET imagem_url = 'https://images.unsplash.com/photo-1543429776-2782fc8e3e56?w=700&q=80' WHERE id = 6;  -- Toscana
-UPDATE pacotes SET imagem_url = 'https://images.unsplash.com/photo-1501854248509-c7e427ccd5ae?w=700&q=80' WHERE id = 7;  -- Patagônia
-UPDATE pacotes SET imagem_url = 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=700&q=80' WHERE id = 8;  -- Tóquio
-UPDATE pacotes SET imagem_url = 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=700&q=80' WHERE id = 9;  -- Bali
-UPDATE pacotes SET imagem_url = 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=700&q=80' WHERE id = 10; -- Dubai
+-- ============================================================
+-- PACOTES
+-- ============================================================
+-- Mapa de IDs:
+--   1  → Rio Premium Experience        (destino 1 – RJ)
+--   2  → Bahia All Inclusive           (destino 2 – BA)
+--   3  → Califórnia Dreams             (destino 4 – CA)
+--   4  → Nova York Experience          (destino 4 – NY)
+--   5  → Paris Romântica               (destino 6 – FR)
+--   6  → Toscana Gourmet               (destino 7 – IT)
+--   7  → Patagônia Argentina           (destino 10 – AR)
+--   8  → Tóquio Tech Tour              (destino 8 – JP)
+--   9  → Bali Paradise                 (destino 12 – ID)
+--  10  → Dubai Lux Experience          (destino 12 – AE)
+-- ============================================================
 
-SET SQL_SAFE_UPDATES = 1;
+-- 1 · Rio Premium Experience — praia de Copacabana / Ipanema
+UPDATE pacotes
+SET imagem_url = 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=800&q=80'
+WHERE id = 1;
+
+-- 2 · Bahia All Inclusive — praia de Morro de São Paulo / Trancoso
+UPDATE pacotes
+SET imagem_url = 'https://images.unsplash.com/photo-1622040806062-61e02e31f12e?w=800&q=80'
+WHERE id = 2;
+
+-- 3 · Califórnia Dreams — rodovia 1 / costa da Califórnia
+UPDATE pacotes
+SET imagem_url = 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&q=80'
+WHERE id = 3;
+
+-- 4 · Nova York Experience — Times Square / Manhattan skyline
+UPDATE pacotes
+SET imagem_url = 'https://images.unsplash.com/photo-1534430480872-3498386e7856?w=800&q=80'
+WHERE id = 4;
+
+-- 5 · Paris Romântica — Torre Eiffel ao entardecer
+UPDATE pacotes
+SET imagem_url = 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80'
+WHERE id = 5;
+
+-- 6 · Toscana Gourmet — vinhedos e villa toscana
+UPDATE pacotes
+SET imagem_url = 'https://images.unsplash.com/photo-1568797629192-789acf8e4df3?w=800&q=80'
+WHERE id = 6;
+
+-- 7 · Patagônia Argentina — Torres del Paine / Perito Moreno
+UPDATE pacotes
+SET imagem_url = 'https://images.unsplash.com/photo-1501854248509-c7e427ccd5ae?w=800&q=80'
+WHERE id = 7;
+
+-- 8 · Tóquio Tech Tour — Shibuya crossing / templos
+UPDATE pacotes
+SET imagem_url = 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&q=80'
+WHERE id = 8;
+
+-- 9 · Bali Paradise — terraços de arroz / templo Uluwatu
+UPDATE pacotes
+SET imagem_url = 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80'
+WHERE id = 9;
+
+-- 10 · Dubai Lux Experience — Burj Khalifa / skyline Dubai
+UPDATE pacotes
+SET imagem_url = 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80'
+WHERE id = 10;
+
+
+
 
 
 -- ============================================================

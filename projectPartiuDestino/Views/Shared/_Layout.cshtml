@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Partiu Destino</title>
+    <title>@ViewData["Title"] - Partiu Destino </title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -111,15 +111,35 @@
                 transform: scale(1.15);
                 color: #3b82f6;
             }
+
+        .navbar-brand-figma {
+            font-weight: 800;
+            color: #1e3a8a !important;
+            font-size: 1.4rem;
+            margin-right: 60px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-navbar {
+            width: 200px;
+            height: 55px;
+            object-fit: contain;
+            display: block;
+        }
     </style>
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-lg navbar-light navbar-figma">
             <div class="container">
+
                 <!-- Logo -->
                 <a class="navbar-brand navbar-brand-figma" asp-controller="Home" asp-action="Index">
-                    Partiu Destino
+                    <img src="~/images/logo.png" alt="Partiu Destino" class="logo-navbar" />
+                    <span>Partiu Destino</span>
                 </a>
 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -224,21 +244,6 @@
         @RenderBody()
     </main>
 
-    <footer class="footer-figma">
-        <div class="container">
-            <div class="footer-links-sociais">
-                <span>Siga nossas redes:</span>
-                <a href="https://www.instagram.com/_partiu.destino/"><i class="fab fa-instagram"></i></a>
-                <a href="https://www.facebook.com/people/Partiu-Destino/61590693054759/"><i class="fab fa-facebook"></i></a>
-                <a href="https://wa.me/5511981125234" target="_blank"><i class="fab fa-whatsapp"></i></a>
-            </div>
-            <p>
-                &copy; 2026 Partiu Destino. Todos os direitos reservados. |
-                <a href="/Legal/PoliticaDePrivacidade" style="color:white;">Política de Privacidade</a> |
-                <a href="/Legal/TermosDeUso" style="color:white;">Termos de Uso</a>
-            </p>
-        </div>
-    </footer>
 </body>
 
 
