@@ -2,54 +2,160 @@
     ViewData["Title"] = "Cadastrar Destino";
 }
 
-<h2>Cadastrar Destino</h2>
+<style>
+    h2 {
+        color: #1e3a8a;
+        font-weight: 800;
+        margin-bottom: 30px;
+        position: relative;
+        padding-bottom: 10px;
+    }
 
-<form method="post" asp-action="Criar">
+        h2::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 60px;
+            height: 4px;
+            background: #3b82f6;
+            border-radius: 2px;
+        }
 
-    <div style="margin-bottom:15px;">
-        <label>País de Origem</label>
-        <br />
-        <input type="text"
-               name="origem_pais"
-               required
-               style="width:300px;padding:8px;" />
-    </div>
+    .form-wrapper {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
 
-    <div style="margin-bottom:15px;">
-        <label>Estado de Origem</label>
-        <br />
-        <input type="text"
-               name="origem_estado"
-               required
-               style="width:300px;padding:8px;" />
-    </div>
+    .btn-voltar {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #e0e7ff;
+        color: #1e3a8a;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 18px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        text-decoration: none;
+        margin-bottom: 24px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
 
-    <div style="margin-bottom:15px;">
-        <label>País de Destino</label>
-        <br />
-        <input type="text"
-               name="pais"
-               required
-               style="width:300px;padding:8px;" />
-    </div>
+        .btn-voltar:hover {
+            background: #c7d2fe;
+        }
 
-    <div style="margin-bottom:15px;">
-        <label>Estado de Destino</label>
-        <br />
-        <input type="text"
-               name="estado"
-               required
-               style="width:300px;padding:8px;" />
-    </div>
+    form {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        align-items: start;
+    }
 
-    <button type="submit"
-            style="background:#16a34a;color:white;border:none;padding:10px 20px;border-radius:6px;cursor:pointer;">
-        Salvar
-    </button>
+        form div {
+            margin-bottom: 0 !important;
+            display: flex;
+            flex-direction: column;
+        }
 
-    <a asp-action="Index"
-       style="margin-left:10px;text-decoration:none;">
-        Cancelar
+            form div br {
+                display: none;
+            }
+
+    label {
+        font-weight: 600;
+        color: #475569;
+        margin-bottom: 8px;
+        display: block;
+        font-size: 0.9rem;
+    }
+
+    input[type="text"] {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        background-color: #f8fafc;
+        font-size: 0.95rem;
+        box-sizing: border-box;
+        transition: all 0.2s;
+    }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background-color: #fff;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+    .form-actions {
+        grid-column: span 2;
+        margin-top: 10px;
+    }
+
+    button[type="submit"] {
+        width: 100%;
+        padding: 16px;
+        background: #16a34a;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+        button[type="submit"]:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+        }
+</style>
+
+<div class="form-wrapper">
+
+    <h2>Cadastrar Destino</h2>
+
+    <a class="btn-voltar" asp-action="Index">
+        &#8592; Voltar para Destinos
     </a>
 
-</form>
+    <form method="post" asp-action="Criar">
+
+        <div>
+            <label>País de Origem</label>
+            <input type="text" name="origem_pais" required />
+        </div>
+
+        <div>
+            <label>Estado de Origem</label>
+            <input type="text" name="origem_estado" required />
+        </div>
+
+        <div>
+            <label>País de Destino</label>
+            <input type="text" name="pais" required />
+        </div>
+
+        <div>
+            <label>Estado de Destino</label>
+            <input type="text" name="estado" required />
+        </div>
+
+        <div class="form-actions">
+            <button type="submit">
+                Salvar Destino
+            </button>
+        </div>
+
+    </form>
+
+</div>

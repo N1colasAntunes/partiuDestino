@@ -128,7 +128,9 @@
 <div class="form-wrapper">
     <h2>Editar Usuário</h2>
 
-    <a class="btn-voltar" href="Usuarios/Index">&#8592; Voltar para Usuários</a>
+    <a asp-controller="Usuarios" asp-action="Index" class="btn-voltar">
+        &#8592; Voltar para Usuários
+    </a>
 
     <form method="post" asp-action="Editar">
 

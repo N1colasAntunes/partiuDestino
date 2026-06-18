@@ -2,41 +2,143 @@
     ViewData["Title"] = "Cadastrar Usuário";
 }
 
-<h2>Cadastrar Usuário</h2>
+<style>
+    h2 {
+        color: #1e3a8a;
+        font-weight: 800;
+        margin-bottom: 30px;
+        position: relative;
+        padding-bottom: 10px;
+    }
 
-<form method="post" asp-action="Criar">
+        h2::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 60px;
+            height: 4px;
+            background: #3b82f6;
+            border-radius: 2px;
+        }
 
-    <div style="margin-bottom:15px;">
-        <label>Nome</label><br />
-        <input type="text"
-               name="nome"
-               required
-               style="width:300px;padding:8px;" />
-    </div>
+    .form-wrapper {
+        max-width: 700px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
 
-    <div style="margin-bottom:15px;">
-        <label>Email</label><br />
-        <input type="email"
-               name="email"
-               required
-               style="width:300px;padding:8px;" />
-    </div>
+    .btn-voltar {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #e0e7ff;
+        color: #1e3a8a;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 18px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        text-decoration: none;
+        margin-bottom: 24px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
 
-    <div style="margin-bottom:15px;">
-        <label>Senha</label><br />
-        <input type="password"
-               name="senha"
-               required
-               style="width:300px;padding:8px;" />
-    </div>
+        .btn-voltar:hover {
+            background: #c7d2fe;
+        }
 
-    <button type="submit"
-            style="background:#16a34a;color:white;border:none;padding:10px 20px;border-radius:6px;cursor:pointer;">
-        Salvar
-    </button>
+    form {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        display: grid;
+        gap: 20px;
+    }
 
-    <a asp-action="Index" style="margin-left:10px;">
-        Cancelar
+        form div {
+            display: flex;
+            flex-direction: column;
+        }
+
+    label {
+        font-weight: 600;
+        color: #475569;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        background-color: #f8fafc;
+        font-size: 0.95rem;
+        box-sizing: border-box;
+        transition: all 0.2s;
+    }
+
+    input:focus {
+        outline: none;
+        border-color: #3b82f6;
+        background-color: #fff;
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    }
+
+    button[type="submit"] {
+        width: 100%;
+        padding: 16px;
+        background: #16a34a;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-top: 10px;
+    }
+
+        button[type="submit"]:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+        }
+</style>
+
+<div class="form-wrapper">
+
+    <h2>Cadastrar Usuário</h2>
+
+    <a class="btn-voltar" asp-action="Index">
+        &#8592; Voltar para Usuários
     </a>
 
-</form>
+    <form method="post" asp-action="Criar">
+
+        <div>
+            <label>Nome</label>
+            <input type="text" name="nome" required />
+        </div>
+
+        <div>
+            <label>Email</label>
+            <input type="email" name="email" required />
+        </div>
+
+        <div>
+            <label>Senha</label>
+            <input type="password" name="senha" required />
+        </div>
+
+        <button type="submit">
+            Salvar Usuário
+        </button>
+
+    </form>
+
+</div>
