@@ -2,89 +2,199 @@
     ViewData["Title"] = "Editar Pacote";
 }
 
-<h2>Editar Pacote</h2>
+<style>
+    h2 {
+        color: #1e3a8a;
+        font-weight: 800;
+        margin-bottom: 30px;
+        position: relative;
+        padding-bottom: 10px;
+    }
 
-<form method="post" asp-action="Editar">
+        h2::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 60px;
+            height: 4px;
+            background: #3b82f6;
+            border-radius: 2px;
+        }
 
-    <input type="hidden" name="id" value="@ViewBag.Id" />
+    .form-wrapper {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
 
-    <div style="margin-bottom:15px;">
-        <label>ID do Destino</label><br />
-        <input type="number"
-               name="destino_id"
-               value="@ViewBag.DestinoId"
-               required
-               style="width:300px;padding:8px;" />
-    </div>
+    .btn-voltar {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #e0e7ff;
+        color: #1e3a8a;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 18px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        text-decoration: none;
+        margin-bottom: 24px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
 
-    <div style="margin-bottom:15px;">
-        <label>Nome</label><br />
-        <input type="text"
-               name="nome"
-               value="@ViewBag.Nome"
-               required
-               style="width:300px;padding:8px;" />
-    </div>
+        .btn-voltar:hover {
+            background: #c7d2fe;
+        }
 
-    <div style="margin-bottom:15px;">
-        <label>Descrição</label><br />
-        <textarea name="descricao"
-                  style="width:500px;height:120px;padding:8px;">@ViewBag.Descricao</textarea>
-    </div>
+    form {
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+    }
 
-    <div style="margin-bottom:15px;">
-        <label>Tipo de Viagem</label><br />
-        <input type="text"
-               name="tipo_viagem"
-               value="@ViewBag.TipoViagem"
-               style="width:300px;padding:8px;" />
-    </div>
+        form div {
+            margin-bottom: 0 !important;
+            display: flex;
+            flex-direction: column;
+        }
 
-    <div style="margin-bottom:15px;">
-        <label>Duração (dias)</label><br />
-        <input type="number"
-               name="duracao_dias"
-               value="@ViewBag.DuracaoDias"
-               style="width:300px;padding:8px;" />
-    </div>
+            form div br {
+                display: none;
+            }
 
-    <div style="margin-bottom:15px;">
-        <label>Data de Partida</label><br />
-        <input type="date"
-               name="data_partida"
-               value="@ViewBag.DataPartida"
-               style="width:300px;padding:8px;" />
-    </div>
+            form div:nth-child(4) {
+                grid-column: span 2;
+            }
 
-    <div style="margin-bottom:15px;">
-        <label>Data de Retorno</label><br />
-        <input type="date"
-               name="data_retorno"
-               value="@ViewBag.DataRetorno"
-               style="width:300px;padding:8px;" />
-    </div>
+    label {
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 8px;
+        display: block;
+        font-size: 0.9rem;
+    }
 
-    <div style="margin-bottom:15px;">
-        <label>Preço por Pessoa</label><br />
-        <input type="number"
-               step="0.01"
-               name="preco_por_pessoa"
-               value="@ViewBag.Preco"
-               required
-               style="width:300px;padding:8px;" />
-    </div>
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    textarea {
+        width: 100% !important;
+        padding: 12px 16px !important;
+        border: 2px solid #f1f5f9 !important;
+        border-radius: 12px !important;
+        background: #f8fafc !important;
+        font-size: 0.95rem !important;
+        box-sizing: border-box !important;
+        transition: all 0.2s;
+    }
 
-    <div style="margin-bottom:15px;">
-        <label>Vagas Disponíveis</label><br />
-        <input type="number"
-               name="vagas_disponiveis"
-               value="@ViewBag.Vagas"
-               style="width:300px;padding:8px;" />
-    </div>
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        textarea:focus {
+            border-color: #3b82f6 !important;
+            background: white !important;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
 
-    <button type="submit"
-            style="background:#2563eb;color:white;border:none;padding:10px 20px;border-radius:6px;">
-        Salvar Alterações
-    </button>
+    textarea {
+        height: 150px !important;
+        resize: vertical;
+    }
 
-</form>
+    .form-actions {
+        grid-column: span 2;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        margin-top: 10px;
+    }
+
+    button[type="submit"] {
+        width: 100% !important;
+        padding: 16px !important;
+        background: #1e3a8a !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 12px !important;
+        font-size: 1rem !important;
+        font-weight: 700 !important;
+        cursor: pointer;
+        margin-top: 8px;
+        transition: all 0.3s;
+    }
+
+        button[type="submit"]:hover {
+            filter: brightness(1.15);
+            transform: translateY(-1px);
+        }
+</style>
+
+<div class="form-wrapper">
+    <h2>Editar Pacote</h2>
+
+    <a class="btn-voltar" href="/PacotesAdmin/Index">&#8592; Voltar para Pacotes</a>
+
+    <form method="post" asp-action="Editar">
+
+        <input type="hidden" name="id" value="@ViewBag.Id" />
+
+        <div>
+            <label>ID do Destino</label>
+            <input type="number" name="destino_id" value="@ViewBag.DestinoId" required />
+        </div>
+
+        <div>
+            <label>Nome</label>
+            <input type="text" name="nome" value="@ViewBag.Nome" required />
+        </div>
+
+        <div>
+            <label>Descrição</label>
+            <textarea name="descricao">@ViewBag.Descricao</textarea>
+        </div>
+
+        <div>
+            <label>Tipo de Viagem</label>
+            <input type="text" name="tipo_viagem" value="@ViewBag.TipoViagem" />
+        </div>
+
+        <div>
+            <label>Duração (dias)</label>
+            <input type="number" name="duracao_dias" value="@ViewBag.DuracaoDias" />
+        </div>
+
+        <div>
+            <label>Data de Partida</label>
+            <input type="date" name="data_partida" value="@ViewBag.DataPartida" />
+        </div>
+
+        <div>
+            <label>Data de Retorno</label>
+            <input type="date" name="data_retorno" value="@ViewBag.DataRetorno" />
+        </div>
+
+        <div>
+            <label>Preço por Pessoa (R$)</label>
+            <input type="number" step="0.01" name="preco_por_pessoa" value="@ViewBag.Preco" required />
+        </div>
+
+        <div>
+            <label>Vagas Disponíveis</label>
+            <input type="number" name="vagas_disponiveis" value="@ViewBag.Vagas" />
+        </div>
+
+        <div class="form-actions">
+            <button type="submit">Salvar Alterações</button>
+        </div>
+
+    </form>
+</div>

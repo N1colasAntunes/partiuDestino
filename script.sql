@@ -144,7 +144,7 @@ INSERT INTO destinos (origem_pais, origem_estado, pais, estado, imagem_url, prec
         1200.00),
 
     ('Brasil', 'São Paulo', 'Brasil', 'Bahia',
-        'https://images.unsplash.com/photo-1590060879041-cfab4e95d716?w=700&q=80',
+        'https://images.unsplash.com/photo-1591233055842-a984961b71af?w=800&q=80',
         980.00),
 
     ('Brasil', 'São Paulo', 'Brasil', 'Ceará',
@@ -281,7 +281,7 @@ WHERE id = 1;
 
 -- 2 · Bahia All Inclusive — praia de Morro de São Paulo / Trancoso
 UPDATE pacotes
-SET imagem_url = 'https://images.unsplash.com/photo-1622040806062-61e02e31f12e?w=800&q=80'
+SET imagem_url = 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=800&q=80'
 WHERE id = 2;
 
 -- 3 · Califórnia Dreams — rodovia 1 / costa da Califórnia
@@ -301,7 +301,7 @@ WHERE id = 5;
 
 -- 6 · Toscana Gourmet — vinhedos e villa toscana
 UPDATE pacotes
-SET imagem_url = 'https://images.unsplash.com/photo-1568797629192-789acf8e4df3?w=800&q=80'
+SET imagem_url = 'https://americachip.com/wp-content/uploads/2023/10/wikipedia-toscana.jpg'
 WHERE id = 6;
 
 -- 7 · Patagônia Argentina — Torres del Paine / Perito Moreno
@@ -311,7 +311,7 @@ WHERE id = 7;
 
 -- 8 · Tóquio Tech Tour — Shibuya crossing / templos
 UPDATE pacotes
-SET imagem_url = 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&q=80'
+SET imagem_url = 'https://media.cntraveller.com/photos/6343df288d5d266e2e66f082/16:9/w_2560%2Cc_limit/tokyoGettyImages-1031467664.jpeg'
 WHERE id = 8;
 
 -- 9 · Bali Paradise — terraços de arroz / templo Uluwatu
@@ -587,3 +587,67 @@ SELECT
     SELECT * FROM usuarios;
     SELECT * FROM destinos;
     SELECT * FROM pedidos;
+    
+    
+    -- ============================================================
+-- 1. DESTINOS — fotos quebradas (404) ou trocadas a pedido
+-- ============================================================
+ 
+-- Bahia (id 2) — quebrada (404) -> casario colorido do Pelourinho/Salvador
+UPDATE destinos
+SET imagem_url = 'https://images.unsplash.com/photo-1591233055842-a984961b71af?w=800&q=80'
+WHERE id = 2;
+ 
+-- Ceará (id 3) — trocada a pedido -> Jericoacoara, litoral do Ceará
+UPDATE destinos
+SET imagem_url = 'https://images.unsplash.com/photo-1661692612848-37801f680815?w=800&q=80'
+WHERE id = 3;
+ 
+-- Flórida (id 5) — trocada a pedido -> vista aérea de Miami Beach
+UPDATE destinos
+SET imagem_url = 'https://images.unsplash.com/photo-1754269675202-6fb0016d9f21?w=800&q=80'
+WHERE id = 5;
+ 
+-- Itália / Toscana (id 7) — quebrada (404) -> vinhedos e villa toscana
+UPDATE destinos
+SET imagem_url = 'https://images.unsplash.com/photo-1759062012196-ab43aef31a6f?w=800&q=80'
+WHERE id = 7;
+ 
+-- Chile (id 11) — trocada a pedido -> Santiago com os Andes ao fundo
+UPDATE destinos
+SET imagem_url = 'https://images.unsplash.com/photo-1689850543263-01a52ccc6943?w=800&q=80'
+WHERE id = 11;
+ 
+-- ============================================================
+-- 2. PACOTES — correção do bug de ID + fotos quebradas
+-- ============================================================
+ 
+-- Bahia All Inclusive (id real 2) — quebrada (404)
+UPDATE pacotes
+SET imagem_url = 'https://images.unsplash.com/photo-1591233055842-a984961b71af?w=800&q=80'
+WHERE id = 2;
+ 
+-- Toscana Gourmet (id real 6) — quebrada (404)
+UPDATE pacotes
+SET imagem_url = 'https://images.unsplash.com/photo-1759062012196-ab43aef31a6f?w=800&q=80'
+WHERE id = 6;
+ 
+-- Tóquio Tech Tour (id real 7) — estava recebendo a foto quebrada da
+-- "Patagônia" por causa do bug de mapeamento; agora foto real de Shibuya
+UPDATE pacotes
+SET imagem_url = 'https://images.unsplash.com/photo-1741684650296-19f452c8814f?w=800&q=80'
+WHERE id = 7;
+ 
+-- Bali Paradise (id real 8) — estava com a foto de Tóquio por engano
+-- (restaurando a foto original de Bali, que é válida)
+UPDATE pacotes
+SET imagem_url = 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80'
+WHERE id = 8;
+ 
+-- Dubai Lux Experience (id real 9) — estava com a foto de Bali por engano
+-- (restaurando a foto original de Dubai, que é válida)
+UPDATE pacotes
+SET imagem_url = 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80'
+WHERE id = 9;
+ 
+SET SQL_SAFE_UPDATES = 1;

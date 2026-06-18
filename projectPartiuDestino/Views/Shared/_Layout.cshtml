@@ -1,85 +1,166 @@
-﻿﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Partiu Destino </title>
+    <title>@ViewData["Title"] - Partiu Destino</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
-        /* Estilos para a Navbar idêntica ao Figma */
+
+        /* Estilos do Botão Voltar ao Topo */
+        #btnTopo {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border: none;
+            border-radius: 50%;
+            background: linear-gradient( 135deg, #3b82f6, #1e3a8a );
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(30, 58, 138, 0.35), 0 4px 10px rgba(0, 0, 0, 0.15);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.35s ease;
+        }
+
+            #btnTopo.mostrar {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+
+            #btnTopo:hover {
+                transform: translateY(-5px) scale(1.08);
+                box-shadow: 0 15px 35px rgba(59, 130, 246, 0.45), 0 5px 15px rgba(0, 0, 0, 0.2);
+            }
+
+            #btnTopo:active {
+                transform: scale(0.95);
+            }
+
+            #btnTopo::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                border-radius: 50%;
+                background: rgba(255,255,255,0.15);
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+
+            #btnTopo:hover::before {
+                opacity: 1;
+            }
+
+        /* ── NAVBAR ── */
         .navbar-figma {
             background-color: #ffffff;
-            padding: 12px 0;
+            padding: 0;
             border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 2px 12px rgba(30, 58, 138, 0.08);
+            height: 68px;
         }
 
+            .navbar-figma .container {
+                height: 100%;
+            }
+
+        /* ── LOGO ── */
         .navbar-brand-figma {
-            font-weight: 800;
-            color: #1e3a8a !important;
-            font-size: 1.4rem;
-            margin-right: 80px; /* Espaço após o logo */
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            margin-right: 40px;
+            padding: 0;
+            flex-shrink: 0;
         }
 
+        .logo-navbar {
+            height: 120px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+        }
+
+        .navbar-brand-figma span {
+            display: none;
+        }
+
+        /* ── LINKS ── */
         .nav-link-figma {
             color: #374151 !important;
             font-weight: 500;
-            font-size: 0.9rem;
-            margin: 0 12px;
-            transition: color 0.3s;
+            font-size: 0.88rem;
+            padding: 6px 2px !important;
+            margin: 0 14px;
             white-space: nowrap;
+            position: relative;
+            transition: color 0.2s;
+            text-decoration: none;
         }
+
+            .nav-link-figma::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                bottom: -2px;
+                width: 0;
+                height: 2px;
+                background: #3b82f6;
+                border-radius: 2px;
+                transition: width 0.25s;
+            }
 
             .nav-link-figma:hover {
                 color: #1e3a8a !important;
             }
 
-        /* Barra de Pesquisa na Nav */
-        .nav-search-container {
-            position: relative;
-            margin-right: 15px;
-            width: 280px;
-            margin-left: 20px;
-        }
+                .nav-link-figma:hover::after {
+                    width: 100%;
+                }
 
-        .nav-search-input {
-            width: 100%;
-            padding: 8px 35px 8px 15px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            background-color: #ffffff;
-        }
+            /* ── LINK ATIVO ── */
+            .nav-link-figma.ativo {
+                color: #1e3a8a !important;
+                font-weight: 700;
+            }
 
-        .nav-search-icon {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50% );
-            color: #9ca3af;
-            font-size: 0.9rem;
-        }
+                .nav-link-figma.ativo::after {
+                    width: 100%;
+                    background: #1e3a8a;
+                }
 
-        /* Botão Entrar */
+        /* ── BOTÃO ENTRAR / SAIR ── */
         .btn-entrar-nav {
             background-color: #1e3a8a;
             color: white !important;
-            padding: 8px 30px;
+            padding: 8px 22px;
             border-radius: 8px;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             text-decoration: none;
-            transition: background 0.3s;
+            transition: background 0.2s, transform 0.15s;
             display: inline-block;
+            white-space: nowrap;
         }
 
             .btn-entrar-nav:hover {
                 background-color: #1e40af;
+                transform: translateY(-1px);
             }
 
-        /* Footer Azul Escuro */
+        /* ── FOOTER ── */
         .footer-figma {
             background-color: #1e3a8a;
             color: white;
@@ -101,44 +182,23 @@
                 text-decoration: none;
             }
 
-        .user-icon-nav {
-            color: #1e3a8a;
-            font-size: 1.5rem;
-            transition: 0.25s;
-        }
-
-            .user-icon-nav:hover {
-                transform: scale(1.15);
-                color: #3b82f6;
-            }
-
-        .navbar-brand-figma {
-            font-weight: 800;
-            color: #1e3a8a !important;
-            font-size: 1.4rem;
-            margin-right: 60px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-        }
-
-        .logo-navbar {
-            width: 200px;
-            height: 55px;
-            object-fit: contain;
-            display: block;
+        /* ── HEADER FIXO ── */
+        .navbar-sticky {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
     </style>
 </head>
 <body>
-    <header>
+
+    <header class="navbar-sticky">
         <nav class="navbar navbar-expand-lg navbar-light navbar-figma">
             <div class="container">
 
                 <!-- Logo -->
                 <a class="navbar-brand navbar-brand-figma" asp-controller="Home" asp-action="Index">
-                    <img src="~/images/logo.png" alt="Partiu Destino" class="logo-navbar" />
+                    <img src="~/images/logonav.png" alt="Partiu Destino" class="logo-navbar" />
                     <span>Partiu Destino</span>
                 </a>
 
@@ -147,53 +207,48 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <!-- Links Alinhados à Esquerda (ms-0 ou ms-2 para ficar perto do logo) -->
                     <ul class="navbar-nav me-auto align-items-center">
                         <li class="nav-item">
-                            <a class="nav-link nav-link-figma" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link nav-link-figma @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "ativo" : "")"
+                               asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link nav-link-figma" asp-controller="Destinos" asp-action="Index">Destinos</a>
+                            <a class="nav-link nav-link-figma @(ViewContext.RouteData.Values["controller"]?.ToString() == "Destinos" ? "ativo" : "")"
+                               asp-controller="Destinos" asp-action="Index">Destinos</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link nav-link-figma" asp-controller="Pacotes" asp-action="Index">Pacotes</a>
+                            <a class="nav-link nav-link-figma @(ViewContext.RouteData.Values["controller"]?.ToString() == "Pacotes" ? "ativo" : "")"
+                               asp-controller="Pacotes" asp-action="Index">Pacotes</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link nav-link-figma" asp-controller="Personalizada" asp-action="Index">Viagem Personalizada</a>
+                            <a class="nav-link nav-link-figma @(ViewContext.RouteData.Values["controller"]?.ToString() == "Personalizada" ? "ativo" : "")"
+                               asp-controller="Personalizada" asp-action="Index">Viagem Personalizada</a>
                         </li>
-
 
                         @if (Context.Session.GetString("UserRole") == "admin")
                         {
                             <li class="nav-item">
-                                <a class="nav-link nav-link-figma" asp-controller="Admin" asp-action="Index">Admin</a>
+                                <a class="nav-link nav-link-figma @(ViewContext.RouteData.Values["controller"]?.ToString() == "Admin" ? "ativo" : "")"
+                                   asp-controller="Admin" asp-action="Index">Admin</a>
                             </li>
                         }
-
                     </ul>
 
                     <div class="d-flex align-items-center gap-3">
 
                         @if (Context.Session.GetString("UserName") != null)
                         {
-                            @* ícone do carrinho com contador *@
-
                             int totalCarrinho = 0;
-
                             try
                             {
                                 string connStr = "server=localhost;database=bdpartiudestino;uid=root;pwd=12345678;";
                                 int? uid = Context.Session.GetInt32("UserId");
-
                                 if (uid != null)
                                 {
                                     using var conn = new MySql.Data.MySqlClient.MySqlConnection(connStr);
                                     conn.Open();
-
                                     var cmd = new MySql.Data.MySqlClient.MySqlCommand(
-                                    "SELECT COALESCE(SUM(quantidade),0) FROM carrinho WHERE usuario_id = @uid",
-                                    conn);
-
+                                    "SELECT COALESCE(SUM(quantidade),0) FROM carrinho WHERE usuario_id = @uid", conn);
                                     cmd.Parameters.AddWithValue("@uid", uid);
                                     totalCarrinho = Convert.ToInt32(cmd.ExecuteScalar());
                                 }
@@ -205,27 +260,25 @@
                                style="position:relative;color:#1e3a8a;font-size:1.3rem;text-decoration:none;"
                                title="Meu Carrinho">
                                 <i class="fas fa-shopping-cart"></i>
-
                                 @if (totalCarrinho > 0)
                                 {
                                     <span style="position:absolute;top:-8px;right:-10px;
-                             background:#ef4444;color:white;
-                             font-size:.6rem;font-weight:800;
-                             width:18px;height:18px;border-radius:50%;
-                             display:flex;align-items:center;justify-content:center;">
+                                          background:#ef4444;color:white;font-size:.6rem;font-weight:800;
+                                          width:18px;height:18px;border-radius:50%;
+                                          display:flex;align-items:center;justify-content:center;">
                                         @(totalCarrinho > 9 ? "9+" : totalCarrinho.ToString())
                                     </span>
                                 }
                             </a>
+
                             <a asp-controller="Perfil"
                                asp-action="Index"
-                               style="color:#1e3a8a;font-size:1.4rem;text-decoration:none;margin-left:10px;"
+                               style="color:#1e3a8a;font-size:1.4rem;text-decoration:none;"
                                title="Meu Perfil">
                                 <i class="fas fa-user-circle"></i>
                             </a>
-                            <a asp-controller="Login" asp-action="Logout" class="btn-entrar-nav">
-                                Sair
-                            </a>
+
+                            <a asp-controller="Login" asp-action="Logout" class="btn-entrar-nav">Sair</a>
                         }
                         else
                         {
@@ -233,8 +286,6 @@
                         }
 
                     </div>
-
-
                 </div>
             </div>
         </nav>
@@ -244,7 +295,19 @@
         @RenderBody()
     </main>
 
+    <!-- Botão Voltar ao Topo Replicado da Home -->
+    <button id="btnTopo" title="Voltar ao topo">
+        ↑
+    </button>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/scroll-to-top.js" asp-append-version="true"></script>
+
+
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
 </body>
-
-
 </html>
