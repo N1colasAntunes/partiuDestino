@@ -1,0 +1,63 @@
+﻿@{
+    ViewData["Title"] = "Novo Quarto";
+}
+
+<style>
+    .form-wrapper {
+        max-width: 700px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    form {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,.1);
+        display: grid;
+        gap: 18px;
+    }
+
+    label {
+        font-weight: 600;
+        color: #475569;
+        margin-bottom: 6px;
+        display: block;
+        font-size: .9rem;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        background: #f8fafc;
+        box-sizing: border-box;
+    }
+
+    button[type="submit"] {
+        padding: 14px;
+        background: #16a34a;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+</style>
+
+<div class="form-wrapper">
+    <h2 style="color:#1e3a8a;font-weight:800;">Novo Quarto</h2>
+    <a href="/QuartosAdmin/Index?hospedagemId=@ViewBag.HospedagemId" style="color:#1e3a8a;font-weight:700;">&#8592; Voltar</a>
+    <form method="post" asp-action="Criar" style="margin-top:20px;">
+        <input type="hidden" name="hospedagemId" value="@ViewBag.HospedagemId" />
+        <div><label>Tipo de Quarto (ex: Standard, Luxo, Suíte)</label><input type="text" name="tipoQuarto" required /></div>
+        <div><label>Capacidade de Adultos</label><input type="number" name="capacidadeAdultos" value="2" min="1" required /></div>
+        <div><label>Capacidade de Crianças</label><input type="number" name="capacidadeCriancas" value="0" min="0" required /></div>
+        <div><label>Valor Extra por Pessoa (R$)</label><input type="number" step="0.01" name="precoAdicional" value="0.00" required /></div>
+        <div><label>Quantidade Disponível</label><input type="number" name="quantidadeDisponivel" value="1" min="0" required /></div>
+        <div><label>Comodidades (separadas por vírgula)</label><input type="text" name="comodidades" placeholder="Wi-Fi, Ar-condicionado, Vista mar" /></div>
+        <div><label>URL da Imagem</label><input type="text" name="imagemUrl" /></div>
+        <button type="submit">Salvar Quarto</button>
+    </form>
+</div>

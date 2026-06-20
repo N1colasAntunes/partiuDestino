@@ -56,7 +56,7 @@ namespace projectPartiuDestino.Controllers
         // POST: /Carrinho/AdicionarPacote
         // ============================================================
         [HttpPost]
-        public IActionResult AdicionarPacote(int pacoteId)
+        public IActionResult AdicionarPacote(int pacoteId, int? quartoId)
         {
             int? usuarioId = HttpContext.Session.GetInt32("UserId");
             if (usuarioId == null)
@@ -65,7 +65,6 @@ namespace projectPartiuDestino.Controllers
             using MySqlConnection conn = new MySqlConnection(conexao);
             conn.Open();
 
-            // Busca nome, preco E imagem do pacote
             string sqlPacote = "SELECT nome, preco_por_pessoa FROM pacotes WHERE id = @id";
             using MySqlCommand cmdP = new MySqlCommand(sqlPacote, conn);
             cmdP.Parameters.AddWithValue("@id", pacoteId);
@@ -87,12 +86,31 @@ namespace projectPartiuDestino.Controllers
                 }
             }
 
-            // Verifica se já existe no carrinho
+            // ── ADICIONADO: soma o valor do quarto escolhido (se houver) ──
+            string nomeItem = nomePacote;
+            if (quartoId.HasValue)
+            {
+                string sqlQuarto = "SELECT tipo_quarto, preco_adicional FROM quartos WHERE id = @id";
+                using MySqlCommand cmdQ = new MySqlCommand(sqlQuarto, conn);
+                cmdQ.Parameters.AddWithValue("@id", quartoId.Value);
+
+                using MySqlDataReader rq = cmdQ.ExecuteReader();
+                if (rq.Read())
+                {
+                    string tipoQuarto = rq["tipo_quarto"].ToString()!;
+                    preco += Convert.ToDecimal(rq["preco_adicional"]);
+                    nomeItem = $"{nomePacote} — Quarto: {tipoQuarto}";
+                }
+            }
+
+            // Verifica se já existe esse MESMO pacote (com o mesmo quarto) no carrinho
             string sqlCheck = @"SELECT id FROM carrinho
-                                WHERE usuario_id = @uid AND tipo_item = 'pacote' AND item_id = @iid";
+                        WHERE usuario_id = @uid AND tipo_item = 'pacote'
+                          AND item_id = @iid AND nome_item = @nome";
             using MySqlCommand cmdCheck = new MySqlCommand(sqlCheck, conn);
             cmdCheck.Parameters.AddWithValue("@uid", usuarioId);
             cmdCheck.Parameters.AddWithValue("@iid", pacoteId);
+            cmdCheck.Parameters.AddWithValue("@nome", nomeItem);
             object? existente = cmdCheck.ExecuteScalar();
 
             if (existente != null)
@@ -105,17 +123,17 @@ namespace projectPartiuDestino.Controllers
             else
             {
                 string sqlIns = @"INSERT INTO carrinho
-                                  (usuario_id, tipo_item, item_id, nome_item, preco_unitario, quantidade)
-                                  VALUES (@uid, 'pacote', @iid, @nome, @preco, 1)";
+                          (usuario_id, tipo_item, item_id, nome_item, preco_unitario, quantidade)
+                          VALUES (@uid, 'pacote', @iid, @nome, @preco, 1)";
                 using MySqlCommand cmdIns = new MySqlCommand(sqlIns, conn);
                 cmdIns.Parameters.AddWithValue("@uid", usuarioId);
                 cmdIns.Parameters.AddWithValue("@iid", pacoteId);
-                cmdIns.Parameters.AddWithValue("@nome", nomePacote);
+                cmdIns.Parameters.AddWithValue("@nome", nomeItem);
                 cmdIns.Parameters.AddWithValue("@preco", preco);
                 cmdIns.ExecuteNonQuery();
             }
 
-            TempData["Sucesso"] = $"{nomePacote} adicionado ao carrinho!";
+            TempData["Sucesso"] = $"{nomeItem} adicionado ao carrinho!";
             return RedirectToAction("Index", "Carrinho");
         }
 

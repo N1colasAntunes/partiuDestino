@@ -14,5 +14,8 @@
         public int VagasDisponiveis { get; set; }
         public string? ImagemUrl { get; set; }
         public Destinos Destino { get; set; }
+
+        // ADICIONADO — usado apenas na tela de Detalhes do Pacote
+        public List<Hospedagem> Hospedagens { get; set; } = new();
     }
 }

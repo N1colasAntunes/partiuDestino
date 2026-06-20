@@ -123,6 +123,42 @@ CREATE TABLE pedidos (
     quantidade INT DEFAULT 1,
     data_pedido DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+-- ------------------------------------------------------------
+-- 2.7 Tabela: hospedagens
+--     Cada pacote pode ter VÁRIAS opções de hospedagem
+-- ------------------------------------------------------------
+CREATE TABLE hospedagens (
+    id          INT           PRIMARY KEY AUTO_INCREMENT,
+    pacote_id   INT           NOT NULL,
+    nome        VARCHAR(150)  NOT NULL,
+    categoria   VARCHAR(50),      -- ex: '3 estrelas', 'Resort', 'Pousada'
+    descricao   TEXT,
+    endereco    VARCHAR(255),
+    imagem_url  VARCHAR(500),
+    FOREIGN KEY (pacote_id) REFERENCES pacotes(id) ON DELETE CASCADE
+);
+
+-- ------------------------------------------------------------
+-- 2.8 Tabela: quartos
+--     Cada hospedagem pode ter VÁRIOS tipos de quarto
+--     preco_adicional é somado ao preco_por_pessoa do pacote
+-- ------------------------------------------------------------
+CREATE TABLE quartos (
+    id                    INT           PRIMARY KEY AUTO_INCREMENT,
+    hospedagem_id         INT           NOT NULL,
+    tipo_quarto           VARCHAR(100)  NOT NULL,   -- ex: Standard, Luxo, Suíte
+    capacidade_adultos    INT           NOT NULL DEFAULT 2,
+    capacidade_criancas   INT           NOT NULL DEFAULT 0,
+    preco_adicional       DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    quantidade_disponivel INT           NOT NULL DEFAULT 1,
+    comodidades           VARCHAR(255),             -- ex: 'Wi-Fi, Ar-condicionado, Vista mar'
+    imagem_url            VARCHAR(500),
+    FOREIGN KEY (hospedagem_id) REFERENCES hospedagens(id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_hospedagens_pacote ON hospedagens(pacote_id);
+CREATE INDEX idx_quartos_hospedagem ON quartos(hospedagem_id);
 -- ============================================================
 -- 3. INSERÇÃO DE DADOS
 -- ============================================================
@@ -244,6 +280,19 @@ VALUES
         'Luxo', 7, '2026-08-18', '2026-08-25', 19990.00, 5,
         'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=700&q=80');
 
+-- Hospedagens + Quartos de exemplo para o pacote "Rio Premium Experience" (id 1)
+INSERT INTO hospedagens (pacote_id, nome, categoria, descricao, endereco, imagem_url) VALUES
+(1, 'Copacabana Palace Inn', '4 estrelas', 'Hotel a 200m da praia de Copacabana, café da manhã incluso.', 'Av. Atlântica, 1500 - Copacabana, RJ',
+ 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=700&q=80'),
+(1, 'Pousada Vista Mar RJ', 'Pousada', 'Pousada charmosa e econômica, a 5 minutos a pé da praia.', 'Rua Barata Ribeiro, 300 - Copacabana, RJ',
+ 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=700&q=80');
+
+INSERT INTO quartos (hospedagem_id, tipo_quarto, capacidade_adultos, capacidade_criancas, preco_adicional, quantidade_disponivel, comodidades) VALUES
+(1, 'Standard', 2, 1, 0.00, 10, 'Wi-Fi, Ar-condicionado, TV a cabo'),
+(1, 'Luxo Vista Mar', 2, 1, 450.00, 5, 'Wi-Fi, Ar-condicionado, Varanda, Vista mar'),
+(1, 'Suíte Master', 4, 2, 890.00, 3, 'Wi-Fi, Ar-condicionado, Jacuzzi, Vista mar, Frigobar'),
+(2, 'Quarto Simples', 2, 0, 0.00, 8, 'Wi-Fi, Ventilador'),
+(2, 'Quarto Família', 4, 2, 180.00, 4, 'Wi-Fi, Ar-condicionado, 2 camas');
 
 -- ============================================================
 -- 4. ALTERAÇÕES E ATUALIZAÇÕES
@@ -376,12 +425,12 @@ WHERE id = 1;
 
 -- 2 · Bahia — Pelourinho / Salvador colorido
 UPDATE destinos
-SET imagem_url = 'https://images.unsplash.com/photo-1622040806062-61e02e31f12e?w=800&q=80'
+SET imagem_url = 'https://images.unsplash.com/photo-1591233055842-a984961b71af?w=800&q=80'
 WHERE id = 2;
 
 -- 3 · Ceará — Jericoacoara / dunas e lagoa
 UPDATE destinos
-SET imagem_url = 'https://images.unsplash.com/photo-1607006344380-b6775a0824a7?w=800&q=80'
+SET imagem_url = 'https://images.unsplash.com/photo-1661692612848-37801f680815?w=800&q=80'
 WHERE id = 3;
 
 -- 4 · Califórnia — Golden Gate / São Francisco
@@ -391,7 +440,7 @@ WHERE id = 4;
 
 -- 5 · Flórida — Miami Beach / South Beach
 UPDATE destinos
-SET imagem_url = 'https://images.unsplash.com/photo-1533106418989-88406c7cc8ca?w=800&q=80'
+SET imagem_url = 'https://images.unsplash.com/photo-1754269675202-6fb0016d9f21?w=800&q=80'
 WHERE id = 5;
 
 -- 6 · França / Provença — Torre Eiffel Paris
@@ -401,7 +450,7 @@ WHERE id = 6;
 
 -- 7 · Itália / Toscana — vinhedos e colinas típicas
 UPDATE destinos
-SET imagem_url = 'https://images.unsplash.com/photo-1568797629192-789acf8e4df3?w=800&q=80'
+SET imagem_url = 'https://images.unsplash.com/photo-1759062012196-ab43aef31a6f?w=800&q=80'
 WHERE id = 7;
 
 -- 8 · Japão / Tóquio — skyline noturno de Tóquio
@@ -421,7 +470,7 @@ WHERE id = 10;
 
 -- 11 · Chile / Santiago — vista panorâmica cidade + Andes
 UPDATE destinos
-SET imagem_url = 'https://images.unsplash.com/photo-1534294668821-28a3054f4256?w=800&q=80'
+SET imagem_url = 'https://images.unsplash.com/photo-1689850543263-01a52ccc6943?w=800&q=80'
 WHERE id = 11;
 
 -- 12 · México / Quintana Roo — Cancún / Riviera Maya praia turquesa
@@ -472,7 +521,7 @@ WHERE id = 1;
 
 -- 2 · Bahia All Inclusive — praia de Morro de São Paulo / Trancoso
 UPDATE pacotes
-SET imagem_url = 'https://images.unsplash.com/photo-1622040806062-61e02e31f12e?w=800&q=80'
+SET imagem_url = 'https://images.unsplash.com/photo-1591233055842-a984961b71af?w=800&q=80'
 WHERE id = 2;
 
 -- 3 · Califórnia Dreams — rodovia 1 / costa da Califórnia
@@ -492,22 +541,22 @@ WHERE id = 5;
 
 -- 6 · Toscana Gourmet — vinhedos e villa toscana
 UPDATE pacotes
-SET imagem_url = 'https://images.unsplash.com/photo-1568797629192-789acf8e4df3?w=800&q=80'
+SET imagem_url = 'https://images.unsplash.com/photo-1759062012196-ab43aef31a6f?w=800&q=80'
 WHERE id = 6;
 
 -- 7 · Patagônia Argentina — Torres del Paine / Perito Moreno
 UPDATE pacotes
-SET imagem_url = 'https://images.unsplash.com/photo-1501854248509-c7e427ccd5ae?w=800&q=80'
+SET imagem_url = 'https://images.unsplash.com/photo-1741684650296-19f452c8814f?w=800&q=80'
 WHERE id = 7;
 
 -- 8 · Tóquio Tech Tour — Shibuya crossing / templos
 UPDATE pacotes
-SET imagem_url = 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&q=80'
+SET imagem_url = 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80'
 WHERE id = 8;
 
 -- 9 · Bali Paradise — terraços de arroz / templo Uluwatu
 UPDATE pacotes
-SET imagem_url = 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80'
+SET imagem_url = 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80'
 WHERE id = 9;
 
 -- 10 · Dubai Lux Experience — Burj Khalifa / skyline Dubai
@@ -587,67 +636,3 @@ SELECT
     SELECT * FROM usuarios;
     SELECT * FROM destinos;
     SELECT * FROM pedidos;
-    
-    
-    -- ============================================================
--- 1. DESTINOS — fotos quebradas (404) ou trocadas a pedido
--- ============================================================
- 
--- Bahia (id 2) — quebrada (404) -> casario colorido do Pelourinho/Salvador
-UPDATE destinos
-SET imagem_url = 'https://images.unsplash.com/photo-1591233055842-a984961b71af?w=800&q=80'
-WHERE id = 2;
- 
--- Ceará (id 3) — trocada a pedido -> Jericoacoara, litoral do Ceará
-UPDATE destinos
-SET imagem_url = 'https://images.unsplash.com/photo-1661692612848-37801f680815?w=800&q=80'
-WHERE id = 3;
- 
--- Flórida (id 5) — trocada a pedido -> vista aérea de Miami Beach
-UPDATE destinos
-SET imagem_url = 'https://images.unsplash.com/photo-1754269675202-6fb0016d9f21?w=800&q=80'
-WHERE id = 5;
- 
--- Itália / Toscana (id 7) — quebrada (404) -> vinhedos e villa toscana
-UPDATE destinos
-SET imagem_url = 'https://images.unsplash.com/photo-1759062012196-ab43aef31a6f?w=800&q=80'
-WHERE id = 7;
- 
--- Chile (id 11) — trocada a pedido -> Santiago com os Andes ao fundo
-UPDATE destinos
-SET imagem_url = 'https://images.unsplash.com/photo-1689850543263-01a52ccc6943?w=800&q=80'
-WHERE id = 11;
- 
--- ============================================================
--- 2. PACOTES — correção do bug de ID + fotos quebradas
--- ============================================================
- 
--- Bahia All Inclusive (id real 2) — quebrada (404)
-UPDATE pacotes
-SET imagem_url = 'https://images.unsplash.com/photo-1591233055842-a984961b71af?w=800&q=80'
-WHERE id = 2;
- 
--- Toscana Gourmet (id real 6) — quebrada (404)
-UPDATE pacotes
-SET imagem_url = 'https://images.unsplash.com/photo-1759062012196-ab43aef31a6f?w=800&q=80'
-WHERE id = 6;
- 
--- Tóquio Tech Tour (id real 7) — estava recebendo a foto quebrada da
--- "Patagônia" por causa do bug de mapeamento; agora foto real de Shibuya
-UPDATE pacotes
-SET imagem_url = 'https://images.unsplash.com/photo-1741684650296-19f452c8814f?w=800&q=80'
-WHERE id = 7;
- 
--- Bali Paradise (id real 8) — estava com a foto de Tóquio por engano
--- (restaurando a foto original de Bali, que é válida)
-UPDATE pacotes
-SET imagem_url = 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80'
-WHERE id = 8;
- 
--- Dubai Lux Experience (id real 9) — estava com a foto de Bali por engano
--- (restaurando a foto original de Dubai, que é válida)
-UPDATE pacotes
-SET imagem_url = 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80'
-WHERE id = 9;
- 
-SET SQL_SAFE_UPDATES = 1;

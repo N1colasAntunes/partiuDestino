@@ -205,6 +205,35 @@
             justify-content: center;
         }
     }
+
+    .btn-detalhes {
+        background: white;
+        color: var(--primary);
+        border: 2px solid var(--primary);
+        padding: 8px 16px;
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: .85rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all .2s;
+        white-space: nowrap;
+    }
+
+        .btn-detalhes:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+    .pacote-acoes {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
 </style>
 
 <div class="admin-wrapper">
@@ -332,6 +361,10 @@
                                     <td class="preco-destaque">R$ @reader["preco_por_pessoa"]</td>
                                     <td>@reader["vagas_disponiveis"]</td>
                                     <td style="display:flex;gap:8px;align-items:center;">
+                                        <a asp-controller="HospedagensAdmin" asp-action="Index" asp-route-pacoteId="@reader["id"]"
+                                           style="background:#f59e0b;color:white;padding:6px 12px;border-radius:6px;text-decoration:none;font-size:0.85rem;">
+                                            <i class="fas fa-hotel"></i> Hospedagens
+                                        </a>
                                         <a asp-controller="PacotesAdmin"
                                            asp-action="Editar"
                                            asp-route-id="@reader["id"]"

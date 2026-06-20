@@ -320,7 +320,7 @@
         color: #1e3a8a;
     }
 
-    
+
     .btn-reservar {
         background: #1e3a8a;
         color: white;
@@ -345,6 +345,27 @@
         .btn-reservar.esgotado {
             background: #94a3b8;
             cursor: not-allowed;
+        }
+
+    .btn-detalhes-home {
+        background: white;
+        color: #1e3a8a;
+        border: 2px solid #1e3a8a;
+        padding: 7px 14px;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: .72rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        transition: .2s;
+        white-space: nowrap;
+    }
+
+        .btn-detalhes-home:hover {
+            background: #1e3a8a;
+            color: white;
         }
 
     /* ── QUEM SOMOS ── */
@@ -807,7 +828,7 @@
             text-decoration: none;
         }
 
-        .btn-monte-viagem{
+    .btn-monte-viagem {
         background: #1e3a8a;
         color: white;
         border: none;
@@ -821,15 +842,14 @@
         align-items: center;
         gap: 5px;
         transition: .2s;
-        
-        }
-
-    .btn-monte-viagem:hover {
-            background: #1e40af;
-            color: white;
     }
 
-        .btn-saiba-mais{
+        .btn-monte-viagem:hover {
+            background: #1e40af;
+            color: white;
+        }
+
+    .btn-saiba-mais {
         background: #1e3a8a;
         color: white;
         border: none;
@@ -843,7 +863,7 @@
         align-items: center;
         gap: 5px;
         transition: .2s;
-        }
+    }
 </style>
 
 <!-- ══════════════════════════════════════════════════════════════════════
@@ -869,64 +889,64 @@
 </section>
 
 
- @* BARRA DE PESQUISA  *@
+@* BARRA DE PESQUISA  *@
 <form method="get" asp-controller="Destinos" asp-action="Index">
-<section class="container mt-5 mb-5">
-    <div class="barra-busca-home">
-        <div class="row g-3">
+    <section class="container mt-5 mb-5">
+        <div class="barra-busca-home">
+            <div class="row g-3">
 
-            <div class="col-md-2">
-                <label class="form-label">Origem</label>
-                <select class="form-select" name="origem">
-                    <option selected>Selecione</option>
+                <div class="col-md-2">
+                    <label class="form-label">Origem</label>
+                    <select class="form-select" name="origem">
+                        <option selected>Selecione</option>
 
-                    @foreach (string origem in ViewBag.Origens)
-                    {
-                        <option>@origem</option>
-                    }
-                </select>
-            </div>
+                        @foreach (string origem in ViewBag.Origens)
+                        {
+                            <option>@origem</option>
+                        }
+                    </select>
+                </div>
 
-            <div class="col-md-2">
-                <label class="form-label">Destino</label>
-                <select class="form-select" name="destino">
-                    <option selected>Selecione</option>
+                <div class="col-md-2">
+                    <label class="form-label">Destino</label>
+                    <select class="form-select" name="destino">
+                        <option selected>Selecione</option>
 
-                    @foreach (string destino in ViewBag.Destinos)
-                    {
-                        <option>@destino</option>
-                    }
-                </select>
-            </div>
+                        @foreach (string destino in ViewBag.Destinos)
+                        {
+                            <option>@destino</option>
+                        }
+                    </select>
+                </div>
 
-            <div class="col-md-2">
-                <label class="form-label">Entrada</label>
-                <input type="date" class="form-control">
-            </div>
+                <div class="col-md-2">
+                    <label class="form-label">Entrada</label>
+                    <input type="date" class="form-control">
+                </div>
 
-            <div class="col-md-2">
-                <label class="form-label">Saída</label>
-                <input type="date" class="form-control">
-            </div>
+                <div class="col-md-2">
+                    <label class="form-label">Saída</label>
+                    <input type="date" class="form-control">
+                </div>
 
-            <div class="col-md-2">
-                <label class="form-label">Pessoas</label>
-                <select class="form-select">
-                    <option>1 Pessoa</option>
-                    <option>2 Pessoas</option>
-                    <option>3 Pessoas</option>
-                    <option>4 Pessoas</option>
-                </select>
-            </div>
+                <div class="col-md-2">
+                    <label class="form-label">Pessoas</label>
+                    <select class="form-select">
+                        <option>1 Pessoa</option>
+                        <option>2 Pessoas</option>
+                        <option>3 Pessoas</option>
+                        <option>4 Pessoas</option>
+                    </select>
+                </div>
 
-            <div class="col-md-2 d-flex align-items-end">
-                <button class="btn-buscar-home w-100">
-                    Buscar
-                </button>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button class="btn-buscar-home w-100">
+                        Buscar
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 </form>
 
 <!-- ══════════════════════════════════════════════════════════════════════
@@ -1024,29 +1044,34 @@
                                     <div class="pacote-preco-label">Por pessoa</div>
                                     <div class="pacote-preco-valor">@p.PrecoPorPessoa.ToString("C")</div>
                                 </div>
-                                @if (Context.Session.GetString("UserName") != null)
-                                {
-                                    if (!esgotado)
+                                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                                    <a asp-controller="Pacotes" asp-action="Detalhes" asp-route-id="@p.Id" class="btn-detalhes-home">
+                                        <i class="fas fa-eye"></i> Detalhes
+                                    </a>
+                                    @if (Context.Session.GetString("UserName") != null)
                                     {
-                                        <form asp-controller="Carrinho" asp-action="AdicionarPacote"
-                                              method="post" style="margin:0;">
-                                            <input type="hidden" name="pacoteId" value="@p.Id" />
-                                            <button type="submit" class="btn-reservar">
-                                                <i class="fas fa-cart-plus"></i> Reservar
-                                            </button>
-                                        </form>
+                                        if (!esgotado)
+                                        {
+                                            <form asp-controller="Carrinho" asp-action="AdicionarPacote"
+                                                  method="post" style="margin:0;">
+                                                <input type="hidden" name="pacoteId" value="@p.Id" />
+                                                <button type="submit" class="btn-reservar">
+                                                    <i class="fas fa-cart-plus"></i> Reservar
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <span class="btn-reservar esgotado">Esgotado</span>
+                                        }
                                     }
                                     else
                                     {
-                                        <span class="btn-reservar esgotado">Esgotado</span>
+                                        <a asp-controller="Login" asp-action="Index" class="btn-reservar">
+                                            <i class="fas fa-sign-in-alt"></i> Entrar
+                                        </a>
                                     }
-                                }
-                                else
-                                {
-                                    <a asp-controller="Login" asp-action="Index" class="btn-reservar">
-                                        <i class="fas fa-sign-in-alt"></i> Entrar
-                                    </a>
-                                }
+                                </div>
                             </div>
                         </div>
                     </div>

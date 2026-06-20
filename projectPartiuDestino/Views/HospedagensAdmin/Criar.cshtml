@@ -1,0 +1,61 @@
+﻿@{
+    ViewData["Title"] = "Nova Hospedagem";
+}
+
+<style>
+    .form-wrapper {
+        max-width: 700px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    form {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,.1);
+        display: grid;
+        gap: 18px;
+    }
+
+    label {
+        font-weight: 600;
+        color: #475569;
+        margin-bottom: 6px;
+        display: block;
+        font-size: .9rem;
+    }
+
+    input, textarea {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        background: #f8fafc;
+        box-sizing: border-box;
+    }
+
+    button[type="submit"] {
+        padding: 14px;
+        background: #16a34a;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+</style>
+
+<div class="form-wrapper">
+    <h2 style="color:#1e3a8a;font-weight:800;">Nova Hospedagem</h2>
+    <a href="/HospedagensAdmin/Index?pacoteId=@ViewBag.PacoteId" style="color:#1e3a8a;font-weight:700;">&#8592; Voltar</a>
+    <form method="post" asp-action="Criar" style="margin-top:20px;">
+        <input type="hidden" name="pacoteId" value="@ViewBag.PacoteId" />
+        <div><label>Nome da Hospedagem</label><input type="text" name="nome" required /></div>
+        <div><label>Categoria (ex: 4 estrelas, Pousada, Resort)</label><input type="text" name="categoria" /></div>
+        <div><label>Endereço</label><input type="text" name="endereco" /></div>
+        <div><label>URL da Imagem</label><input type="text" name="imagemUrl" /></div>
+        <div><label>Descrição</label><textarea name="descricao" rows="4"></textarea></div>
+        <button type="submit">Salvar Hospedagem</button>
+    </form>
+</div>

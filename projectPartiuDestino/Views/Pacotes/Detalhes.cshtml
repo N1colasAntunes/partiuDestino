@@ -1,1 +1,302 @@
-﻿
+﻿@model projectPartiuDestino.Models.Pacotes
+@{
+    ViewData["Title"] = $"{Model.Nome} - Partiu Destino";
+}
+
+<style>
+    :root {
+        --primary: #1e3a8a;
+        --accent: #3b82f6;
+        --success: #10b981;
+        --text-muted: #6b7280;
+        --border: #e5e7eb;
+    }
+
+    .det-pct-page {
+        background: #f8fafc;
+        min-height: 100vh;
+        padding: 50px 0 80px;
+        font-family: 'Inter','Segoe UI',sans-serif;
+    }
+
+    .det-pct-hero {
+        background: linear-gradient(135deg,var(--primary),var(--accent));
+        padding: 50px 0 70px;
+        color: white;
+        text-align: center;
+    }
+
+        .det-pct-hero h1 {
+            font-size: 2.4rem;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+    .det-pct-resumo {
+        max-width: 900px;
+        margin: -40px auto 40px;
+        background: white;
+        border-radius: 18px;
+        padding: 26px 32px;
+        box-shadow: 0 10px 30px rgba(0,0,0,.1);
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .resumo-item {
+        text-align: center;
+        flex: 1;
+    }
+
+        .resumo-item span {
+            display: block;
+            font-size: .7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .resumo-item strong {
+            font-size: 1.05rem;
+            color: #1f2937;
+        }
+
+    .det-pct-layout {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .det-pct-desc {
+        background: white;
+        border-radius: 16px;
+        padding: 26px;
+        margin-bottom: 30px;
+        border: 1px solid var(--border);
+        color: #374151;
+        line-height: 1.7;
+    }
+
+    .sec-titulo-h {
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin-bottom: 6px;
+        color: #1f2937;
+    }
+
+    .sec-sub-h {
+        color: var(--text-muted);
+        margin-bottom: 24px;
+    }
+
+    .hosp-bloco {
+        background: white;
+        border-radius: 18px;
+        border: 1px solid var(--border);
+        margin-bottom: 24px;
+        overflow: hidden;
+    }
+
+    .hosp-cabecalho {
+        padding: 20px 26px;
+        background: #f9fafb;
+        border-bottom: 1px solid var(--border);
+    }
+
+        .hosp-cabecalho h3 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #1f2937;
+            margin: 0 0 4px;
+        }
+
+    .hosp-categoria-badge {
+        display: inline-block;
+        background: #eff6ff;
+        color: var(--primary);
+        font-size: .72rem;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 20px;
+        margin-bottom: 6px;
+    }
+
+    .hosp-end {
+        font-size: .85rem;
+        color: var(--text-muted);
+    }
+
+    .quartos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill,minmax(260px,1fr));
+        gap: 18px;
+        padding: 22px 26px;
+    }
+
+    .quarto-card {
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 18px;
+    }
+
+        .quarto-card h4 {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+
+    .quarto-cap {
+        font-size: .8rem;
+        color: var(--text-muted);
+        margin-bottom: 8px;
+    }
+
+    .quarto-comodidades {
+        font-size: .78rem;
+        color: var(--text-muted);
+        margin-bottom: 14px;
+        line-height: 1.5;
+    }
+
+    .quarto-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .quarto-preco {
+        font-size: .95rem;
+        font-weight: 800;
+        color: var(--success);
+    }
+
+    .btn-add-quarto {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 10px;
+        font-size: .82rem;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+        .btn-add-quarto:hover {
+            background: var(--accent);
+        }
+
+    .sem-hosp {
+        text-align: center;
+        padding: 50px 20px;
+        background: white;
+        border-radius: 16px;
+        border: 2px dashed var(--border);
+        color: var(--text-muted);
+    }
+</style>
+
+<div class="det-pct-page">
+    <div class="det-pct-hero">
+        <h1>@Model.Nome</h1>
+        <p>@Model.TipoViagem · @Model.DuracaoDias dias</p>
+    </div>
+
+    <div class="det-pct-resumo">
+        <div class="resumo-item"><span>Partida</span><strong>@Model.DataPartida.ToString("dd/MM/yyyy")</strong></div>
+        <div class="resumo-item"><span>Retorno</span><strong>@Model.DataRetorno.ToString("dd/MM/yyyy")</strong></div>
+        <div class="resumo-item"><span>Vagas</span><strong>@Model.VagasDisponiveis</strong></div>
+        <div class="resumo-item"><span>Preço base / pessoa</span><strong style="color:var(--primary);">@Model.PrecoPorPessoa.ToString("C")</strong></div>
+    </div>
+
+    <div class="det-pct-layout">
+        <div class="det-pct-desc">@Model.Descricao</div>
+
+        <h2 class="sec-titulo-h"><i class="fas fa-hotel"></i> Opções de Hospedagem</h2>
+        <p class="sec-sub-h">Escolha a hospedagem e o tipo de quarto. O valor extra é somado ao preço base do pacote.</p>
+
+        @if (!Model.Hospedagens.Any())
+        {
+            <div class="sem-hosp">
+                <i class="fas fa-bed fa-3x mb-3" style="color:#cbd5e1;"></i>
+                <h4>Nenhuma hospedagem cadastrada ainda</h4>
+                <p>Você pode adicionar este pacote ao carrinho com o preço base.</p>
+            </div>
+        }
+        else
+        {
+            @foreach (var hosp in Model.Hospedagens)
+            {
+                <div class="hosp-bloco">
+                    <div class="hosp-cabecalho">
+                        @if (!string.IsNullOrEmpty(hosp.Categoria))
+                        {
+                            <span class="hosp-categoria-badge">@hosp.Categoria</span>
+                        }
+                        <h3>@hosp.Nome</h3>
+                        @if (!string.IsNullOrEmpty(hosp.Endereco))
+                        {
+                            <p class="hosp-end"><i class="fas fa-map-marker-alt"></i> @hosp.Endereco</p>
+                        }
+                    </div>
+
+                    <div class="quartos-grid">
+                        @foreach (var quarto in hosp.Quartos)
+                        {
+                            decimal precoFinal = Model.PrecoPorPessoa + quarto.PrecoAdicional;
+                            bool esgotado = quarto.QuantidadeDisponivel == 0;
+
+                            <div class="quarto-card">
+                                <h4>@quarto.TipoQuarto</h4>
+                                <div class="quarto-cap">
+                                    <i class="fas fa-user-friends"></i> @quarto.CapacidadeAdultos adultos, @quarto.CapacidadeCriancas crianças
+                                </div>
+                                <div class="quarto-comodidades">@quarto.Comodidades</div>
+                                <div class="quarto-footer">
+                                    <span class="quarto-preco">@precoFinal.ToString("C") /pessoa</span>
+
+                                    @if (Context.Session.GetString("UserName") != null)
+                                    {
+                                        if (!esgotado)
+                                        {
+                                            <form asp-controller="Carrinho" asp-action="AdicionarPacote" method="post" style="margin:0;">
+                                                <input type="hidden" name="pacoteId" value="@Model.Id" />
+                                                <input type="hidden" name="quartoId" value="@quarto.Id" />
+                                                <button type="submit" class="btn-add-quarto">
+                                                    <i class="fas fa-cart-plus"></i> Escolher
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <span style="color:#ef4444;font-weight:700;font-size:.8rem;">Esgotado</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <a asp-controller="Login" asp-action="Index" class="btn-add-quarto" style="text-decoration:none;display:inline-block;">
+                                            Entrar
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        }
+
+        @if (Context.Session.GetString("UserName") != null)
+        {
+            <form asp-controller="Carrinho" asp-action="AdicionarPacote" method="post" style="margin-top:10px;">
+                <input type="hidden" name="pacoteId" value="@Model.Id" />
+                <button type="submit" class="btn-add-quarto" style="padding:12px 24px;">
+                    <i class="fas fa-cart-plus"></i> Adicionar pacote sem escolher quarto (preço base)
+                </button>
+            </form>
+        }
+    </div>
+</div>

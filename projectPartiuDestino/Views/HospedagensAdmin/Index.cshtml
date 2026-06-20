@@ -1,0 +1,76 @@
+﻿@model List<projectPartiuDestino.Models.Hospedagem>
+@{
+    ViewData["Title"] = "Hospedagens do Pacote";
+}
+
+<style>
+    .form-wrapper { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+    .btn-voltar {
+        display: inline-flex; align-items: center; gap: 6px;
+        background: #e0e7ff; color: #1e3a8a; border-radius: 10px;
+        padding: 10px 18px; font-weight: 700; text-decoration: none;
+        margin-bottom: 20px;
+    }
+    .btn-novo {
+        background: #16a34a; color: white; padding: 10px 18px; text-decoration: none;
+        border-radius: 8px; display: inline-flex; gap: 6px; font-weight: 600;
+        margin-bottom: 24px;
+    }
+    .hosp-card {
+        background: white; border: 1px solid #e5e7eb; border-radius: 16px;
+        padding: 22px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,.05);
+    }
+    .hosp-card h4 { color: #1e3a8a; font-weight: 800; margin-bottom: 4px; }
+    .hosp-categoria {
+        display: inline-block; background: #eff6ff; color: #1e3a8a;
+        font-size: .75rem; font-weight: 700; padding: 2px 10px; border-radius: 20px;
+        margin-bottom: 10px;
+    }
+    .hosp-acoes { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+    .btn-mini { padding: 6px 14px; border-radius: 8px; font-size: .85rem; text-decoration: none; border: none; cursor: pointer; }
+    .btn-quartos { background: #f59e0b; color: white; }
+    .btn-editar { background: #2563eb; color: white; }
+    .btn-excluir { background: #ef4444; color: white; }
+</style>
+
+<div class="form-wrapper">
+    <h2 style="color:#1e3a8a;font-weight:800;">Hospedagens — @ViewBag.NomePacote</h2>
+    <a class="btn-voltar" href="/PacotesAdmin/Index">&#8592; Voltar para Pacotes</a>
+    <br />
+    <a class="btn-novo" asp-action="Criar" asp-route-pacoteId="@ViewBag.PacoteId">+ Nova Hospedagem</a>
+
+    @if (!Model.Any())
+    {
+        <p style="color:#6b7280;">Nenhuma hospedagem cadastrada para este pacote ainda.</p>
+    }
+    else
+    {
+        @foreach (var h in Model)
+        {
+            <div class="hosp-card">
+                <h4>@h.Nome</h4>
+                @if (!string.IsNullOrEmpty(h.Categoria))
+                {
+                    <span class="hosp-categoria">@h.Categoria</span>
+                }
+                <p style="color:#6b7280;font-size:.9rem;">@h.Descricao</p>
+                @if (!string.IsNullOrEmpty(h.Endereco))
+                {
+                    <p style="color:#6b7280;font-size:.85rem;"><i class="fas fa-map-marker-alt"></i> @h.Endereco</p>
+                }
+                <div class="hosp-acoes">
+                    <a class="btn-mini btn-quartos" asp-controller="QuartosAdmin" asp-action="Index" asp-route-hospedagemId="@h.Id">
+                        <i class="fas fa-bed"></i> Gerenciar Quartos
+                    </a>
+                    <a class="btn-mini btn-editar" asp-action="Editar" asp-route-id="@h.Id">Editar</a>
+                    <form asp-action="Delete" method="post" style="margin:0;"
+                          onsubmit="return confirm('Excluir esta hospedagem e todos os seus quartos?');">
+                        <input type="hidden" name="id" value="@h.Id" />
+                        <input type="hidden" name="pacoteId" value="@ViewBag.PacoteId" />
+                        <button type="submit" class="btn-mini btn-excluir">Excluir</button>
+                    </form>
+                </div>
+            </div>
+        }
+    }
+</div>

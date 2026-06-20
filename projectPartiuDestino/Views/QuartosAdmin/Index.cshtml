@@ -1,0 +1,105 @@
+﻿@model List<projectPartiuDestino.Models.Quarto>
+@{
+    ViewData["Title"] = "Quartos da Hospedagem";
+}
+
+<style>
+    .form-wrapper {
+        max-width: 1100px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    .btn-novo {
+        background: #16a34a;
+        color: white;
+        padding: 10px 18px;
+        text-decoration: none;
+        border-radius: 8px;
+        display: inline-flex;
+        gap: 6px;
+        font-weight: 600;
+        margin-bottom: 24px;
+    }
+
+    .admin-table-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px rgba(0,0,0,.05);
+        border: 1px solid #f1f5f9;
+        overflow: hidden;
+    }
+
+    .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .admin-table th {
+            background: #1e3a8a;
+            color: white;
+            text-align: left;
+            padding: 12px 14px;
+            font-size: .78rem;
+            text-transform: uppercase;
+        }
+
+        .admin-table td {
+            padding: 11px 14px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: .88rem;
+            color: #334155;
+        }
+
+    .preco-extra {
+        color: #16a34a;
+        font-weight: 700;
+    }
+</style>
+
+<div class="form-wrapper">
+    <h2 style="color:#1e3a8a;font-weight:800;">Quartos — @ViewBag.NomeHospedagem</h2>
+    <a href="/HospedagensAdmin/Index?pacoteId=@ViewBag.PacoteId" style="color:#1e3a8a;font-weight:700;">&#8592; Voltar para Hospedagens</a>
+    <br /><br />
+    <a class="btn-novo" asp-action="Criar" asp-route-hospedagemId="@ViewBag.HospedagemId">+ Novo Quarto</a>
+
+    <div class="admin-table-card">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Capacidade</th>
+                    <th>Valor Extra</th>
+                    <th>Disponíveis</th>
+                    <th>Comodidades</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="6" style="text-align:center;color:#6b7280;">Nenhum quarto cadastrado.</td></tr>
+                }
+                @foreach (var q in Model)
+                {
+                    <tr>
+                        <td><strong>@q.TipoQuarto</strong></td>
+                        <td>@q.CapacidadeAdultos adultos, @q.CapacidadeCriancas crianças</td>
+                        <td class="preco-extra">+ @q.PrecoAdicional.ToString("C")</td>
+                        <td>@q.QuantidadeDisponivel</td>
+                        <td>@q.Comodidades</td>
+                        <td style="display:flex;gap:8px;">
+                            <a asp-action="Editar" asp-route-id="@q.Id"
+                               style="background:#2563eb;color:white;padding:6px 12px;border-radius:6px;text-decoration:none;font-size:.85rem;">Editar</a>
+                            <form asp-action="Delete" method="post" style="margin:0;" onsubmit="return confirm('Excluir este quarto?');">
+                                <input type="hidden" name="id" value="@q.Id" />
+                                <input type="hidden" name="hospedagemId" value="@ViewBag.HospedagemId" />
+                                <button type="submit" style="background:#ef4444;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:.85rem;">Excluir</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
