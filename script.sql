@@ -294,6 +294,17 @@ INSERT INTO quartos (hospedagem_id, tipo_quarto, capacidade_adultos, capacidade_
 (2, 'Quarto Simples', 2, 0, 0.00, 8, 'Wi-Fi, Ventilador'),
 (2, 'Quarto Família', 4, 2, 180.00, 4, 'Wi-Fi, Ar-condicionado, 2 camas');
 
+SET SQL_SAFE_UPDATES = 0;
+
+-- IMAGENS DOS QUARTOS DO PACOTE RIO
+UPDATE quartos SET imagem_url = 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=600&q=80' WHERE tipo_quarto = 'Standard';
+UPDATE quartos SET imagem_url = 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&q=80' WHERE tipo_quarto = 'Luxo Vista Mar';
+UPDATE quartos SET imagem_url = 'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=600&q=80' WHERE tipo_quarto = 'Suíte Master';
+UPDATE quartos SET imagem_url = 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=600&q=80' WHERE tipo_quarto = 'Quarto Simples';
+UPDATE quartos SET imagem_url = 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=600&q=80' WHERE tipo_quarto = 'Quarto Família';
+
+SET SQL_SAFE_UPDATES = 1;
+
 -- ============================================================
 -- 4. ALTERAÇÕES E ATUALIZAÇÕES
 -- ============================================================
@@ -372,7 +383,6 @@ WHERE id = 9;
 UPDATE pacotes
 SET imagem_url = 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80'
 WHERE id = 10;
-
 
 SET SQL_SAFE_UPDATES = 1;
 
@@ -563,9 +573,6 @@ WHERE id = 9;
 UPDATE pacotes
 SET imagem_url = 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80'
 WHERE id = 10;
-
-
-
 
 
 -- ============================================================
