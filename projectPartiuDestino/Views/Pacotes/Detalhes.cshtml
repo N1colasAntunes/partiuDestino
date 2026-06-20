@@ -196,7 +196,45 @@
         border-radius: 16px;
         border: 2px dashed var(--border);
         color: var(--text-muted);
+    } 
+
+    .hosp-banner {
+        height: 160px;
+        position: relative;
+        overflow: hidden;
     }
+
+    .hosp-banner-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .hosp-banner-fallback {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .hosp-banner-fallback i {
+            font-size: 2.5rem;
+            color: rgba(255,255,255,.35);
+        }
+
+    .quarto-card-img {
+        width: 100%;
+        height: 110px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        display: block;
+        background: #f1f5f9;
+    }
+
 </style>
 
 <div class="det-pct-page">
@@ -231,6 +269,26 @@
             @foreach (var hosp in Model.Hospedagens)
             {
                 <div class="hosp-bloco">
+
+                    <!-- ADICIONADO: banner da hospedagem -->
+                    <div class="hosp-banner">
+                        @if (!string.IsNullOrEmpty(hosp.ImagemUrl))
+                        {
+                            <img src="@hosp.ImagemUrl" alt="@hosp.Nome" class="hosp-banner-img"
+                                 loading="lazy"
+                                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+                            <div class="hosp-banner-fallback" style="display:none;">
+                                <i class="fas fa-hotel"></i>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="hosp-banner-fallback">
+                                <i class="fas fa-hotel"></i>
+                            </div>
+                        }
+                    </div>
+
                     <div class="hosp-cabecalho">
                         @if (!string.IsNullOrEmpty(hosp.Categoria))
                         {
@@ -250,6 +308,14 @@
                             bool esgotado = quarto.QuantidadeDisponivel == 0;
 
                             <div class="quarto-card">
+                                @* ADICIONADO: miniatura do quarto (só aparece se tiver URL cadastrada) *@
+                                @if (!string.IsNullOrEmpty(quarto.ImagemUrl))
+                                {
+                                    <img src="@quarto.ImagemUrl" alt="@quarto.TipoQuarto" class="quarto-card-img"
+                                         loading="lazy"
+                                         onerror="this.style.display='none';" />
+                                }
+
                                 <h4>@quarto.TipoQuarto</h4>
                                 <div class="quarto-cap">
                                     <i class="fas fa-user-friends"></i> @quarto.CapacidadeAdultos adultos, @quarto.CapacidadeCriancas crianças
