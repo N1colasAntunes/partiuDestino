@@ -1,8 +1,7 @@
 ﻿@model IEnumerable<projectPartiuDestino.Models.Pacotes>
 
 @{
-    ViewData["Title"] = "Pacotes de Viagem - Partiu Destino";
-}
+    ViewData["Title"] = "Pacotes de Viagem";
 
 <style>
     :root {
@@ -225,7 +224,7 @@
     .btn-reservar {
         background: var(--primary);
         color: white;
-        padding: 10px 20px;
+        padding: 10px 30px;
         border-radius: 10px;
         font-weight: 700;
         font-size: .88rem;
@@ -423,7 +422,7 @@
 
                             <div class="pacote-acoes">
                                 <a asp-controller="Pacotes" asp-action="Detalhes" asp-route-id="@item.Id" class="btn-detalhes">
-                                    <i class="fas fa-eye"></i> Detalhes
+                                  Detalhes
                                 </a>
 
                         @if (Context.Session.GetString("UserName") != null)

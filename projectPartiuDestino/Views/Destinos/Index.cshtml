@@ -1,8 +1,7 @@
 ﻿@model IEnumerable<projectPartiuDestino.Models.Destinos>
 
 @{
-    ViewData["Title"] = "Destinos - Partiu Destino";
-}
+    ViewData["Title"] = "Destinos";
 
 <style>
     :root {
@@ -401,7 +400,7 @@
                                       method="post" style="margin:0;">
                                     <input type="hidden" name="destinoId" value="@item.Id" />
                                     <button type="submit" class="btn-adicionar-destino">
-                                        <i class="fas fa-cart-plus"></i> Adicionar ao Carrinho
+                                       Adicionar ao Carrinho
                                     </button>
                                 </form>
                             }

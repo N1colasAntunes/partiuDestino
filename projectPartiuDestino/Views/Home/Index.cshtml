@@ -1,7 +1,7 @@
 ﻿@model List<projectPartiuDestino.Models.Destinos>
 @using MySql.Data.MySqlClient
 @{
-    ViewData["Title"] = "Home - Partiu Destino";
+    ViewData["Title"] = "Home";
 
     // ── Busca pacotes em destaque direto aqui ──────────────────────────
     var pacotesDestaque = new List<projectPartiuDestino.Models.Pacotes>();
@@ -709,58 +709,7 @@
             text-decoration: none;
         }
 
-    #btnTopo {
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        width: 60px;
-        height: 60px;
-        border: none;
-        border-radius: 50%;
-        background: linear-gradient( 135deg, var(--azul-claro), var(--azul-escuro) );
-        color: var(--branco);
-        font-size: 28px;
-        font-weight: bold;
-        cursor: pointer;
-        box-shadow: 0 10px 25px rgba(30, 58, 138, 0.35), 0 4px 10px rgba(0, 0, 0, 0.15);
-        z-index: 9999;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        visibility: hidden;
-        transform: translateY(20px);
-        transition: all 0.35s ease;
-    }
-
-        #btnTopo.mostrar {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        #btnTopo:hover {
-            transform: translateY(-5px) scale(1.08);
-            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.45), 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        #btnTopo:active {
-            transform: scale(0.95);
-        }
-
-        #btnTopo::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.15);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        #btnTopo:hover::before {
-            opacity: 1;
-        }
+  
 
     .barra-busca-home {
         background: white;
@@ -1046,7 +995,7 @@
                                 </div>
                                 <div style="display:flex;gap:6px;flex-wrap:wrap;">
                                     <a asp-controller="Pacotes" asp-action="Detalhes" asp-route-id="@p.Id" class="btn-detalhes-home">
-                                        <i class="fas fa-eye"></i> Detalhes
+                                       Detalhes
                                     </a>
                                     @if (Context.Session.GetString("UserName") != null)
                                     {
@@ -1251,9 +1200,6 @@
     </div>
 </section>
 
-<button id="btnTopo" title="Voltar ao topo">
-    ↑
-</button>
 
 <footer class="footer-figma">
     <div class="container">
@@ -1288,20 +1234,5 @@
 
 
     // botao do topo
-    const btnTopo = document.getElementById("btnTopo");
-
-    window.addEventListener("scroll", () => {
-        if (window.scrollY > 300) {
-            btnTopo.classList.add("mostrar");
-        } else {
-            btnTopo.classList.remove("mostrar");
-        }
-    });
-
-    btnTopo.addEventListener("click", () => {
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
-    });
+    
 </script>
