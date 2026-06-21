@@ -1,6 +1,7 @@
 ﻿@model projectPartiuDestino.Models.Pacotes
 @{
     ViewData["Title"] = $"{Model.Nome}";
+    }
 
 <style>
     :root {
@@ -252,7 +253,7 @@
     <div class="det-pct-layout">
         <div class="det-pct-desc">@Model.Descricao</div>
 
-        <h2 class="sec-titulo-h"><i class="fas fa-hotel"></i> Opções de Hospedagem</h2>
+        <h2 class="sec-titulo-h"> Opções de Hospedagem</h2>
         <p class="sec-sub-h">Escolha a hospedagem e o tipo de quarto. O valor extra é somado ao preço base do pacote.</p>
 
         @if (!Model.Hospedagens.Any())
@@ -283,7 +284,7 @@
                         else
                         {
                             <div class="hosp-banner-fallback">
-                                <i class="fas fa-hotel"></i>
+                            
                             </div>
                         }
                     </div>
@@ -356,10 +357,10 @@
 
         @if (Context.Session.GetString("UserName") != null)
         {
-            <form asp-controller="Carrinho" asp-action="AdicionarPacote" method="post" style="margin-top:10px;">
+            <form asp-controller="Carrinho" asp-action="" method="post" style="margin-top:10px;">
                 <input type="hidden" name="pacoteId" value="@Model.Id" />
                 <button type="submit" class="btn-add-quarto" style="padding:12px 24px;">
-                    <i class="fas fa-cart-plus"></i> Adicionar pacote sem escolher quarto (preço base)
+                     Mais informações
                 </button>
             </form>
         }

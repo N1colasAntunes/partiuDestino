@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Pacotes de Viagem";
+ }
 
 <style>
     :root {
@@ -322,6 +323,7 @@
         flex-wrap: wrap;
         justify-content: flex-end;
     }
+}
 
 </style>
 
@@ -419,21 +421,18 @@
                                 <span class="preco-sub">Por pessoa</span>
                                 <span class="preco-principal">@item.PrecoPorPessoa.ToString("C")</span>
                             </div>
+                            </div>
 
-                            <div class="pacote-acoes">
-                                <a asp-controller="Pacotes" asp-action="Detalhes" asp-route-id="@item.Id" class="btn-detalhes">
-                                  Detalhes
-                                </a>
 
                         @if (Context.Session.GetString("UserName") != null)
                                 {
                                     if (!esgotado)
                                     {
-                                        <form asp-controller="Carrinho" asp-action="AdicionarPacote"
+                                        <form asp-controller="Pacotes" asp-action="DetalhesPassagens"
                                               method="post" style="margin:0;">
                                             <input type="hidden" name="pacoteId" value="@item.Id" />
                                             <button type="submit" class="btn-reservar">
-                                                <i class="fas fa-cart-plus"></i> Adicionar
+                                                 Reservar
                                             </button>
                                         </form>
                                     }
@@ -449,8 +448,8 @@
                                     </a>
                                 }
                             </div>
-                        </div>
-                    </div>
+                        
+
                 }
             }
             else

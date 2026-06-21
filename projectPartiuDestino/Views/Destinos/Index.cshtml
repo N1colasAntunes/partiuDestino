@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Destinos";
+    }
 
 <style>
     :root {
@@ -315,7 +316,7 @@
         </div>
 
         <div class="header-secao">
-            <h1>Destinos Disponíveis</h1>
+            <h1>Passagens Disponíveis</h1>
             <p>Explore destinos nacionais e internacionais saindo de diferentes regiões do Brasil.</p>
         </div>
 
@@ -396,11 +397,11 @@
 
                             @if (Context.Session.GetString("UserName") != null)
                             {
-                                <form asp-controller="Carrinho" asp-action="AdicionarDestino"
+                                <form asp-controller="Destinos" asp-action="DetalhesPassagens"
                                       method="post" style="margin:0;">
                                     <input type="hidden" name="destinoId" value="@item.Id" />
                                     <button type="submit" class="btn-adicionar-destino">
-                                       Adicionar ao Carrinho
+                                       Ver mais
                                     </button>
                                 </form>
                             }

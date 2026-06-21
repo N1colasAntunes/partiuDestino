@@ -135,6 +135,11 @@ namespace projectPartiuDestino.Controllers
 
             return View(pacote);
         }
+
+        public IActionResult DetalhesPassagens(int id)
+        {
+            return View();
+        }
         public IActionResult Buscar(string termo)
         {
             List<Pacotes> pacotes = new();
