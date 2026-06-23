@@ -181,6 +181,11 @@
             background-color: #f8fafc;
         }
 
+        /* Linha de usuário desativado fica levemente acinzentada */
+        .admin-table tr.usuario-inativo td {
+            opacity: 0.55;
+        }
+
     .badge-tipo {
         padding: 4px 10px;
         border-radius: 20px;
@@ -197,6 +202,24 @@
     .badge-usuario {
         background: #f0fdf4;
         color: #16a34a;
+    }
+
+    /* Badge de status ativo/inativo */
+    .badge-status {
+        padding: 3px 9px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+
+    .badge-ativo {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .badge-inativo {
+        background: #fee2e2;
+        color: #991b1b;
     }
 
     @@media (max-width: 992px) {
@@ -278,18 +301,18 @@
             <h2><i class="fas fa-users me-2"></i>Usuários Cadastrados</h2>
         </div>
 
-        <!-- Métrica -->
+        <!-- Métrica — conta apenas usuários ATIVOS -->
         <div class="metric-card-small">
             <div class="metric-icon-sm"><i class="fas fa-user-check"></i></div>
             <div class="metric-info">
-                <h4>Usuários Registrados</h4>
+                <h4>Usuários Ativos</h4>
                 <p>
                     @{
                         int totalUsuarios = 0;
                         using (MySqlConnection conn = new MySqlConnection(conexao))
                         {
                             conn.Open();
-                            string sqlUsuarios = "SELECT COUNT(*) FROM usuarios";
+                            string sqlUsuarios = "SELECT COUNT(*) FROM usuarios WHERE ativo = 1";
                             MySqlCommand cmdUsuarios = new MySqlCommand(sqlUsuarios, conn);
                             totalUsuarios = Convert.ToInt32(cmdUsuarios.ExecuteScalar());
                         }
@@ -306,7 +329,7 @@
             </a>
         </div>
 
-        <!-- Tabela -->
+        <!-- Tabela — exibe TODOS os usuários (ativos e inativos) para o admin -->
         <div class="admin-table-card">
             <table class="admin-table">
                 <thead>
@@ -315,6 +338,7 @@
                         <th>Nome</th>
                         <th>Email</th>
                         <th>Tipo</th>
+                        <th>Status</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -323,36 +347,68 @@
                         using (MySqlConnection conn = new MySqlConnection(conexao))
                         {
                             conn.Open();
-                            string sqlUsuarios2 = "SELECT id, nome, email, tipo FROM usuarios ORDER BY id";
+                            // Busca todos os usuários (ativos e inativos) ordenados pelo status
+                            string sqlUsuarios2 = "SELECT id, nome, email, tipo, ativo FROM usuarios ORDER BY ativo DESC, id ASC";
                             MySqlCommand cmdUsuarios2 = new MySqlCommand(sqlUsuarios2, conn);
                             MySqlDataReader readerUsuarios = cmdUsuarios2.ExecuteReader();
+
                             while (readerUsuarios.Read())
                             {
                                 string tipo = readerUsuarios["tipo"].ToString();
                                 string badgeClass = tipo == "admin" ? "badge-admin" : "badge-usuario";
-                                <tr>
+                                bool estaAtivo = Convert.ToInt32(readerUsuarios["ativo"]) == 1;
+                                string rowClass = estaAtivo ? "" : "usuario-inativo";
+
+                                <tr class="@rowClass">
                                     <td>@readerUsuarios["id"]</td>
                                     <td>@readerUsuarios["nome"]</td>
                                     <td>@readerUsuarios["email"]</td>
                                     <td><span class="badge-tipo @badgeClass">@tipo</span></td>
+                                    <td>
+                                        @if (estaAtivo)
+                                        {
+                                            <span class="badge-status badge-ativo">
+                                                <i class="fas fa-check-circle"></i> Ativo
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge-status badge-inativo">
+                                                <i class="fas fa-ban"></i> Inativo
+                                            </span>
+                                        }
+                                    </td>
                                     <td style="display:flex;gap:8px;align-items:center;">
+                                        <!-- Botão Editar (sempre visível) -->
                                         <a asp-controller="Usuarios"
                                            asp-action="Editar"
                                            asp-route-id="@readerUsuarios["id"]"
                                            style="background:#2563eb;color:white;padding:6px 12px;border-radius:6px;text-decoration:none;font-size:0.85rem;">
                                             <i class="fas fa-edit"></i> Editar
                                         </a>
-                                        <form asp-action="Delete"
-                                              asp-controller="Usuarios"
-                                              method="post"
-                                              onsubmit="return confirm('Tem certeza que deseja excluir este usuário?');"
-                                              style="margin:0;">
-                                            <input type="hidden" name="id" value="@readerUsuarios["id"]" />
-                                            <button type="submit"
-                                                    style="background:#ef4444;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:0.85rem;">
-                                                <i class="fas fa-trash"></i> Excluir
-                                            </button>
-                                        </form>
+
+                                        <!-- Botão Desativar — só aparece se o usuário estiver ativo -->
+                                        @if (estaAtivo)
+                                        {
+                                            <form asp-action="Desativar"
+                                                  asp-controller="Usuarios"
+                                                  method="post"
+                                                  onsubmit="return confirm('Tem certeza que deseja desativar o usuário \'@readerUsuarios["nome"]\'?\n\nEle não conseguirá mais acessar o sistema, mas o registro será mantido.');"
+                                                  style="margin:0;">
+                                                <input type="hidden" name="id" value="@readerUsuarios["id"]" />
+                                                <button type="submit"
+                                                        style="background:#f97316;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:0.85rem;">
+                                                    <i class="fas fa-ban"></i> Desativar
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <!-- Usuário já inativo: mostra aviso no lugar do botão -->
+                                            <span style="color:#9ca3af;font-size:0.8rem;font-style:italic;">
+                                                Já desativado
+                                            </span>
+                                        }
                                     </td>
                                 </tr>
                             }

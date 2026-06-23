@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
+using BCrypt.Net;
 using projectPartiuDestino.Data;
 
 namespace projectPartiuDestino.Controllers
@@ -10,8 +11,14 @@ namespace projectPartiuDestino.Controllers
         {
             return View();
         }
+
+
+        // -------------------------------------------------------
+        // DESATIVAR — substitui o antigo Delete (exclusão física)
+        // Apenas marca ativo = 0, nunca apaga o registro
+        // -------------------------------------------------------
         [HttpPost]
-        public IActionResult Delete(int id)
+        public IActionResult Desativar(int id)
         {
             string conexao = "server=localhost;database=bdpartiudestino;uid=root;pwd=12345678;";
 
@@ -19,7 +26,7 @@ namespace projectPartiuDestino.Controllers
             {
                 conn.Open();
 
-                string sql = "DELETE FROM usuarios WHERE id = @id";
+                string sql = "UPDATE usuarios SET ativo = 0 WHERE id = @id";
 
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@id", id);
@@ -60,7 +67,7 @@ namespace projectPartiuDestino.Controllers
                 {
                     cmd.Parameters.AddWithValue("@nome", nome);
                     cmd.Parameters.AddWithValue("@email", email);
-                    cmd.Parameters.AddWithValue("@senha", senha);
+                    cmd.Parameters.AddWithValue("@senha", BCrypt.Net.BCrypt.HashPassword(senha));
 
                     cmd.ExecuteNonQuery();
                 }

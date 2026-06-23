@@ -1,8 +1,8 @@
 ﻿@model IEnumerable<projectPartiuDestino.Models.Pacotes>
 
 @{
-    ViewData["Title"] = "Pacotes de Viagem";
- }
+    ViewData["Title"] = "Pacotes de Viagem - Partiu Destino";
+}
 
 <style>
     :root {
@@ -198,7 +198,7 @@
 
     /* ── Footer ── */
     .pacote-footer {
-        padding: 18px 24px;
+        padding: 16px 25px;
         background: #fcfcfd;
         border-top: 1px solid var(--border);
         display: flex;
@@ -225,29 +225,23 @@
     .btn-reservar {
         background: var(--primary);
         color: white;
-        padding: 10px 30px;
-        border-radius: 10px;
+        text-decoration: none;
+        padding: 10px 18px;
+        border-radius: 12px;
         font-weight: 700;
-        font-size: .88rem;
         border: none;
         cursor: pointer;
-        text-decoration: none;
+        font-size: .88rem;
+        transition: background .25s, transform .2s;
         display: inline-flex;
         align-items: center;
         gap: 7px;
-        transition: background .25s, transform .2s;
     }
 
         .btn-reservar:hover {
             background: var(--accent);
             color: white;
             transform: scale(1.04);
-        }
-
-        .btn-reservar.disabled {
-            background: #94a3b8;
-            cursor: not-allowed;
-            pointer-events: none;
         }
 
     .lista-vazia {
@@ -295,35 +289,6 @@
             transform: translateY(-50%);
             color: #3b82f6;
         }
-
-    .btn-detalhes {
-        background: white;
-        color: var(--primary);
-        border: 2px solid var(--primary);
-        padding: 8px 16px;
-        border-radius: 10px;
-        font-weight: 700;
-        font-size: .85rem;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        transition: all .2s;
-        white-space: nowrap;
-    }
-
-        .btn-detalhes:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-    .pacote-acoes {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-    }
-}
 
 </style>
 
@@ -388,68 +353,59 @@
                             {
                                 <span class="badge-tipo">@item.TipoViagem</span>
                             }
-                    </div>
-
-                    <!-- Conteúdo -->
-                    <div class="pacote-conteudo">
-                        <h3 class="pacote-titulo">@item.Nome</h3>
-
-                        <div class="pacote-detalhes-rapidos">
-                            <div class="detalhe-item">
-                                <span class="detalhe-label">Duração</span>
-                                <span class="detalhe-valor">@item.DuracaoDias dias</span>
-                            </div>
-                            <div class="detalhe-item">
-                                <span class="detalhe-label">Partida</span>
-                                <span class="detalhe-valor">@item.DataPartida.ToString("dd/MM/yy")</span>
-                            </div>
-                            <div class="detalhe-item">
-                                <span class="detalhe-label">Retorno</span>
-                                <span class="detalhe-valor">@item.DataRetorno.ToString("dd/MM/yy")</span>
-                            </div>
                         </div>
 
-                        <p class="pacote-descricao">
-                            @(item.Descricao?.Length > 120
-                                                    ? item.Descricao.Substring(0, 120) + "…"
-                                                    : item.Descricao)
-                    </p>
-                </div>
+                        <!-- Conteúdo -->
+                        <div class="pacote-conteudo">
+                            <h3 class="pacote-titulo">@item.Nome</h3>
+
+                            <div class="pacote-detalhes-rapidos">
+                                <div class="detalhe-item">
+                                    <span class="detalhe-label">Duração</span>
+                                    <span class="detalhe-valor">@item.DuracaoDias dias</span>
+                                </div>
+                                <div class="detalhe-item">
+                                    <span class="detalhe-label">Partida</span>
+                                    <span class="detalhe-valor">@item.DataPartida.ToString("dd/MM/yy")</span>
+                                </div>
+                                <div class="detalhe-item">
+                                    <span class="detalhe-label">Retorno</span>
+                                    <span class="detalhe-valor">@item.DataRetorno.ToString("dd/MM/yy")</span>
+                                </div>
+                            </div>
+
+                            <p class="pacote-descricao">
+                                @(item.Descricao?.Length > 120
+                                    ? item.Descricao.Substring(0, 120) + "…"
+                                    : item.Descricao)
+                            </p>
+                        </div>
 
                         <div class="pacote-footer">
                             <div class="pacote-preco-box">
                                 <span class="preco-sub">Por pessoa</span>
                                 <span class="preco-principal">@item.PrecoPorPessoa.ToString("C")</span>
                             </div>
-                            </div>
 
-
-                        @if (Context.Session.GetString("UserName") != null)
-                                {
-                                    if (!esgotado)
-                                    {
-                                        <form asp-controller="Pacotes" asp-action="DetalhesPassagens"
-                                              method="post" style="margin:0;">
-                                            <input type="hidden" name="pacoteId" value="@item.Id" />
-                                            <button type="submit" class="btn-reservar">
-                                                 Reservar
-                                            </button>
-                                        </form>
-                                    }
-                                    else
-                                    {
-                                        <span class="btn-reservar disabled">Esgotado</span>
-                                    }
-                                }
-                                else
-                                {
-                                    <a asp-controller="Login" asp-action="Index" class="btn-reservar">
-                                        <i class="fas fa-sign-in-alt"></i> Entre para Reservar
-                                    </a>
-                                }
-                            </div>
-                        
-
+                            @if (Context.Session.GetString("UserName") != null)
+                            {
+                                <a asp-controller="Pacotes"
+                                   asp-action="DetalhesPassagens"
+                                   asp-route-id="@item.Id"
+                                   class="btn-reservar">
+                                    Reservar
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Login"
+                                   asp-action="Index"
+                                   class="btn-reservar">
+                                    <i class="fas fa-sign-in-alt"></i> Entrar para Reservar
+                                </a>
+                            }
+                        </div>
+                    </div>
                 }
             }
             else

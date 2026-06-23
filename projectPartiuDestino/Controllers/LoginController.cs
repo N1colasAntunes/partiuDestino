@@ -27,9 +27,9 @@ namespace projectPartiuDestino.Controllers
 
                 string sql = @"SELECT id, nome, email, senha, tipo
                        FROM usuarios
-                       WHERE email = @Email";
+                       WHERE email = @Email AND ativo = 1";
 
-                MySqlCommand cmd = new MySqlCommand(sql, conn);
+           MySqlCommand cmd = new MySqlCommand(sql, conn);
 
                 cmd.Parameters.AddWithValue("@Email", email);
 
