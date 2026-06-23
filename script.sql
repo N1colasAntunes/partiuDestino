@@ -19,7 +19,7 @@
 
 CREATE DATABASE bdpartiudestino;
 USE bdpartiudestino;
-
+select * from usuarios;
 -- ============================================================
 -- 2. CRIAÇÃO DAS TABELAS
 -- ============================================================
@@ -34,6 +34,13 @@ CREATE TABLE usuarios (
     senha VARCHAR(255) NOT NULL,
     tipo  VARCHAR(20)  NOT NULL DEFAULT 'usuario'   -- 'usuario' | 'admin'
 );
+
+ALTER TABLE usuarios
+    ADD COLUMN ativo TINYINT(1) NOT NULL DEFAULT 1;
+
+
+DELETE FROM usuarios 
+WHERE id = 2;
 
 -- ------------------------------------------------------------
 -- 2.2 Tabela: destinos
@@ -168,7 +175,6 @@ CREATE INDEX idx_quartos_hospedagem ON quartos(hospedagem_id);
 -- ------------------------------------------------------------
 INSERT INTO usuarios (nome, email, senha, tipo) VALUES
     ('Julia Costa', 'julia@gmail.com', '$2a$11$KG8AxkIziG2A6C9aOIzWkeD82eW96KTcXrDiM2JMYZGlSmLVoU2am', 'admin');
-
 -- ------------------------------------------------------------
 -- 3.2 Destinos (com imagem_url e preco_por_pessoa)
 -- ------------------------------------------------------------
