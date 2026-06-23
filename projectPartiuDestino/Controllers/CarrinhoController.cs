@@ -101,6 +101,10 @@ namespace projectPartiuDestino.Controllers
                     {
                         nomeItem += $" — Classe {voo.ClasseViagem}";
                     }
+                    if (!string.IsNullOrEmpty(voo.NumeroAssento))
+                    {
+                        nomeItem += $" — Assento: {voo.NumeroAssento}";
+                    }
                 }
             }
 

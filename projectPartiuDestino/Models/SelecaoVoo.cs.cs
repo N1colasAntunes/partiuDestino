@@ -11,6 +11,7 @@
         public string TipoItem { get; set; } = "pacote"; // "pacote" | "destino" (futuro)
         public string ClasseViagem { get; set; } = "Econômica"; // Econômica | Executiva | Primeira Classe
         public string TipoAssento { get; set; } = "Janela";     // Janela | Corredor | Meio
+        public string? NumeroAssento { get; set; }
         public string? CompanhiaAerea { get; set; }
         public string? HorarioIda { get; set; }
         public string? HorarioVolta { get; set; }
