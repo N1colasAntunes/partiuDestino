@@ -1014,13 +1014,9 @@ CARROSSEL — DESTINOS
                                     {
                                         if (!esgotado)
                                         {
-                                            <form asp-controller="Pacotes" asp-action="DetalhesPassagens"
-                                                  method="post" style="margin:0;">
-                                                <input type="hidden" name="pacoteId" value="@p.Id" />
-                                                <button type="submit" class="btn-reservar">
-                                                    <i class="fas fa-cart-plus"></i> Reservar
-                                                </button>
-                                            </form>
+                                            <a asp-controller="Pacotes" asp-action="Passagem" asp-route-id="@p.Id" class="btn-reservar">
+                                                <i class="fas fa-cart-plus"></i> Reservar
+                                            </a>
                                         }
                                         else
                                         {

@@ -19,7 +19,6 @@
 
 CREATE DATABASE bdpartiudestino;
 USE bdpartiudestino;
-select * from usuarios;
 -- ============================================================
 -- 2. CRIAÇÃO DAS TABELAS
 -- ============================================================

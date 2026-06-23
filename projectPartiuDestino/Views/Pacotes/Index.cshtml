@@ -389,12 +389,7 @@
 
                             @if (Context.Session.GetString("UserName") != null)
                             {
-                                <a asp-controller="Pacotes"
-                                   asp-action="DetalhesPassagens"
-                                   asp-route-id="@item.Id"
-                                   class="btn-reservar">
-                                    Reservar
-                                </a>
+                                <a asp-controller="Pacotes" asp-action="Passagem" asp-route-id="@item.Id" class="btn-reservar"> Reservar </a>
                             }
                             else
                             {

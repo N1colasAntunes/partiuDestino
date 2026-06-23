@@ -86,8 +86,25 @@ namespace projectPartiuDestino.Controllers
                 }
             }
 
-            // ── ADICIONADO: soma o valor do quarto escolhido (se houver) ──
             string nomeItem = nomePacote;
+
+            // ADICIONADO: aplica a passagem escolhida na etapa anterior (lida da Session,
+            // nunca de um campo do formulário — evita manipulação de preço pelo cliente)
+            string? vooJson = HttpContext.Session.GetString($"Voo_pacote_{pacoteId}");
+            if (!string.IsNullOrEmpty(vooJson))
+            {
+                var voo = System.Text.Json.JsonSerializer.Deserialize<Models.SelecaoVoo>(vooJson);
+                if (voo != null)
+                {
+                    preco += voo.PrecoAdicional;
+                    if (voo.ClasseViagem != "Econômica")
+                    {
+                        nomeItem += $" — Classe {voo.ClasseViagem}";
+                    }
+                }
+            }
+
+            // soma o valor do quarto escolhido (se houver)
             if (quartoId.HasValue)
             {
                 string sqlQuarto = "SELECT tipo_quarto, preco_adicional FROM quartos WHERE id = @id";
@@ -99,14 +116,13 @@ namespace projectPartiuDestino.Controllers
                 {
                     string tipoQuarto = rq["tipo_quarto"].ToString()!;
                     preco += Convert.ToDecimal(rq["preco_adicional"]);
-                    nomeItem = $"{nomePacote} — Quarto: {tipoQuarto}";
+                    nomeItem = $"{nomeItem} — Quarto: {tipoQuarto}";
                 }
             }
 
-            // Verifica se já existe esse MESMO pacote (com o mesmo quarto) no carrinho
             string sqlCheck = @"SELECT id FROM carrinho
-                        WHERE usuario_id = @uid AND tipo_item = 'pacote'
-                          AND item_id = @iid AND nome_item = @nome";
+                WHERE usuario_id = @uid AND tipo_item = 'pacote'
+                  AND item_id = @iid AND nome_item = @nome";
             using MySqlCommand cmdCheck = new MySqlCommand(sqlCheck, conn);
             cmdCheck.Parameters.AddWithValue("@uid", usuarioId);
             cmdCheck.Parameters.AddWithValue("@iid", pacoteId);
@@ -123,8 +139,8 @@ namespace projectPartiuDestino.Controllers
             else
             {
                 string sqlIns = @"INSERT INTO carrinho
-                          (usuario_id, tipo_item, item_id, nome_item, preco_unitario, quantidade)
-                          VALUES (@uid, 'pacote', @iid, @nome, @preco, 1)";
+                  (usuario_id, tipo_item, item_id, nome_item, preco_unitario, quantidade)
+                  VALUES (@uid, 'pacote', @iid, @nome, @preco, 1)";
                 using MySqlCommand cmdIns = new MySqlCommand(sqlIns, conn);
                 cmdIns.Parameters.AddWithValue("@uid", usuarioId);
                 cmdIns.Parameters.AddWithValue("@iid", pacoteId);
@@ -132,6 +148,9 @@ namespace projectPartiuDestino.Controllers
                 cmdIns.Parameters.AddWithValue("@preco", preco);
                 cmdIns.ExecuteNonQuery();
             }
+
+            // ADICIONADO: limpa a passagem da Session após concluir a adição ao carrinho
+            HttpContext.Session.Remove($"Voo_pacote_{pacoteId}");
 
             TempData["Sucesso"] = $"{nomeItem} adicionado ao carrinho!";
             return RedirectToAction("Index", "Carrinho");

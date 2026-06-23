@@ -1,0 +1,152 @@
+﻿@model projectPartiuDestino.Models.Pacotes
+@{
+    ViewData["Title"] = $"Passagem - {Model.Nome}";
+}
+
+<style>
+    :root {
+        --primary: #1e3a8a;
+        --accent: #3b82f6;
+        --success: #10b981;
+        --text-muted: #6b7280;
+        --border: #e5e7eb;
+    }
+
+    .voo-page { background:#f8fafc; min-height:100vh; padding:50px 0 80px; font-family:'Inter','Segoe UI',sans-serif; }
+
+    .voo-hero {
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        padding: 50px 0 70px; color:white; text-align:center;
+    }
+    .voo-hero h1 { font-size:2.2rem; font-weight:900; margin-bottom:6px; }
+    .voo-hero p { opacity:.9; }
+
+    .voo-resumo {
+        max-width:800px; margin:-40px auto 40px; background:white; border-radius:18px;
+        padding:24px 32px; box-shadow:0 10px 30px rgba(0,0,0,.1);
+        display:flex; justify-content:space-between; flex-wrap:wrap; gap:16px;
+    }
+    .resumo-rota { display:flex; align-items:center; gap:14px; font-weight:700; color:#1f2937; }
+    .resumo-rota i { color:var(--accent); }
+    .resumo-datas { display:flex; gap:24px; font-size:.85rem; color:var(--text-muted); }
+    .resumo-datas strong { color:#1f2937; display:block; }
+
+    .voo-layout { max-width:800px; margin:0 auto; padding:0 20px; }
+
+    .card-secao-voo {
+        background:white; border-radius:18px; padding:32px; margin-bottom:24px;
+        border:1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,.04);
+    }
+    .card-secao-voo h3 { font-size:1.1rem; font-weight:800; margin-bottom:18px; color:#1f2937; display:flex; align-items:center; gap:10px; }
+
+    .opcoes-classe { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+    .opcao-classe input { display:none; }
+    .opcao-classe-label {
+        display:block; border:2px solid var(--border); border-radius:14px; padding:18px;
+        text-align:center; cursor:pointer; transition:.2s;
+    }
+    .opcao-classe-label .nome-classe { font-weight:800; color:#1f2937; margin-bottom:6px; display:block; }
+    .opcao-classe-label .preco-classe { font-size:.85rem; color:var(--success); font-weight:700; }
+    .opcao-classe input:checked + .opcao-classe-label { border-color:var(--primary); background:#eff6ff; }
+
+    .opcoes-assento { display:flex; gap:14px; flex-wrap:wrap; }
+    .opcao-assento input { display:none; }
+    .opcao-assento-label {
+        padding:12px 24px; border:2px solid var(--border); border-radius:50px;
+        font-weight:600; color:var(--text-muted); cursor:pointer; transition:.2s;
+    }
+    .opcao-assento input:checked + .opcao-assento-label { border-color:var(--primary); background:var(--primary); color:white; }
+
+    .btn-continuar-voo {
+        width:100%; background:linear-gradient(135deg, var(--primary), #1e40af); color:white;
+        border:none; padding:16px; border-radius:14px; font-size:1rem; font-weight:800;
+        cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; transition:.2s;
+    }
+    .btn-continuar-voo:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(30,58,138,.25); }
+
+    @@media (max-width:700px) { .opcoes-classe { grid-template-columns:1fr; } }
+</style>
+
+<div class="voo-page">
+
+    <div class="voo-hero">
+        <h1><i class="fas fa-plane-departure"></i> Escolha sua Passagem</h1>
+        <p>Etapa 1 de 3 — Pacote selecionado: @Model.Nome</p>
+    </div>
+
+    <div class="voo-resumo">
+        <div class="resumo-rota">
+            <i class="fas fa-map-marker-alt"></i> @ViewBag.OrigemEstado - @ViewBag.OrigemPais
+            <i class="fas fa-arrow-right"></i> @ViewBag.DestinoEstado - @ViewBag.DestinoPais
+        </div>
+        <div class="resumo-datas">
+            <div><strong>Ida</strong>@Model.DataPartida.ToString("dd/MM/yyyy")</div>
+            <div><strong>Volta</strong>@Model.DataRetorno.ToString("dd/MM/yyyy")</div>
+            <div><strong>Duração</strong>@Model.DuracaoDias dias</div>
+        </div>
+    </div>
+
+    <div class="voo-layout">
+
+        @if (TempData["Erro"] != null)
+        {
+            <div style="background:#fee2e2;border:1px solid #fca5a5;color:#991b1b;padding:14px 20px;border-radius:12px;margin-bottom:20px;font-weight:600;">
+                <i class="fas fa-exclamation-circle"></i> @TempData["Erro"]
+            </div>
+        }
+
+        <form method="post" asp-action="Passagem">
+            <input type="hidden" name="pacoteId" value="@Model.Id" />
+
+            <div class="card-secao-voo">
+                <h3><i class="fas fa-chair" style="color:var(--accent);"></i> Classe de Viagem</h3>
+                <div class="opcoes-classe">
+                    <div class="opcao-classe">
+                        <input type="radio" name="classeViagem" id="classeEco" value="Econômica" checked />
+                        <label class="opcao-classe-label" for="classeEco">
+                            <span class="nome-classe">Econômica</span>
+                            <span class="preco-classe">Incluído no pacote</span>
+                        </label>
+                    </div>
+                    <div class="opcao-classe">
+                        <input type="radio" name="classeViagem" id="classeExec" value="Executiva" />
+                        <label class="opcao-classe-label" for="classeExec">
+                            <span class="nome-classe">Executiva</span>
+                            <span class="preco-classe">+ R$ 450,00 /pessoa</span>
+                        </label>
+                    </div>
+                    <div class="opcao-classe">
+                        <input type="radio" name="classeViagem" id="classePrim" value="Primeira Classe" />
+                        <label class="opcao-classe-label" for="classePrim">
+                            <span class="nome-classe">Primeira Classe</span>
+                            <span class="preco-classe">+ R$ 1.200,00 /pessoa</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-secao-voo">
+                <h3><i class="fas fa-couch" style="color:var(--accent);"></i> Tipo de Assento</h3>
+                <div class="opcoes-assento">
+                    <div class="opcao-assento">
+                        <input type="radio" name="tipoAssento" id="assentoJanela" value="Janela" checked />
+                        <label class="opcao-assento-label" for="assentoJanela"><i class="fas fa-square"></i> Janela</label>
+                    </div>
+                    <div class="opcao-assento">
+                        <input type="radio" name="tipoAssento" id="assentoCorredor" value="Corredor" />
+                        <label class="opcao-assento-label" for="assentoCorredor"><i class="fas fa-walking"></i> Corredor</label>
+                    </div>
+                    <div class="opcao-assento">
+                        <input type="radio" name="tipoAssento" id="assentoMeio" value="Meio" />
+                        <label class="opcao-assento-label" for="assentoMeio"><i class="fas fa-grip-lines-vertical"></i> Meio</label>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-continuar-voo">
+                Continuar para Hospedagem <i class="fas fa-arrow-right"></i>
+            </button>
+        </form>
+
+    </div>
+</div>

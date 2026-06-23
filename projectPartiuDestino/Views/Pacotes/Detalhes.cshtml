@@ -251,6 +251,31 @@
     </div>
 
     <div class="det-pct-layout">
+
+        @{
+            var voo = ViewBag.Voo as projectPartiuDestino.Models.SelecaoVoo;
+        }
+
+        @if (voo != null)
+        {
+            <div style="background:white;border:1px solid var(--border);border-radius:16px;padding:18px 24px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+                <div>
+                    <span style="font-size:.7rem;color:var(--text-muted);text-transform:uppercase;font-weight:700;">Passagem selecionada</span>
+                    <div style="font-weight:800;color:#1f2937;margin-top:2px;">
+                        <i class="fas fa-plane" style="color:var(--accent);"></i>
+                        Classe @voo.ClasseViagem · Assento @voo.TipoAssento
+                        @if (voo.PrecoAdicional > 0)
+                        {
+                            <span style="color:var(--success);"> (+ @voo.PrecoAdicional.ToString("C") /pessoa)</span>
+                        }
+                    </div>
+                </div>
+                <a asp-controller="Pacotes" asp-action="Passagem" asp-route-id="@Model.Id"
+                   style="color:var(--accent);font-weight:700;font-size:.85rem;text-decoration:none;">
+                    <i class="fas fa-edit"></i> Alterar voo
+                </a>
+            </div>
+        }
         <div class="det-pct-desc">@Model.Descricao</div>
 
         <h2 class="sec-titulo-h"> Opções de Hospedagem</h2>
@@ -356,10 +381,10 @@
 
         @if (Context.Session.GetString("UserName") != null)
         {
-            <form asp-controller="Carrinho" asp-action="" method="post" style="margin-top:10px;">
+            <form asp-controller="Carrinho" asp-action="AdicionarPacote" method="post" style="margin-top:10px;">
                 <input type="hidden" name="pacoteId" value="@Model.Id" />
                 <button type="submit" class="btn-add-quarto" style="padding:12px 24px;">
-                    Mais informações
+                    <i class="fas fa-cart-plus"></i> Adicionar ao Carrinho (sem hospedagem)
                 </button>
             </form>
         }
