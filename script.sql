@@ -36,6 +36,35 @@ CREATE TABLE usuarios (
 
 ALTER TABLE usuarios
     ADD COLUMN ativo TINYINT(1) NOT NULL DEFAULT 1;
+    
+-- ============================================================
+-- MIGRATION: Campos extras para a página de Perfil
+-- Execute UMA VEZ no MySQL Workbench / terminal mysql
+-- ============================================================
+
+USE bdpartiudestino;
+
+-- Foto de perfil (caminho relativo salvo em /wwwroot/uploads/perfis/)
+ALTER TABLE usuarios
+    ADD COLUMN foto_perfil VARCHAR(500) NULL DEFAULT NULL
+    COMMENT 'Caminho relativo da foto: /uploads/perfis/nome.jpg';
+
+-- Telefone
+ALTER TABLE usuarios
+    ADD COLUMN telefone VARCHAR(20) NULL DEFAULT NULL;
+
+-- CPF / Documento
+ALTER TABLE usuarios
+    ADD COLUMN documento VARCHAR(20) NULL DEFAULT NULL;
+
+-- Data de nascimento
+ALTER TABLE usuarios
+    ADD COLUMN data_nascimento DATE NULL DEFAULT NULL;
+
+-- Verificação: confira o resultado
+DESCRIBE usuarios;
+
+select * from usuarios;
 
 
 DELETE FROM usuarios 
@@ -78,6 +107,10 @@ CREATE TABLE pacotes (
     imagem_url        VARCHAR(500)
 );
 
+select * from pacotes;
+select * from hospedagens;
+
+delete from hospedagens where id=2;
 -- ------------------------------------------------------------
 -- 2.4 Tabela: viagem_personalizada
 -- ------------------------------------------------------------
@@ -581,70 +614,302 @@ WHERE id = 10;
 
 
 -- ============================================================
+-- HOSPEDAGENS E QUARTOS POR PACOTE
+-- ============================================================
+USE bdpartiudestino;
+
+-- ==========================================
+-- APAGANDO HOSPEDAGENS ANTIGAS
+-- ==========================================
+-- Como os quartos estão ligados nas hospedagens,
+-- ao apagar as hospedagens os quartos também são apagados.
+
+DELETE FROM hospedagens;
+
+-- Reiniciando os IDs para ficar mais fácil de entender
+ALTER TABLE hospedagens AUTO_INCREMENT = 1;
+ALTER TABLE quartos AUTO_INCREMENT = 1;
+
+
+-- ==========================================
+-- INSERINDO 1 HOSPEDAGEM PARA CADA PACOTE
+-- ==========================================
+
+INSERT INTO hospedagens 
+(pacote_id, nome, categoria, descricao, endereco, imagem_url) 
+VALUES
+(1, 'Hotel Copacabana Mar', 'Hotel 4 estrelas', 
+'Hotel confortável próximo à praia de Copacabana, com café da manhã incluso.',
+'Av. Atlântica, 1500 - Copacabana, Rio de Janeiro - RJ',
+'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=700&q=80'),
+
+(2, 'Resort Bahia Sol', 'Resort', 
+'Resort com área de lazer, piscina e alimentação inclusa para aproveitar a Bahia.',
+'Rodovia BA-099, km 45 - Salvador - BA',
+'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=700&q=80'),
+
+(3, 'California Dream Hotel', 'Hotel 4 estrelas', 
+'Hotel moderno em Los Angeles, ideal para conhecer praias, parques e pontos turísticos.',
+'Sunset Boulevard, 7200 - Los Angeles - Califórnia',
+'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=700&q=80'),
+
+(4, 'Manhattan City Hotel', 'Hotel Boutique', 
+'Hotel localizado em Manhattan, próximo aos principais pontos turísticos de Nova York.',
+'West 45th Street, 150 - Manhattan - Nova York',
+'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=700&q=80'),
+
+(5, 'Paris Lumière Hotel', 'Hotel Boutique', 
+'Hotel elegante e confortável para uma experiência romântica em Paris.',
+'Rue Saint-Dominique, 82 - Paris - França',
+'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=700&q=80'),
+
+(6, 'Villa Toscana Hotel', 'Hotel Boutique', 
+'Hospedagem charmosa na Toscana, ideal para turismo gastronômico e cultural.',
+'Strada del Chianti, 40 - Toscana - Itália',
+'https://images.unsplash.com/photo-1518005020951-eccb494ad742?w=700&q=80'),
+
+(7, 'Tokyo Central Hotel', 'Hotel 4 estrelas', 
+'Hotel moderno em Tóquio, próximo a regiões tecnológicas e pontos culturais.',
+'Shinjuku-ku, 3-12-8 - Tóquio - Japão',
+'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=700&q=80'),
+
+(8, 'Bali Paradise Resort', 'Resort Luxo', 
+'Resort em Bali com piscina, spa e estrutura para descanso.',
+'Jalan Pantai, 88 - Bali - Indonésia',
+'https://images.unsplash.com/photo-1535827841776-24afc1e255ac?w=700&q=80'),
+
+(9, 'Dubai Skyline Hotel', 'Hotel Luxo', 
+'Hotel de luxo em Dubai com ótima localização e vista para a cidade.',
+'Sheikh Zayed Road, 1200 - Dubai',
+'https://images.unsplash.com/photo-1561501878-aabd62634533?w=700&q=80');
+
+-- ==========================================
+-- QUARTOS DO PACOTE 1 - RIO DE JANEIRO
+-- ==========================================
+
+INSERT INTO quartos
+(hospedagem_id, tipo_quarto, capacidade_adultos, capacidade_criancas, preco_adicional, quantidade_disponivel, comodidades, imagem_url)
+VALUES
+(12, 'Quarto Standard', 2, 1, 0.00, 10, 
+'Wi-Fi, Ar-condicionado, TV e café da manhã',
+'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=600&q=80'),
+
+(12, 'Quarto Luxo', 2, 1, 350.00, 6, 
+'Wi-Fi, Ar-condicionado, Frigobar e vista para a cidade',
+'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&q=80'),
+
+(12, 'Suíte Vista Mar', 2, 1, 700.00, 4, 
+'Wi-Fi, Ar-condicionado, Varanda e vista para o mar',
+'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=600&q=80'),
+
+(12, 'Quarto Família', 4, 2, 900.00, 3, 
+'Wi-Fi, Ar-condicionado, 2 camas e espaço família',
+'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=600&q=80');
+
+select * from hospedagens;
+select* from quartos;
+
+-- ==========================================
+-- QUARTOS DO PACOTE 2 - BAHIA
+-- ==========================================
+
+INSERT INTO quartos
+(hospedagem_id, tipo_quarto, capacidade_adultos, capacidade_criancas, preco_adicional, quantidade_disponivel, comodidades, imagem_url)
+VALUES
+(4, 'Quarto Standard', 2, 1, 0.00, 12, 
+'Wi-Fi, Ar-condicionado, TV e alimentação inclusa',
+'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=600&q=80'),
+
+(4, 'Quarto Superior', 2, 2, 300.00, 8, 
+'Wi-Fi, Ar-condicionado, Vista para o jardim e frigobar',
+'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=600&q=80'),
+
+(4, 'Quarto Luxo', 3, 2, 550.00, 5, 
+'Wi-Fi, Ar-condicionado, Varanda e vista para piscina',
+'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&q=80'),
+
+(4, 'Suíte Família', 4, 2, 850.00, 4, 
+'Wi-Fi, Ar-condicionado, sala pequena e frigobar',
+'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=600&q=80');
+
+
+-- ==========================================
+-- QUARTOS DO PACOTE 3 - CALIFÓRNIA
+-- ==========================================
+
+INSERT INTO quartos
+(hospedagem_id, tipo_quarto, capacidade_adultos, capacidade_criancas, preco_adicional, quantidade_disponivel, comodidades, imagem_url)
+VALUES
+(5, 'Quarto Standard', 2, 0, 0.00, 8, 
+'Wi-Fi, Ar-condicionado, TV e mesa de trabalho',
+'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80'),
+
+(5, 'Quarto Deluxe', 2, 1, 500.00, 6, 
+'Wi-Fi, Ar-condicionado, cama queen e frigobar',
+'https://images.unsplash.com/photo-1595576508898-0ad5c879a061?w=600&q=80'),
+
+(5, 'Quarto Premium', 2, 1, 850.00, 4, 
+'Wi-Fi, Ar-condicionado, vista privilegiada e cafeteira',
+'https://images.unsplash.com/photo-1566195992011-5f6b21e539aa?w=600&q=80'),
+
+(5, 'Quarto Família', 4, 2, 1100.00, 3, 
+'Wi-Fi, Ar-condicionado, 2 camas e espaço família',
+'https://images.unsplash.com/photo-1560448075-bb485b067938?w=600&q=80');
+
+
+-- ==========================================
+-- QUARTOS DO PACOTE 4 - NOVA YORK
+-- ==========================================
+
+INSERT INTO quartos
+(hospedagem_id, tipo_quarto, capacidade_adultos, capacidade_criancas, preco_adicional, quantidade_disponivel, comodidades, imagem_url)
+VALUES
+(6, 'Quarto Standard', 2, 0, 0.00, 9, 
+'Wi-Fi, Ar-condicionado, TV e cofre',
+'https://images.unsplash.com/photo-1560448075-bb485b067938?w=600&q=80'),
+
+(6, 'Quarto Superior', 2, 1, 600.00, 6, 
+'Wi-Fi, Ar-condicionado, vista da cidade e frigobar',
+'https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=600&q=80'),
+
+(6, 'Quarto Deluxe', 2, 1, 950.00, 4, 
+'Wi-Fi, Ar-condicionado, cafeteira e vista urbana',
+'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80'),
+
+(6, 'Suíte Executiva', 3, 1, 1400.00, 2, 
+'Wi-Fi, Ar-condicionado, sala de estar e mesa executiva',
+'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=600&q=80');
+
+
+-- ==========================================
+-- QUARTOS DO PACOTE 5 - PARIS
+-- ==========================================
+
+INSERT INTO quartos
+(hospedagem_id, tipo_quarto, capacidade_adultos, capacidade_criancas, preco_adicional, quantidade_disponivel, comodidades, imagem_url)
+VALUES
+(7, 'Quarto Casal Standard', 2, 0, 0.00, 7, 
+'Wi-Fi, Ar-condicionado, TV e café da manhã',
+'https://images.unsplash.com/photo-1615873968403-89e068629265?w=600&q=80'),
+
+(7, 'Quarto Superior', 2, 0, 550.00, 5, 
+'Wi-Fi, Ar-condicionado, frigobar e decoração premium',
+'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=600&q=80'),
+
+(7, 'Quarto Luxo com Varanda', 2, 0, 900.00, 3, 
+'Wi-Fi, Ar-condicionado, varanda e vista da cidade',
+'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=600&q=80'),
+
+(7, 'Suíte Romântica', 2, 0, 1400.00, 2, 
+'Wi-Fi, Hidromassagem, varanda e decoração especial',
+'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&q=80');
+
+
+-- ==========================================
+-- QUARTOS DO PACOTE 6 - TOSCANA
+-- ==========================================
+
+INSERT INTO quartos
+(hospedagem_id, tipo_quarto, capacidade_adultos, capacidade_criancas, preco_adicional, quantidade_disponivel, comodidades, imagem_url)
+VALUES
+(8, 'Quarto Standard', 2, 0, 0.00, 6, 
+'Wi-Fi, Ar-condicionado, café da manhã e vista para jardim',
+'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=600&q=80'),
+
+(8, 'Quarto Superior', 2, 0, 500.00, 5, 
+'Wi-Fi, Ar-condicionado, vista para vinhedo e frigobar',
+'https://images.unsplash.com/photo-1618220179428-22790b461013?w=600&q=80'),
+
+(8, 'Quarto Luxo', 2, 1, 850.00, 3, 
+'Wi-Fi, Ar-condicionado, kit café e vista panorâmica',
+'https://images.unsplash.com/photo-1615529162924-f8605388461d?w=600&q=80'),
+
+(8, 'Suíte Família', 4, 2, 1200.00, 2, 
+'Wi-Fi, Ar-condicionado, sala de estar e vista para vinhedo',
+'https://images.unsplash.com/photo-1618220179428-22790b461013?w=600&q=80');
+
+
+-- ==========================================
+-- QUARTOS DO PACOTE 7 - TÓQUIO
+-- ==========================================
+
+INSERT INTO quartos
+(hospedagem_id, tipo_quarto, capacidade_adultos, capacidade_criancas, preco_adicional, quantidade_disponivel, comodidades, imagem_url)
+VALUES
+(9, 'Quarto Standard', 2, 0, 0.00, 10, 
+'Wi-Fi, Ar-condicionado, TV e mesa compacta',
+'https://images.unsplash.com/photo-1554995207-c18c203602cb?w=600&q=80'),
+
+(9, 'Quarto Superior', 2, 0, 600.00, 6, 
+'Wi-Fi, Ar-condicionado, vista urbana e frigobar',
+'https://images.unsplash.com/photo-1617098474202-0d0d7f60c56b?w=600&q=80'),
+
+(9, 'Quarto Deluxe', 2, 1, 950.00, 4, 
+'Wi-Fi, Ar-condicionado, automação e vista para a cidade',
+'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=600&q=80'),
+
+(9, 'Suíte Família', 4, 2, 1400.00, 2, 
+'Wi-Fi, Ar-condicionado, sala e espaço família',
+'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=600&q=80');
+
+
+-- ==========================================
+-- QUARTOS DO PACOTE 8 - BALI
+-- ==========================================
+
+INSERT INTO quartos
+(hospedagem_id, tipo_quarto, capacidade_adultos, capacidade_criancas, preco_adicional, quantidade_disponivel, comodidades, imagem_url)
+VALUES
+(10, 'Quarto Standard', 2, 1, 0.00, 6, 
+'Wi-Fi, Ar-condicionado, varanda e vista para jardim',
+'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=600&q=80'),
+
+(10, 'Quarto Deluxe', 2, 1, 700.00, 4, 
+'Wi-Fi, Ar-condicionado, vista para piscina e frigobar',
+'https://images.unsplash.com/photo-1560448204-603b3fc33ddc?w=600&q=80'),
+
+(10, 'Villa Privativa', 2, 0, 1600.00, 3, 
+'Wi-Fi, Ar-condicionado, piscina privativa e spa',
+'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=80'),
+
+(10, 'Villa Família', 4, 2, 2200.00, 2, 
+'Wi-Fi, Ar-condicionado, piscina privativa e 2 quartos',
+'https://images.unsplash.com/photo-1600607688969-a5bfcd646154?w=600&q=80');
+
+
+-- ==========================================
+-- QUARTOS DO PACOTE 9 - DUBAI
+-- ==========================================
+INSERT INTO quartos
+(hospedagem_id, tipo_quarto, capacidade_adultos, capacidade_criancas, preco_adicional, quantidade_disponivel, comodidades, imagem_url)
+VALUES
+(11, 'Quarto Standard Luxo', 2, 0, 0.00, 5, 
+'Wi-Fi, Ar-condicionado, TV e vista urbana',
+'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=600&q=80'),
+
+(11, 'Quarto Deluxe', 2, 1, 900.00, 4, 
+'Wi-Fi, Ar-condicionado, vista skyline e frigobar',
+'https://images.unsplash.com/photo-1591088398332-8a7791972843?w=600&q=80'),
+
+(11, 'Quarto Premium', 2, 1, 1700.00, 3, 
+'Wi-Fi, Ar-condicionado, vista privilegiada e cafeteira',
+'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&q=80'),
+
+(11, 'Suíte Família Luxo', 4, 2, 2800.00, 2, 
+'Wi-Fi, Ar-condicionado, sala, serviço premium e 2 quartos',
+'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=600&q=80');
+-- ============================================================
 -- 5. ÍNDICES
 -- ============================================================
 
 CREATE INDEX idx_carrinho_usuario ON carrinho(usuario_id);
 CREATE INDEX idx_pacotes_destino  ON pacotes(destino_id);
 CREATE INDEX idx_viagem_usuario   ON viagem_personalizada(usuario_id);
-
-
--- ============================================================
--- 6. SELECTs DE VERIFICAÇÃO
--- ============================================================
-
--- 6.1 Todos os usuários
-SELECT id, nome, email, tipo FROM usuarios ORDER BY id;
-
--- 6.2 Todos os destinos com imagem e preço
-SELECT id, origem_pais, origem_estado, pais, estado, preco_por_pessoa, imagem_url
-FROM destinos ORDER BY id;
-
--- 6.3 Todos os pacotes com imagem e destino relacionado
-SELECT
-    p.id,
-    p.nome                              AS pacote,
-    CONCAT(d.pais, ' - ', d.estado)    AS destino,
-    p.tipo_viagem,
-    p.duracao_dias,
-    p.data_partida,
-    p.data_retorno,
-    p.preco_por_pessoa,
-    p.vagas_disponiveis,
-    p.imagem_url
-FROM pacotes p
-JOIN destinos d ON d.id = p.destino_id
-ORDER BY p.id;
-
--- 6.4 Viagens personalizadas (mais recentes primeiro)
-SELECT
-    vp.id, vp.usuario_id, u.nome AS nome_usuario,
-    vp.nome_completo, vp.destino, vp.data_partida,
-    vp.duracao_dias, vp.orcamento, vp.data_criacao
-FROM viagem_personalizada vp
-JOIN usuarios u ON u.id = vp.usuario_id
-ORDER BY vp.id DESC;
-
--- 6.5 Carrinho com subtotal calculado
-SELECT
-    c.id, u.nome AS usuario, c.tipo_item, c.nome_item,
-    c.quantidade, c.preco_unitario,
-    (c.quantidade * c.preco_unitario) AS subtotal,
-    c.data_adicionado
-FROM carrinho c
-JOIN usuarios u ON u.id = c.usuario_id
-ORDER BY c.usuario_id, c.data_adicionado DESC;
-
--- 6.6 Contagem geral — painel do administrador
-SELECT
-    (SELECT COUNT(*) FROM usuarios)             AS total_usuarios,
-    (SELECT COUNT(*) FROM destinos)             AS total_destinos,
-    (SELECT COUNT(*) FROM pacotes)              AS total_pacotes,
-    (SELECT COUNT(*) FROM viagem_personalizada) AS total_viagens_personalizadas,
-    (SELECT COUNT(*) FROM carrinho)             AS total_itens_carrinho,
-    (SELECT COUNT(*) FROM pedidos)             AS total_pedidos;
     
     SELECT * FROM pacotes;
     SELECT * FROM usuarios;
     SELECT * FROM destinos;
     SELECT * FROM pedidos;
+    
+    
+    

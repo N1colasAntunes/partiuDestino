@@ -2,217 +2,573 @@
 
 @{
     ViewData["Title"] = "Meu Perfil";
+    string tipo = ViewBag.Tipo ?? "usuario";
+    bool isAdmin = tipo == "admin";
+    string fotoPerfil = ViewBag.FotoPerfil;
+    bool temFoto = !string.IsNullOrEmpty(fotoPerfil);
+    string dataNasc = ViewBag.DataNascimento is DateTime dn
+                            ? dn.ToString("dd/MM/yyyy") : "—";
 }
 
 <style>
+    :root {
+        --azul: #1e3a8a;
+        --azul-medio: #2563eb;
+        --cinza-bg: #f1f5f9;
+        --cinza-borda: #e2e8f0;
+        --texto: #1e293b;
+        --sub: #64748b;
+        --branco: #ffffff;
+        --verde: #16a34a;
+        --laranja: #d97706;
+    }
+
     body {
-        background: #f3f4f6;
+        background: var(--cinza-bg);
     }
 
-    .perfil-container {
-        max-width: 1200px;
-        margin: 40px auto;
+    /* ── layout ── */
+    .perfil-wrap {
+        max-width: 1100px;
+        margin: 36px auto 60px;
+        padding: 0 16px;
         display: grid;
-        grid-template-columns: 280px 1fr;
-        gap: 25px;
+        grid-template-columns: 300px 1fr;
+        gap: 24px;
     }
 
-    /* SIDEBAR */
-    .perfil-sidebar {
-        background: white;
-        border-radius: 18px;
-        padding: 25px;
-        height: fit-content;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.06);
-        text-align: center;
+    @@media (max-width: 860px) {
+        .perfil-wrap {
+            grid-template-columns: 1fr;
+        }
     }
 
-    .avatar {
-        width: 90px;
-        height: 90px;
+    /* ── sidebar ── */
+    .sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .card {
+        background: var(--branco);
+        border-radius: 14px;
+        border: 1px solid var(--cinza-borda);
+        overflow: hidden;
+    }
+
+    .card-body {
+        padding: 24px;
+    }
+
+    /* foto */
+    .foto-wrap {
+        position: relative;
+        width: 96px;
+        height: 96px;
+        margin: 0 auto 16px;
+    }
+
+        .foto-wrap img,
+        .foto-wrap .avatar-inicial {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--cinza-borda);
+        }
+
+    .avatar-inicial {
+        background: var(--azul);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.2rem;
+        font-weight: 700;
+        letter-spacing: -1px;
+    }
+
+    .btn-foto-label {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 30px;
+        height: 30px;
+        background: var(--azul-medio);
         border-radius: 50%;
-        background: linear-gradient(135deg, #1e3a8a, #3b82f6);
         display: flex;
         align-items: center;
         justify-content: center;
         color: white;
-        font-size: 2rem;
-        margin: 0 auto 15px;
+        font-size: .75rem;
+        cursor: pointer;
+        border: 2px solid white;
+        transition: background .2s;
     }
 
-    .perfil-sidebar h3 {
-        margin: 0;
-        font-size: 1.1rem;
-        color: #111827;
-    }
-
-    .perfil-sidebar p {
-        font-size: .85rem;
-        color: #6b7280;
-        margin-top: 5px;
-    }
-
-    .perfil-info-box {
-        margin-top: 20px;
-        text-align: left;
-        font-size: .85rem;
-        color: #374151;
-    }
-
-        .perfil-info-box div {
-            margin-bottom: 10px;
+        .btn-foto-label:hover {
+            background: var(--azul);
         }
 
-    /* MAIN */
-    .perfil-main {
+    #inputFoto {
+        display: none;
+    }
+
+    .perfil-nome {
+        text-align: center;
+        font-weight: 700;
+        font-size: 1.05rem;
+        color: var(--texto);
+        margin-bottom: 2px;
+    }
+
+    .perfil-email {
+        text-align: center;
+        font-size: .82rem;
+        color: var(--sub);
+        margin-bottom: 14px;
+    }
+
+    .badge-tipo {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: .75rem;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 20px;
+        margin: 0 auto 16px;
+    }
+
+    .badge-admin {
+        background: #eff6ff;
+        color: var(--azul);
+    }
+
+    .badge-usuario {
+        background: #f0fdf4;
+        color: var(--verde);
+    }
+
+    /* dados pessoais na sidebar */
+    .info-lista {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+        .info-lista li {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 9px 0;
+            border-bottom: 1px solid var(--cinza-borda);
+            font-size: .84rem;
+            gap: 10px;
+        }
+
+            .info-lista li:last-child {
+                border-bottom: none;
+            }
+
+        .info-lista .label {
+            color: var(--sub);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .info-lista .valor {
+            color: var(--texto);
+            text-align: right;
+            word-break: break-word;
+        }
+
+    .btn-editar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        width: 100%;
+        padding: 10px;
+        background: var(--azul);
+        color: white;
+        border-radius: 9px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: .88rem;
+        margin-top: 16px;
+        transition: background .2s;
+    }
+
+        .btn-editar:hover {
+            background: var(--azul-medio);
+            color: white;
+        }
+
+    /* admin atalhos */
+    .atalhos-admin a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 11px 16px;
+        border-bottom: 1px solid var(--cinza-borda);
+        color: var(--texto);
+        text-decoration: none;
+        font-size: .88rem;
+        font-weight: 600;
+        transition: background .15s;
+    }
+
+        .atalhos-admin a:last-child {
+            border-bottom: none;
+        }
+
+        .atalhos-admin a:hover {
+            background: var(--cinza-bg);
+        }
+
+    .atalhos-admin .icon-a {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .9rem;
+        flex-shrink: 0;
+    }
+
+    .ic-azul {
+        background: #eff6ff;
+        color: var(--azul-medio);
+    }
+
+    .ic-verde {
+        background: #f0fdf4;
+        color: var(--verde);
+    }
+
+    .ic-roxo {
+        background: #f5f3ff;
+        color: #7c3aed;
+    }
+
+    .ic-laranja {
+        background: #fff7ed;
+        color: var(--laranja);
+    }
+
+    /* ── conteúdo principal ── */
+    .main {
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        gap: 22px;
     }
 
-    .perfil-header {
-        background: linear-gradient(135deg, #1e3a8a, #3b82f6);
-        color: white;
-        padding: 25px;
-        border-radius: 18px;
+    /* alerta sucesso */
+    .alerta-sucesso {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        color: #166534;
+        padding: 12px 18px;
+        border-radius: 10px;
+        font-size: .9rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
 
-        .perfil-header h2 {
-            margin: 0;
-            font-size: 1.6rem;
-        }
-
-        .perfil-header p {
-            margin-top: 5px;
-            opacity: .9;
-        }
-
-    /* compras */
-    .section-title {
-        font-size: 1.2rem;
+    /* seção de pedidos */
+    .secao-titulo {
+        font-size: 1rem;
         font-weight: 700;
-        color: #111827;
-        margin-top: 10px;
+        color: var(--texto);
+        padding: 18px 22px 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
 
-    .cards-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-        gap: 18px;
-    }
-
-    .pedido-card {
-        background: white;
-        border-radius: 16px;
-        padding: 18px;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-        border-left: 5px solid #3b82f6;
-        transition: 0.25s;
-    }
-
-        .pedido-card:hover {
-            transform: translateY(-4px);
+        .secao-titulo span {
+            color: var(--sub);
+            font-weight: 400;
+            font-size: .85rem;
         }
 
-    .pedido-title {
-        font-weight: 800;
-        color: #111827;
-        margin-bottom: 8px;
+    /* tabela de pedidos */
+    .tabela-pedidos {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: .87rem;
     }
 
-    .pedido-info {
-        font-size: .85rem;
-        color: #6b7280;
-        margin-bottom: 5px;
+        .tabela-pedidos thead th {
+            background: var(--cinza-bg);
+            color: var(--sub);
+            font-weight: 700;
+            font-size: .75rem;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            padding: 10px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--cinza-borda);
+        }
+
+        .tabela-pedidos tbody td {
+            padding: 13px 16px;
+            border-bottom: 1px solid var(--cinza-borda);
+            color: var(--texto);
+            vertical-align: middle;
+        }
+
+        .tabela-pedidos tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .tabela-pedidos tbody tr:hover td {
+            background: #f8fafc;
+        }
+
+    .badge-tipo-item {
+        font-size: .72rem;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 20px;
+        display: inline-block;
     }
 
-    .pedido-valor {
-        font-weight: 900;
-        color: #1e3a8a;
-        margin-top: 8px;
+    .badge-pacote {
+        background: #eff6ff;
+        color: var(--azul-medio);
     }
 
-    .empty {
-        background: white;
-        padding: 30px;
-        border-radius: 16px;
+    .badge-destino {
+        background: #f5f3ff;
+        color: #7c3aed;
+    }
+
+    .badge-outro {
+        background: #f1f5f9;
+        color: var(--sub);
+    }
+
+    .preco-destaque {
+        font-weight: 700;
+        color: var(--azul);
+    }
+
+    .vazio {
+        padding: 40px 24px;
         text-align: center;
-        color: #6b7280;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        color: var(--sub);
+        font-size: .92rem;
     }
 
-    /* responsivo */
-    @@media (max-width: 900px) {
-        .perfil-container {
-            grid-template-columns: 1fr;
+        .vazio i {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: block;
+            color: var(--cinza-borda);
         }
-    }
 </style>
 
-<div class="perfil-container">
-
-    <!-- SIDEBAR -->
-    <div class="perfil-sidebar">
-
-        <div class="avatar">
-            <i class="fas fa-user"></i>
+@* alerta de sucesso *@
+@if (!string.IsNullOrEmpty(ViewBag.Sucesso as string))
+{
+    <div style="max-width:1100px;margin:20px auto 0;padding:0 16px;">
+        <div class="alerta-sucesso">
+            <i class="fas fa-check-circle"></i>
+            @ViewBag.Sucesso
         </div>
-
-        <h3>@Context.Session.GetString("UserName")</h3>
-        <p>Cliente Partiu Destino</p>
-
-        <div class="perfil-info-box">
-            <div><strong>Email:</strong> @Context.Session.GetString("UserEmail")</div>
-            <div><strong>Status:</strong> Ativo</div>
-        </div>
-
     </div>
+}
 
-    <!-- MAIN -->
-    <div class="perfil-main">
-
-        <div class="perfil-header">
-            <h2>Meu Perfil</h2>
-            <p>Acompanhe suas viagens e experiências</p>
+@* alerta de erro *@
+@if (!string.IsNullOrEmpty(ViewBag.Erro as string))
+{
+    <div style="max-width:1100px;margin:20px auto 0;padding:0 16px;">
+        <div style="background:#fee2e2;border:1px solid #fca5a5;color:#b91c1c;padding:12px 16px;border-radius:8px;display:flex;align-items:center;gap:10px;">
+            <i class="fas fa-exclamation-circle"></i>
+            @ViewBag.Erro
         </div>
+    </div>
+}
 
-        <div>
-            <div class="section-title">🧾 Minhas compras</div>
-        </div>
+<div class="perfil-wrap">
 
-        @if (!Model.Any())
-        {
-            <div class="empty">
-                Nenhuma compra encontrada ainda.
-            </div>
-        }
-        else
-        {
-            <div class="cards-container">
-                @foreach (var p in Model)
-                {
-                    <div class="pedido-card">
+    <!-- ════════════ SIDEBAR ════════════ -->
+    <aside class="sidebar">
 
-                        <div class="pedido-title">
-                            @p.NomeItem
-                        </div>
+        <!-- Card: foto + dados resumidos -->
+        <div class="card">
+            <div class="card-body" style="text-align:center;">
 
-                        <div class="pedido-info">
-                            📅 @p.DataPedido.ToString("dd/MM/yyyy HH:mm")
-                        </div>
-
-                        <div class="pedido-info">
-                            🔢 Quantidade: @p.Quantidade
-                        </div>
-
-                        <div class="pedido-valor">
-                            💰 @p.Total.ToString("C")
-                        </div>
-
+                <!-- Foto e botão de alterar -->
+                <form asp-action="AlterarFoto" asp-controller="Perfil"
+                      method="post" enctype="multipart/form-data" id="formFoto">
+                    <div class="foto-wrap">
+                        @if (temFoto)
+                        {
+                            <img src="@fotoPerfil" alt="Foto de perfil" width="96" height="96" />
+                        }
+                        else
+                        {
+                            <div class="avatar-inicial">
+                                @(ViewBag.Nome?.ToString().Substring(0, 1).ToUpper())
+                            </div>
+                        }
+                        <label class="btn-foto-label" for="inputFoto" title="Alterar foto">
+                            <i class="fas fa-camera"></i>
+                        </label>
+                        <input type="file" id="inputFoto" name="foto"
+                               accept=".jpg,.jpeg,.png,.webp"
+                               style="display:none"
+                               onchange="document.getElementById('formFoto').submit()" />
                     </div>
-                }
+                </form>
+
+                <div class="perfil-nome">@ViewBag.Nome</div>
+                <div class="perfil-email">@ViewBag.Email</div>
+
+                <div style="display:flex;justify-content:center;">
+                    @if (isAdmin)
+                    {
+                        <span class="badge-tipo badge-admin">
+                            <i class="fas fa-shield-alt"></i> Administrador
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge-tipo badge-usuario">
+                            <i class="fas fa-user"></i> Cliente
+                        </span>
+                    }
+                </div>
+
+                <!-- Informações pessoais -->
+                <ul class="info-lista" style="margin-top:14px;">
+                    <li>
+                        <span class="label"><i class="fas fa-phone" style="width:14px;"></i> Telefone</span>
+                        <span class="valor">@(string.IsNullOrEmpty(ViewBag.Telefone as string) ? "—" : ViewBag.Telefone)</span>
+                    </li>
+                    <li>
+                        <span class="label"><i class="fas fa-id-card" style="width:14px;"></i> CPF</span>
+                        <span class="valor">@(string.IsNullOrEmpty(ViewBag.Documento as string) ? "—" : ViewBag.Documento)</span>
+                    </li>
+                    <li>
+                        <span class="label"><i class="fas fa-calendar" style="width:14px;"></i> Nascimento</span>
+                        <span class="valor">@dataNasc</span>
+                    </li>
+                </ul>
+
+                <a asp-controller="Perfil" asp-action="Editar" class="btn-editar">
+                    <i class="fas fa-pen"></i> Editar perfil
+                </a>
+            </div>
+        </div>
+
+        <!-- Card: atalhos do Admin (só aparece para admins) -->
+        @if (isAdmin)
+        {
+            <div class="card">
+                <div class="secao-titulo" style="padding-bottom:10px;">
+                    <i class="fas fa-cog" style="color:var(--sub);"></i> Painel Administrativo
+                </div>
+                <nav class="atalhos-admin">
+                    <a href="/Admin/Index">
+                        <span class="icon-a ic-azul"><i class="fas fa-chart-pie"></i></span>
+                        Dashboard
+                    </a>
+                    <a href="/Usuarios/Index">
+                        <span class="icon-a ic-verde"><i class="fas fa-users"></i></span>
+                        Usuários
+                    </a>
+                    <a href="/PacotesAdmin/Index">
+                        <span class="icon-a ic-roxo"><i class="fas fa-suitcase-rolling"></i></span>
+                        Pacotes
+                    </a>
+                    <a href="/DestinosAdmin/Index">
+                        <span class="icon-a ic-laranja"><i class="fas fa-map-marked-alt"></i></span>
+                        Destinos
+                    </a>
+                </nav>
             </div>
         }
 
-    </div>
+    </aside>
+
+    <!-- ════════════ CONTEÚDO PRINCIPAL ════════════ -->
+    <main class="main">
+
+        <!-- Card: histórico de pedidos -->
+        <div class="card">
+            <div class="secao-titulo">
+                <i class="fas fa-receipt" style="color:var(--azul-medio);"></i>
+                Histórico de Pedidos
+                <span>(@Model.Count @(Model.Count == 1 ? "pedido" : "pedidos"))</span>
+            </div>
+
+            @if (!Model.Any())
+            {
+                <div class="vazio">
+                    <i class="fas fa-inbox"></i>
+                    Nenhum pedido encontrado.<br />
+                    <a href="/Pacotes/Index" style="color:var(--azul-medio);font-weight:600;">
+                        Explorar pacotes disponíveis
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div style="overflow-x:auto;">
+                    <table class="tabela-pedidos">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Item</th>
+                                <th>Tipo</th>
+                                <th>Data</th>
+                                <th>Qtd.</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var p in Model)
+                            {
+                                string badgeClass = p.TipoItem switch
+                                {
+                                    "pacote" => "badge-pacote",
+                                    "destino" => "badge-destino",
+                                    _ => "badge-outro"
+                                };
+                                string labelTipo = p.TipoItem switch
+                                {
+                                    "pacote" => "Pacote",
+                                    "destino" => "Passagem",
+                                    _ => p.TipoItem
+                                };
+
+                                <tr>
+                                    <td style="color:var(--sub);font-size:.8rem;">@p.Id</td>
+                                    <td style="font-weight:600;">@p.NomeItem</td>
+                                    <td>
+                                        <span class="badge-tipo-item @badgeClass">@labelTipo</span>
+                                    </td>
+                                    <td style="color:var(--sub);">
+                                        @p.DataPedido.ToString("dd/MM/yyyy")
+                                        <br />
+                                        <span style="font-size:.78rem;">@p.DataPedido.ToString("HH:mm")</span>
+                                    </td>
+                                    <td style="text-align:center;">@p.Quantidade</td>
+                                    <td class="preco-destaque">@p.Total.ToString("C")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+
+    </main>
 </div>

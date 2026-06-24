@@ -1,0 +1,275 @@
+﻿@{
+    ViewData["Title"] = "Editar Perfil";
+    bool isAdmin = (ViewBag.Tipo as string) == "admin";
+}
+
+<style>
+    body {
+        background: #f1f5f9;
+    }
+
+    .edit-wrap {
+        max-width: 620px;
+        margin: 40px auto 60px;
+        padding: 0 16px;
+    }
+
+    .edit-card {
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #e2e8f0;
+        overflow: hidden;
+    }
+
+    .edit-header {
+        padding: 22px 28px;
+        border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+        .edit-header h2 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .edit-header p {
+            margin: 2px 0 0;
+            font-size: .83rem;
+            color: #64748b;
+        }
+
+    .edit-body {
+        padding: 28px;
+    }
+
+    .form-grupo {
+        margin-bottom: 20px;
+    }
+
+        .form-grupo label {
+            display: block;
+            font-size: .83rem;
+            font-weight: 700;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .form-grupo input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: 9px;
+            font-size: .92rem;
+            color: #1e293b;
+            background: #fff;
+            transition: border-color .2s, box-shadow .2s;
+            box-sizing: border-box;
+        }
+
+            .form-grupo input:focus {
+                outline: none;
+                border-color: #2563eb;
+                box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+            }
+
+            .form-grupo input[disabled] {
+                background: #f8fafc;
+                color: #94a3b8;
+                cursor: not-allowed;
+            }
+
+    .campo-obs {
+        font-size: .77rem;
+        color: #94a3b8;
+        margin-top: 4px;
+    }
+
+    .divisor {
+        border: none;
+        border-top: 1px solid #e2e8f0;
+        margin: 24px 0;
+    }
+
+    .secao-label {
+        font-size: .75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .6px;
+        color: #94a3b8;
+        margin-bottom: 16px;
+    }
+
+    .alerta-erro {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #991b1b;
+        padding: 11px 16px;
+        border-radius: 9px;
+        font-size: .88rem;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .edit-footer {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+        margin-top: 8px;
+    }
+
+    .btn-cancelar {
+        padding: 10px 20px;
+        border: 1px solid #e2e8f0;
+        background: #fff;
+        border-radius: 9px;
+        font-size: .9rem;
+        font-weight: 600;
+        color: #64748b;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: background .2s;
+    }
+
+        .btn-cancelar:hover {
+            background: #f8fafc;
+            color: #374151;
+        }
+
+    .btn-salvar {
+        padding: 10px 24px;
+        background: #1e3a8a;
+        color: white;
+        border: none;
+        border-radius: 9px;
+        font-size: .9rem;
+        font-weight: 700;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: background .2s;
+    }
+
+        .btn-salvar:hover {
+            background: #2563eb;
+        }
+</style>
+
+<div class="edit-wrap">
+    <div class="edit-card">
+
+        <div class="edit-header">
+            <i class="fas fa-user-edit" style="font-size:1.4rem;color:#2563eb;"></i>
+            <div>
+                <h2>Editar Perfil</h2>
+                <p>
+                    @if (isAdmin)
+                    {
+                        <span>Administrador — altere nome, e-mail ou senha</span>
+                    }
+                    else
+                    {
+                        <span>Atualize suas informações pessoais</span>
+                    }
+                </p>
+            </div>
+        </div>
+
+        <div class="edit-body">
+
+            @if (!string.IsNullOrEmpty(ViewBag.Erro as string))
+            {
+                <div class="alerta-erro">
+                    <i class="fas fa-exclamation-circle"></i>
+                    @ViewBag.Erro
+                </div>
+            }
+
+            <form asp-action="Editar" asp-controller="Perfil" method="post">
+
+                <!-- ── CAMPOS COMUNS (admin + usuário) ── -->
+                <div class="secao-label">Dados da conta</div>
+
+                <!-- Nome -->
+                <div class="form-grupo">
+                    <label for="nome">Nome completo <span style="color:#e11d48;">*</span></label>
+                    <input type="text" id="nome" name="nome"
+                           value="@ViewBag.Nome" required maxlength="150"
+                           placeholder="Seu nome completo" />
+                </div>
+
+                <!-- E-mail — somente leitura para todos -->
+                <div class="form-grupo">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" value="@ViewBag.Email" disabled />
+                    <div class="campo-obs">O e-mail não pode ser alterado por aqui.</div>
+                </div>
+
+                @if (isAdmin)
+                {
+                    <!-- ── CAMPOS EXCLUSIVOS DO ADMIN ── -->
+                    <hr class="divisor" />
+                    <div class="secao-label">Alterar senha</div>
+
+                    <div class="form-grupo">
+                        <label for="novaSenha">Nova senha</label>
+                        <input type="password" id="novaSenha" name="novaSenha"
+                               maxlength="100" placeholder="Deixe em branco para não alterar" />
+                        <div class="campo-obs">Mínimo de 6 caracteres.</div>
+                    </div>
+
+                    <div class="form-grupo">
+                        <label for="confirmarSenha">Confirmar nova senha</label>
+                        <input type="password" id="confirmarSenha" name="confirmarSenha"
+                               maxlength="100" placeholder="Repita a nova senha" />
+                    </div>
+                }
+                else
+                {
+                    <!-- ── CAMPOS EXCLUSIVOS DO USUÁRIO COMUM ── -->
+                    <hr class="divisor" />
+                    <div class="secao-label">Informações pessoais</div>
+
+                    <div class="form-grupo">
+                        <label for="telefone">Telefone / WhatsApp</label>
+                        <input type="tel" id="telefone" name="telefone"
+                               value="@ViewBag.Telefone" maxlength="20"
+                               placeholder="(11) 99999-9999" />
+                    </div>
+
+                    <div class="form-grupo">
+                        <label for="documento">CPF</label>
+                        <input type="text" id="documento" name="documento"
+                               value="@ViewBag.Documento" maxlength="14"
+                               placeholder="000.000.000-00" />
+                    </div>
+
+                    <div class="form-grupo">
+                        <label for="dataNascimento">Data de nascimento</label>
+                        <input type="date" id="dataNascimento" name="dataNascimento"
+                               value="@ViewBag.DataNascimento" />
+                    </div>
+                }
+
+                <div class="edit-footer">
+                    <a asp-controller="Perfil" asp-action="Index" class="btn-cancelar">
+                        <i class="fas fa-times"></i> Cancelar
+                    </a>
+                    <button type="submit" class="btn-salvar">
+                        <i class="fas fa-check"></i> Salvar alterações
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>

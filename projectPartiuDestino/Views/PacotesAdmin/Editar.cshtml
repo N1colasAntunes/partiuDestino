@@ -53,7 +53,7 @@
         background: white;
         padding: 40px;
         border-radius: 20px;
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 24px;
@@ -64,14 +64,6 @@
             display: flex;
             flex-direction: column;
         }
-
-            form div br {
-                display: none;
-            }
-
-            form div:nth-child(4) {
-                grid-column: span 2;
-            }
 
     label {
         font-weight: 700;
@@ -102,12 +94,62 @@
             border-color: #3b82f6 !important;
             background: white !important;
             outline: none;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            box-shadow: 0 0 0 4px rgba(59,130,246,0.1);
         }
 
     textarea {
         height: 150px !important;
         resize: vertical;
+    }
+
+    /* bloco da imagem */
+    .imagem-bloco {
+        grid-column: span 2;
+        border: 2px dashed #c7d2fe;
+        border-radius: 12px;
+        padding: 20px;
+        background: #f8faff;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+        .imagem-bloco > label {
+            color: #1e3a8a;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .imagem-bloco small {
+            color: #64748b;
+            font-size: .82rem;
+        }
+
+    .imagem-atual {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        background: white;
+        border-radius: 10px;
+        padding: 12px;
+        border: 1px solid #e2e8f0;
+    }
+
+        .imagem-atual img {
+            width: 100px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+    #previewImagem {
+        width: 180px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 2px solid #c7d2fe;
+        display: none;
     }
 
     .form-actions {
@@ -143,9 +185,14 @@
 
     <a class="btn-voltar" href="/PacotesAdmin/Index">&#8592; Voltar para Pacotes</a>
 
-    <form method="post" asp-action="Editar">
+    <!-- enctype="multipart/form-data" é OBRIGATÓRIO para o upload funcionar -->
+    <form method="post" asp-action="Editar" enctype="multipart/form-data">
 
         <input type="hidden" name="id" value="@ViewBag.Id" />
+
+        <!-- Campo hidden que guarda a imagem atual.
+             Se o admin não enviar nova imagem, este valor é mantido no banco. -->
+        <input type="hidden" name="imagem_url" value="@ViewBag.ImagemUrl" />
 
         <div>
             <label>ID do Destino</label>
@@ -157,7 +204,7 @@
             <input type="text" name="nome" value="@ViewBag.Nome" required />
         </div>
 
-        <div>
+        <div style="grid-column:span 2">
             <label>Descrição</label>
             <textarea name="descricao">@ViewBag.Descricao</textarea>
         </div>
@@ -192,9 +239,59 @@
             <input type="number" name="vagas_disponiveis" value="@ViewBag.Vagas" />
         </div>
 
+        <!-- BLOCO DA IMAGEM -->
+        <div class="imagem-bloco">
+            <label>🖼️ Imagem do Pacote</label>
+
+            <!-- Mostra a imagem que está salva atualmente -->
+            @if (!string.IsNullOrWhiteSpace(ViewBag.ImagemUrl as string))
+            {
+                <div class="imagem-atual">
+                    <img src="@(ViewBag.ImagemUrl.ToString().StartsWith("http")
+                                    ? ViewBag.ImagemUrl
+                                    : "/" + ViewBag.ImagemUrl)"
+                         alt="Imagem atual"
+                         onerror="this.style.display='none'" />
+                    <div>
+                        <strong>Imagem atual</strong><br />
+                        <small>@ViewBag.ImagemUrl</small>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <small>⚠️ Nenhuma imagem cadastrada ainda.</small>
+            }
+
+            <!-- OPÇÃO 1: enviar arquivo novo (substitui a atual) -->
+            <div>
+                <label>Substituir por arquivo do computador</label>
+                <input type="file" name="imagemArquivo" accept="image/*"
+                       onchange="mostrarPreview(this)" />
+                <small>Se enviar um arquivo novo, ele substitui a imagem atual.</small>
+            </div>
+
+            <!-- preview da nova imagem antes de salvar -->
+            <img id="previewImagem" src="" alt="Preview da nova imagem" />
+        </div>
+
         <div class="form-actions">
             <button type="submit">Salvar Alterações</button>
         </div>
 
     </form>
 </div>
+
+<script>
+    function mostrarPreview(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var img = document.getElementById('previewImagem');
+                img.src = e.target.result;
+                img.style.display = 'block';
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>

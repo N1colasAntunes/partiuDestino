@@ -397,7 +397,7 @@
 
                             @if (Context.Session.GetString("UserName") != null)
                             {
-                                <form asp-controller="Destinos" asp-action="DetalhesPassagens"
+                                <form asp-controller="Destinos" asp-action="Passagem"
                                       method="post" style="margin:0;">
                                     <input type="hidden" name="destinoId" value="@item.Id" />
                                     <button type="submit" class="btn-adicionar-destino">

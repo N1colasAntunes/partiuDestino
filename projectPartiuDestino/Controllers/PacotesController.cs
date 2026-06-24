@@ -146,11 +146,7 @@ namespace projectPartiuDestino.Controllers
             return View(pacote);
         }
 
-        public IActionResult DetalhesPassagens(int id)
-        {
-            return View();
-        }
-
+     
         // GET: /Pacotes/Passagem/5
         public IActionResult Passagem(int id)
         {

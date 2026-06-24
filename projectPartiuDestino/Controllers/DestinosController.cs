@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
 using projectPartiuDestino.Models;
 
@@ -153,9 +154,132 @@ namespace projectPartiuDestino.Controllers
             return View(pacote);
         }
 
-        public IActionResult DetalhesPassagens(int id)
+        [HttpGet]
+        public IActionResult Passagem(int id)
         {
-            return View();
+            if (HttpContext.Session.GetInt32("UserId") == null)
+                return RedirectToAction("Index", "Login");
+
+            Pacotes? pacote = null;
+            List<string> assentosOcupados = new List<string>();
+
+            using (MySqlConnection conn = new MySqlConnection(conexao))
+            {
+                conn.Open();
+
+                string sql = @"SELECT p.id, p.nome, p.tipo_viagem, p.duracao_dias,
+                               p.data_partida, p.data_retorno, p.preco_por_pessoa,
+                               p.vagas_disponiveis, p.imagem_url,
+                               d.pais AS destino_pais, d.estado AS destino_estado,
+                               d.origem_pais, d.origem_estado
+                        FROM pacotes p
+                        INNER JOIN destinos d ON d.id = p.destino_id
+                        WHERE p.id = @id";
+
+                using (var cmd = new MySqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", id);
+                    using var reader = cmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        pacote = new Pacotes
+                        {
+                            Id = Convert.ToInt32(reader["id"]),
+                            Nome = reader["nome"].ToString(),
+                            TipoViagem = reader["tipo_viagem"].ToString(),
+                            DuracaoDias = Convert.ToInt32(reader["duracao_dias"]),
+                            DataPartida = Convert.ToDateTime(reader["data_partida"]),
+                            DataRetorno = Convert.ToDateTime(reader["data_retorno"]),
+                            PrecoPorPessoa = Convert.ToDecimal(reader["preco_por_pessoa"]),
+                            VagasDisponiveis = Convert.ToInt32(reader["vagas_disponiveis"]),
+                            ImagemUrl = reader["imagem_url"]?.ToString() ?? ""
+                        };
+
+                        ViewBag.DestinoPais = reader["destino_pais"].ToString();
+                        ViewBag.DestinoEstado = reader["destino_estado"].ToString();
+                        ViewBag.OrigemPais = reader["origem_pais"].ToString();
+                        ViewBag.OrigemEstado = reader["origem_estado"].ToString();
+                    }
+                }
+
+                // Buscar assentos já ocupados para este pacote
+                string sqlAssentos = "SELECT nome_item FROM pedidos WHERE tipo_item = 'pacote' AND nome_item LIKE @pattern";
+                using (var cmdA = new MySqlCommand(sqlAssentos, conn))
+                {
+                    cmdA.Parameters.AddWithValue("@pattern", $"%{pacote?.Nome}%Assento:%");
+                    using var readerA = cmdA.ExecuteReader();
+                    while (readerA.Read())
+                    {
+                        string nomeItem = readerA["nome_item"].ToString()!;
+                        // Extrair o número do assento do nome do item (ex: "... Assento: 12A")
+                        var parts = nomeItem.Split("Assento: ");
+                        if (parts.Length > 1)
+                        {
+                            assentosOcupados.Add(parts[1].Trim());
+                        }
+                    }
+                }
+            }
+
+            if (pacote == null)
+                return NotFound();
+
+            ViewBag.AssentosOcupados = assentosOcupados;
+            return View(pacote);
+        }
+
+        // POST: /Passagens/Passagem
+        [HttpPost]
+        public IActionResult Passagem(int pacoteId, string classeViagem, string tipoAssento, string numeroAssento)
+        {
+            if (HttpContext.Session.GetInt32("UserId") == null)
+                return RedirectToAction("Index", "Login");
+
+            if (string.IsNullOrEmpty(numeroAssento))
+            {
+                TempData["Erro"] = "Por favor, selecione um assento no mapa.";
+                return RedirectToAction("Passagem", new { id = pacoteId });
+            }
+
+            // Verificar novamente se o assento está ocupado
+            using (MySqlConnection conn = new MySqlConnection(conexao))
+            {
+                conn.Open();
+                string sqlCheck = "SELECT COUNT(*) FROM pedidos WHERE tipo_item = 'pacote' AND nome_item LIKE @pattern";
+                using var cmdCheck = new MySqlCommand(sqlCheck, conn);
+                cmdCheck.Parameters.AddWithValue("@pattern", $"%Assento: {numeroAssento}%");
+                long count = (long)cmdCheck.ExecuteScalar();
+                if (count > 0)
+                {
+                    TempData["Erro"] = "Este assento já foi selecionado por outro usuário. Por favor, escolha outro.";
+                    return RedirectToAction("Passagem", new { id = pacoteId });
+                }
+            }
+
+            // Preço fixado no servidor — nunca confiar em valor vindo do cliente
+            decimal precoAdicional = classeViagem switch
+            {
+                "Executiva" => 450.00m,
+                "Primeira Classe" => 1200.00m,
+                _ => 0.00m
+            };
+
+            var selecao = new SelecaoVoo
+            {
+                ItemId = pacoteId,
+                TipoItem = "pacote",
+                ClasseViagem = classeViagem,
+                TipoAssento = tipoAssento,
+                NumeroAssento = numeroAssento,
+                PrecoAdicional = precoAdicional
+            };
+
+            HttpContext.Session.SetString(
+                $"Voo_pacote_{pacoteId}",
+                JsonSerializer.Serialize(selecao)
+            );
+
+            return RedirectToAction("Detalhes", new { id = pacoteId });
         }
 
 

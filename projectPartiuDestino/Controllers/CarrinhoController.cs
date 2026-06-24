@@ -49,10 +49,14 @@ namespace projectPartiuDestino.Controllers
                 }
             }
 
+            if (TempData["Sucesso"] != null)
+                ViewBag.Sucesso = TempData["Sucesso"].ToString();
+
+            if (TempData["Erro"] != null)
+                ViewBag.Erro = TempData["Erro"].ToString();
+
             return View(itens);
         }
-
-        // ============================================================
         // POST: /Carrinho/AdicionarPacote
         // ============================================================
         [HttpPost]
@@ -61,6 +65,12 @@ namespace projectPartiuDestino.Controllers
             int? usuarioId = HttpContext.Session.GetInt32("UserId");
             if (usuarioId == null)
                 return RedirectToAction("Index", "Login");
+
+            if (HttpContext.Session.GetString("UserRole") == "admin")
+            {
+                TempData["Erro"] = "Administradores não podem realizar compras.";
+                return RedirectToAction("Index", "Carrinho");
+            }
 
             using MySqlConnection conn = new MySqlConnection(conexao);
             conn.Open();
@@ -171,6 +181,12 @@ namespace projectPartiuDestino.Controllers
             if (usuarioId == null)
                 return RedirectToAction("Index", "Login");
 
+            if (HttpContext.Session.GetString("UserRole") == "admin")
+            {
+                TempData["Erro"] = "Administradores não podem realizar compras.";
+                return RedirectToAction("Index", "Carrinho");
+            }
+
             using MySqlConnection conn = new MySqlConnection(conexao);
             conn.Open();
 
@@ -238,6 +254,12 @@ namespace projectPartiuDestino.Controllers
             int? usuarioId = HttpContext.Session.GetInt32("UserId");
             if (usuarioId == null)
                 return RedirectToAction("Index", "Login");
+
+            if (HttpContext.Session.GetString("UserRole") == "admin")
+            {
+                TempData["Erro"] = "Administradores não podem realizar compras.";
+                return RedirectToAction("Index", "Carrinho");
+            }
 
             using MySqlConnection conn = new MySqlConnection(conexao);
             conn.Open();
