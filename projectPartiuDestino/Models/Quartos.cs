@@ -11,5 +11,17 @@
         public int QuantidadeDisponivel { get; set; }
         public string? Comodidades { get; set; }
         public string? ImagemUrl { get; set; }
+
+        public int? NumeroCamas { get; set; }
+
+        public string? TipoCamas { get; set; }
+
+        public bool CafeIncluso { get; set; }
+
+        public decimal? AreaM2 { get; set; }
+
+        public string? Descricao { get; set; }
+
+        public string? PoliticaCancelamento { get; set; }
     }
 }

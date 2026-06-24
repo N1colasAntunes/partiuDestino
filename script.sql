@@ -2,27 +2,16 @@
 --  PARTIU DESTINO — BANCO DE DADOS COMPLETO
 --  Organizado por: Autores do TCC
 --  Última atualização: junho de 2026
---
---  ESTRUTURA:
---    1. CRIAÇÃO DO BANCO
---    2. CRIAÇÃO DAS TABELAS
---    3. INSERÇÃO DE DADOS (INSERTs)
---    4. ALTERAÇÕES E ATUALIZAÇÕES (ALTERs / UPDATEs)
---    5. ÍNDICES
---    6. SELECTs DE VERIFICAÇÃO
--- ============================================================
-
 
 -- ============================================================
 -- 1. CRIAÇÃO DO BANCO DE DADOS
 -- ============================================================
-
 CREATE DATABASE bdpartiudestino;
 USE bdpartiudestino;
+
 -- ============================================================
 -- 2. CRIAÇÃO DAS TABELAS
 -- ============================================================
-
 -- ------------------------------------------------------------
 -- 2.1 Tabela: usuarios
 -- ------------------------------------------------------------
@@ -34,50 +23,8 @@ CREATE TABLE usuarios (
     tipo  VARCHAR(20)  NOT NULL DEFAULT 'usuario'   -- 'usuario' | 'admin'
 );
 
-ALTER TABLE usuarios
-    ADD COLUMN ativo TINYINT(1) NOT NULL DEFAULT 1;
-    
--- ============================================================
--- MIGRATION: Campos extras para a página de Perfil
--- Execute UMA VEZ no MySQL Workbench / terminal mysql
--- ============================================================
-
-USE bdpartiudestino;
-
--- Foto de perfil (caminho relativo salvo em /wwwroot/uploads/perfis/)
-ALTER TABLE usuarios
-    ADD COLUMN foto_perfil VARCHAR(500) NULL DEFAULT NULL
-    COMMENT 'Caminho relativo da foto: /uploads/perfis/nome.jpg';
-
--- Telefone
-ALTER TABLE usuarios
-    ADD COLUMN telefone VARCHAR(20) NULL DEFAULT NULL;
-
--- CPF / Documento
-ALTER TABLE usuarios
-    ADD COLUMN documento VARCHAR(20) NULL DEFAULT NULL;
-
--- Data de nascimento
-ALTER TABLE usuarios
-    ADD COLUMN data_nascimento DATE NULL DEFAULT NULL;
-
--- Verificação: confira o resultado
-DESCRIBE usuarios;
-
-select * from usuarios;
-
-
-DELETE FROM usuarios 
-WHERE id = 2;
-
--- ------------------------------------------------------------
 -- 2.2 Tabela: destinos
 --     preco_por_pessoa: preço base de referência do destino
-
--- ------------------------------------------------------------
-
-
-
 
 CREATE TABLE destinos (
     id               INT            PRIMARY KEY AUTO_INCREMENT,
@@ -89,10 +36,9 @@ CREATE TABLE destinos (
     preco_por_pessoa DECIMAL(10,2)  NOT NULL DEFAULT 0.00
 );
 
--- ------------------------------------------------------------
 -- 2.3 Tabela: pacotes
 --     imagem_url: imagem própria de cada pacote
--- ------------------------------------------------------------
+
 CREATE TABLE pacotes (
     id                INT            PRIMARY KEY AUTO_INCREMENT,
     destino_id        INT            NOT NULL,
@@ -107,10 +53,7 @@ CREATE TABLE pacotes (
     imagem_url        VARCHAR(500)
 );
 
-select * from pacotes;
-select * from hospedagens;
 
-delete from hospedagens where id=2;
 -- ------------------------------------------------------------
 -- 2.4 Tabela: viagem_personalizada
 -- ------------------------------------------------------------
@@ -178,6 +121,157 @@ CREATE TABLE hospedagens (
     FOREIGN KEY (pacote_id) REFERENCES pacotes(id) ON DELETE CASCADE
 );
 
+
+-- =====================================================
+-- CAMPOS EXTRAS PARA HOSPEDAGENS
+-- =====================================================
+ALTER TABLE hospedagens
+    ADD COLUMN checkin VARCHAR(10) NULL DEFAULT '14:00',
+    ADD COLUMN checkout VARCHAR(10) NULL DEFAULT '12:00',
+    ADD COLUMN cafe_incluso TINYINT(1) NOT NULL DEFAULT 1,
+    ADD COLUMN wifi_incluso TINYINT(1) NOT NULL DEFAULT 1,
+    ADD COLUMN estacionamento TINYINT(1) NOT NULL DEFAULT 0,
+    ADD COLUMN politica_cancelamento TEXT NULL,
+    ADD COLUMN regras_hospedagem TEXT NULL,
+    ADD COLUMN avaliacao DECIMAL(3,1) NULL DEFAULT 8.5,
+    ADD COLUMN comodidades TEXT NULL;
+    
+    
+USE bdpartiudestino;
+
+SET SQL_SAFE_UPDATES = 0;
+
+-- =====================================================
+-- ATUALIZAÇÃO DAS HOSPEDAGENS COM AS NOVAS COLUNAS
+-- =====================================================
+
+UPDATE hospedagens
+SET
+    checkin = '14:00',
+    checkout = '12:00',
+    cafe_incluso = 1,
+    wifi_incluso = 1,
+    estacionamento = 0,
+    politica_cancelamento = 'Cancelamento e alterações seguem as políticas da Partiu Destino e dos fornecedores envolvidos. Valores pagos podem estar sujeitos a taxas administrativas e regras específicas do pacote.',
+    regras_hospedagem = 'Documento obrigatório no check-in. Menores de idade devem estar acompanhados por responsável legal. Horários de entrada e saída devem ser respeitados conforme política da hospedagem.',
+    avaliacao = 8.7,
+    comodidades = 'Wi-Fi, Café da manhã, Recepção 24h, Ar-condicionado, Restaurante, Serviço de quarto'
+WHERE nome = 'Hotel Copacabana Mar';
+
+
+UPDATE hospedagens
+SET
+    checkin = '15:00',
+    checkout = '12:00',
+    cafe_incluso = 1,
+    wifi_incluso = 1,
+    estacionamento = 1,
+    politica_cancelamento = 'Cancelamentos seguem as regras do pacote e do resort. Alterações de data ou quarto estão sujeitas à disponibilidade e podem gerar custos adicionais.',
+    regras_hospedagem = 'Documento obrigatório no check-in. Pulseiras de identificação podem ser exigidas durante a estadia. Menores devem estar acompanhados por responsável legal.',
+    avaliacao = 9.1,
+    comodidades = 'Wi-Fi, Café da manhã, Piscina, Restaurante, Área de lazer, Bar, Recepção 24h, Estacionamento'
+WHERE nome = 'Resort Bahia Sol';
+
+
+UPDATE hospedagens
+SET
+    checkin = '15:00',
+    checkout = '11:00',
+    cafe_incluso = 1,
+    wifi_incluso = 1,
+    estacionamento = 1,
+    politica_cancelamento = 'Cancelamentos e alterações devem seguir as regras da Partiu Destino e dos fornecedores internacionais. Alterações podem sofrer variação cambial e taxas.',
+    regras_hospedagem = 'Documento e passaporte podem ser solicitados no check-in. O hóspede deve respeitar as normas locais e horários definidos pela hospedagem.',
+    avaliacao = 8.8,
+    comodidades = 'Wi-Fi, Café da manhã, Academia, Estacionamento, Recepção 24h, Ar-condicionado, Restaurante'
+WHERE nome = 'California Dream Hotel';
+
+
+UPDATE hospedagens
+SET
+    checkin = '15:00',
+    checkout = '11:00',
+    cafe_incluso = 0,
+    wifi_incluso = 1,
+    estacionamento = 0,
+    politica_cancelamento = 'Cancelamentos seguem as políticas do pacote contratado. Alterações de quarto, datas ou quantidade de hóspedes podem gerar custos adicionais.',
+    regras_hospedagem = 'Documento obrigatório no check-in. Taxas locais podem ser cobradas pela hospedagem. Respeitar horários de entrada e saída.',
+    avaliacao = 8.6,
+    comodidades = 'Wi-Fi, Recepção 24h, Ar-condicionado, Elevador, Serviço de quarto, Localização central'
+WHERE nome = 'Manhattan City Hotel';
+
+
+UPDATE hospedagens
+SET
+    checkin = '14:00',
+    checkout = '12:00',
+    cafe_incluso = 1,
+    wifi_incluso = 1,
+    estacionamento = 0,
+    politica_cancelamento = 'Cancelamentos e remarcações seguem as regras da Partiu Destino e dos fornecedores. Alterações estão sujeitas à disponibilidade.',
+    regras_hospedagem = 'Documento obrigatório no check-in. Menores devem estar acompanhados por responsável legal. Taxas locais podem ser cobradas pela hospedagem.',
+    avaliacao = 9.0,
+    comodidades = 'Wi-Fi, Café da manhã, Recepção 24h, Ar-condicionado, Restaurante, Serviço de quarto'
+WHERE nome = 'Paris Lumière Hotel';
+
+
+UPDATE hospedagens
+SET
+    checkin = '14:00',
+    checkout = '11:00',
+    cafe_incluso = 1,
+    wifi_incluso = 1,
+    estacionamento = 1,
+    politica_cancelamento = 'Cancelamentos seguem a política do pacote. Alterações de datas, quarto ou quantidade de hóspedes estão sujeitas à disponibilidade.',
+    regras_hospedagem = 'Documento obrigatório no check-in. Respeitar horários da hospedagem e normas locais. Menores devem estar acompanhados por responsável legal.',
+    avaliacao = 8.9,
+    comodidades = 'Wi-Fi, Café da manhã, Estacionamento, Restaurante, Jardim, Ar-condicionado, Recepção'
+WHERE nome = 'Villa Toscana Hotel';
+
+
+UPDATE hospedagens
+SET
+    checkin = '15:00',
+    checkout = '11:00',
+    cafe_incluso = 1,
+    wifi_incluso = 1,
+    estacionamento = 0,
+    politica_cancelamento = 'Cancelamentos e alterações seguem as regras da Partiu Destino e fornecedores internacionais. Alterações podem gerar taxas adicionais.',
+    regras_hospedagem = 'Documento e passaporte podem ser solicitados. Respeitar normas locais, horários de entrada e saída e orientações da hospedagem.',
+    avaliacao = 8.8,
+    comodidades = 'Wi-Fi, Café da manhã, Recepção 24h, Ar-condicionado, Restaurante, Elevador'
+WHERE nome = 'Tokyo Central Hotel';
+
+
+UPDATE hospedagens
+SET
+    checkin = '14:00',
+    checkout = '12:00',
+    cafe_incluso = 1,
+    wifi_incluso = 1,
+    estacionamento = 1,
+    politica_cancelamento = 'Cancelamentos e alterações seguem as regras do pacote e do resort. Serviços extras podem ter cobrança separada.',
+    regras_hospedagem = 'Documento obrigatório no check-in. Menores devem estar acompanhados. Uso de áreas comuns sujeito às regras da hospedagem.',
+    avaliacao = 9.3,
+    comodidades = 'Wi-Fi, Café da manhã, Piscina, Spa, Restaurante, Estacionamento, Recepção 24h, Área de lazer'
+WHERE nome = 'Bali Paradise Resort';
+
+
+UPDATE hospedagens
+SET
+    checkin = '15:00',
+    checkout = '12:00',
+    cafe_incluso = 1,
+    wifi_incluso = 1,
+    estacionamento = 1,
+    politica_cancelamento = 'Cancelamentos e alterações seguem as políticas da Partiu Destino e fornecedores. Serviços de luxo e extras podem possuir regras próprias.',
+    regras_hospedagem = 'Documento ou passaporte obrigatório no check-in. Respeitar normas locais, horários e regras da hospedagem. Taxas locais podem ser aplicadas.',
+    avaliacao = 9.2,
+    comodidades = 'Wi-Fi, Café da manhã, Piscina, Academia, Restaurante, Estacionamento, Recepção 24h, Serviço de quarto'
+WHERE nome = 'Dubai Skyline Hotel';    
+
+
+
 -- ------------------------------------------------------------
 -- 2.8 Tabela: quartos
 --     Cada hospedagem pode ter VÁRIOS tipos de quarto
@@ -196,6 +290,500 @@ CREATE TABLE quartos (
     FOREIGN KEY (hospedagem_id) REFERENCES hospedagens(id) ON DELETE CASCADE
 );
 
+-- =====================================================
+-- CAMPOS EXTRAS PARA QUARTOS
+-- =====================================================
+
+ALTER TABLE quartos
+    ADD COLUMN numero_camas INT NULL DEFAULT 1,
+    ADD COLUMN tipo_camas VARCHAR(150) NULL,
+    ADD COLUMN cafe_incluso TINYINT(1) NOT NULL DEFAULT 1,
+    ADD COLUMN area_m2 DECIMAL(5,2) NULL,
+    ADD COLUMN descricao TEXT NULL,
+    ADD COLUMN politica_cancelamento TEXT NULL;
+    
+    
+-- =====================================================
+-- ATUALIZAÇÃO DOS QUARTOS COM AS NOVAS COLUNAS
+-- =====================================================
+
+-- =========================
+-- RIO - Hotel Copacabana Mar
+-- =========================
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 1,
+    q.tipo_camas = '1 cama de casal',
+    q.cafe_incluso = 1,
+    q.area_m2 = 22.00,
+    q.descricao = 'Quarto confortável para casal ou pequena família, com ar-condicionado, banheiro privativo, Wi-Fi e boa estrutura para estadias curtas.',
+    q.politica_cancelamento = 'Alterações e cancelamentos seguem as regras do pacote e da hospedagem.'
+WHERE h.nome = 'Hotel Copacabana Mar'
+  AND q.tipo_quarto = 'Quarto Standard';
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 1,
+    q.tipo_camas = '1 cama queen size',
+    q.cafe_incluso = 1,
+    q.area_m2 = 28.00,
+    q.descricao = 'Quarto mais espaçoso, indicado para quem busca mais conforto, com cama queen, ar-condicionado, Wi-Fi e frigobar.',
+    q.politica_cancelamento = 'Alterações e cancelamentos seguem as regras do pacote e da hospedagem.'
+WHERE h.nome = 'Hotel Copacabana Mar'
+  AND q.tipo_quarto = 'Quarto Luxo';
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 1,
+    q.tipo_camas = '1 cama king size',
+    q.cafe_incluso = 1,
+    q.area_m2 = 34.00,
+    q.descricao = 'Suíte com vista para o mar, cama king size, ambiente amplo, frigobar, Wi-Fi e estrutura ideal para uma experiência mais confortável.',
+    q.politica_cancelamento = 'Alterações e cancelamentos seguem as regras do pacote e da hospedagem.'
+WHERE h.nome = 'Hotel Copacabana Mar'
+  AND q.tipo_quarto = 'Suíte Vista Mar';
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 3,
+    q.tipo_camas = '1 cama de casal e 2 camas de solteiro',
+    q.cafe_incluso = 1,
+    q.area_m2 = 38.00,
+    q.descricao = 'Quarto amplo para famílias, com camas múltiplas, ar-condicionado, Wi-Fi, banheiro privativo e espaço confortável para adultos e crianças.',
+    q.politica_cancelamento = 'Alterações e cancelamentos seguem as regras do pacote e da hospedagem.'
+WHERE h.nome = 'Hotel Copacabana Mar'
+  AND q.tipo_quarto = 'Quarto Família';
+
+
+-- =========================
+-- BAHIA - Resort Bahia Sol
+-- =========================
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 1,
+    q.tipo_camas = '1 cama de casal',
+    q.cafe_incluso = 1,
+    q.area_m2 = 24.00,
+    q.descricao = 'Quarto confortável em resort, com café da manhã, Wi-Fi, ar-condicionado e acesso às áreas comuns da hospedagem.',
+    q.politica_cancelamento = 'Alterações e cancelamentos seguem as regras do resort e do pacote contratado.'
+WHERE h.nome = 'Resort Bahia Sol'
+  AND q.tipo_quarto = 'Quarto Standard';
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 2,
+    q.tipo_camas = '1 cama de casal e 1 cama de solteiro',
+    q.cafe_incluso = 1,
+    q.area_m2 = 30.00,
+    q.descricao = 'Quarto superior com mais espaço, indicado para família pequena, com ar-condicionado, Wi-Fi, frigobar e café da manhã incluso.',
+    q.politica_cancelamento = 'Alterações e cancelamentos seguem as regras do resort e do pacote contratado.'
+WHERE h.nome = 'Resort Bahia Sol'
+  AND q.tipo_quarto = 'Quarto Superior';
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 2,
+    q.tipo_camas = '1 cama queen size e 1 cama auxiliar',
+    q.cafe_incluso = 1,
+    q.area_m2 = 34.00,
+    q.descricao = 'Quarto luxo com melhor localização dentro do resort, cama queen, cama auxiliar, Wi-Fi, frigobar e café incluso.',
+    q.politica_cancelamento = 'Alterações e cancelamentos seguem as regras do resort e do pacote contratado.'
+WHERE h.nome = 'Resort Bahia Sol'
+  AND q.tipo_quarto = 'Quarto Luxo';
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 3,
+    q.tipo_camas = '2 camas de casal e 1 cama de solteiro',
+    q.cafe_incluso = 1,
+    q.area_m2 = 42.00,
+    q.descricao = 'Suíte família espaçosa, ideal para grupos com adultos e crianças, com camas múltiplas, Wi-Fi, ar-condicionado e café incluso.',
+    q.politica_cancelamento = 'Alterações e cancelamentos seguem as regras do resort e do pacote contratado.'
+WHERE h.nome = 'Resort Bahia Sol'
+  AND q.tipo_quarto = 'Suíte Família';
+
+
+-- =========================
+-- CALIFÓRNIA - California Dream Hotel
+-- =========================
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 1,
+    q.tipo_camas = '1 cama de casal',
+    q.cafe_incluso = 1,
+    q.area_m2 = 23.00,
+    q.descricao = 'Quarto funcional e confortável para viagem internacional, com Wi-Fi, ar-condicionado e banheiro privativo.',
+    q.politica_cancelamento = 'Alterações podem gerar custos adicionais conforme regras internacionais do fornecedor.'
+WHERE h.nome = 'California Dream Hotel'
+  AND q.tipo_quarto = 'Quarto Standard';
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 1,
+    q.tipo_camas = '1 cama queen size',
+    q.cafe_incluso = 1,
+    q.area_m2 = 29.00,
+    q.descricao = 'Quarto deluxe com cama queen, ambiente moderno, Wi-Fi, frigobar e estrutura confortável para estadia em Los Angeles.',
+    q.politica_cancelamento = 'Alterações podem gerar custos adicionais conforme regras internacionais do fornecedor.'
+WHERE h.nome = 'California Dream Hotel'
+  AND q.tipo_quarto = 'Quarto Deluxe';
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 1,
+    q.tipo_camas = '1 cama king size',
+    q.cafe_incluso = 1,
+    q.area_m2 = 36.00,
+    q.descricao = 'Quarto premium com cama king size, maior conforto, Wi-Fi, ar-condicionado, frigobar e melhor localização na hospedagem.',
+    q.politica_cancelamento = 'Alterações podem gerar custos adicionais conforme regras internacionais do fornecedor.'
+WHERE h.nome = 'California Dream Hotel'
+  AND q.tipo_quarto = 'Quarto Premium';
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 3,
+    q.tipo_camas = '1 cama de casal e 2 camas de solteiro',
+    q.cafe_incluso = 1,
+    q.area_m2 = 40.00,
+    q.descricao = 'Quarto família com boa capacidade, ideal para grupos, com camas múltiplas, Wi-Fi, ar-condicionado e banheiro privativo.',
+    q.politica_cancelamento = 'Alterações podem gerar custos adicionais conforme regras internacionais do fornecedor.'
+WHERE h.nome = 'California Dream Hotel'
+  AND q.tipo_quarto = 'Quarto Família';
+
+
+-- =========================
+-- NOVA YORK - Manhattan City Hotel
+-- =========================
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 1,
+    q.tipo_camas = '1 cama de casal',
+    q.cafe_incluso = 0,
+    q.area_m2 = 18.00,
+    q.descricao = 'Quarto compacto e funcional em Manhattan, ideal para quem busca localização central e praticidade durante a viagem.',
+    q.politica_cancelamento = 'Cancelamentos seguem as regras do hotel e do pacote contratado.'
+WHERE h.nome = 'Manhattan City Hotel'
+  AND q.tipo_quarto = 'Quarto Standard';
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 1,
+    q.tipo_camas = '1 cama queen size',
+    q.cafe_incluso = 0,
+    q.area_m2 = 23.00,
+    q.descricao = 'Quarto superior com melhor espaço interno, cama queen, Wi-Fi, ar-condicionado e boa localização na hospedagem.',
+    q.politica_cancelamento = 'Cancelamentos seguem as regras do hotel e do pacote contratado.'
+WHERE h.nome = 'Manhattan City Hotel'
+  AND q.tipo_quarto = 'Quarto Superior';
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 2,
+    q.tipo_camas = '1 cama queen size e 1 cama auxiliar',
+    q.cafe_incluso = 0,
+    q.area_m2 = 28.00,
+    q.descricao = 'Quarto deluxe com mais conforto, Wi-Fi, ar-condicionado, frigobar e estrutura adequada para estadia em Nova York.',
+    q.politica_cancelamento = 'Cancelamentos seguem as regras do hotel e do pacote contratado.'
+WHERE h.nome = 'Manhattan City Hotel'
+  AND q.tipo_quarto = 'Quarto Deluxe';
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 2,
+    q.tipo_camas = '1 cama king size e 1 sofá-cama',
+    q.cafe_incluso = 0,
+    q.area_m2 = 35.00,
+    q.descricao = 'Suíte executiva com cama king, sofá-cama, Wi-Fi, ambiente amplo e estrutura ideal para maior conforto na viagem.',
+    q.politica_cancelamento = 'Cancelamentos seguem as regras do hotel e do pacote contratado.'
+WHERE h.nome = 'Manhattan City Hotel'
+  AND q.tipo_quarto = 'Suíte Executiva';    
+  
+-- =========================
+-- PARIS - Paris Lumière Hotel
+-- =========================
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 1,
+    q.tipo_camas = '1 cama de casal',
+    q.cafe_incluso = 1,
+    q.area_m2 = 21.00,
+    q.descricao = 'Quarto casal confortável, com decoração elegante, Wi-Fi, ar-condicionado e café da manhã incluso.',
+    q.politica_cancelamento = 'Alterações e cancelamentos seguem as regras da hospedagem e do pacote.'
+WHERE h.nome = 'Paris Lumière Hotel'
+  AND q.tipo_quarto = 'Quarto Casal Standard';
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 1,
+    q.tipo_camas = '1 cama queen size',
+    q.cafe_incluso = 1,
+    q.area_m2 = 27.00,
+    q.descricao = 'Quarto superior com cama queen, ambiente confortável, Wi-Fi, frigobar e café incluso.',
+    q.politica_cancelamento = 'Alterações e cancelamentos seguem as regras da hospedagem e do pacote.'
+WHERE h.nome = 'Paris Lumière Hotel'
+  AND q.tipo_quarto = 'Quarto Superior';
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 1,
+    q.tipo_camas = '1 cama queen size',
+    q.cafe_incluso = 1,
+    q.area_m2 = 31.00,
+    q.descricao = 'Quarto luxo com varanda, ideal para casal, com Wi-Fi, ar-condicionado, frigobar e ambiente mais reservado.',
+    q.politica_cancelamento = 'Alterações e cancelamentos seguem as regras da hospedagem e do pacote.'
+WHERE h.nome = 'Paris Lumière Hotel'
+  AND q.tipo_quarto = 'Quarto Luxo com Varanda';
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 1,
+    q.tipo_camas = '1 cama king size',
+    q.cafe_incluso = 1,
+    q.area_m2 = 38.00,
+    q.descricao = 'Suíte romântica com cama king size, ambiente elegante, Wi-Fi, café incluso e estrutura ideal para viagem a dois.',
+    q.politica_cancelamento = 'Alterações e cancelamentos seguem as regras da hospedagem e do pacote.'
+WHERE h.nome = 'Paris Lumière Hotel'
+  AND q.tipo_quarto = 'Suíte Romântica';
+
+
+-- =========================
+-- TOSCANA - Villa Toscana Hotel
+-- =========================
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 1,
+    q.tipo_camas = '1 cama de casal',
+    q.cafe_incluso = 1,
+    q.area_m2 = 23.00,
+    q.descricao = 'Quarto aconchegante, com decoração regional, Wi-Fi, café da manhã e estrutura confortável para estadia na Toscana.',
+    q.politica_cancelamento = 'Alterações e cancelamentos seguem as regras do pacote e da hospedagem.'
+WHERE h.nome = 'Villa Toscana Hotel'
+  AND q.tipo_quarto = 'Quarto Standard';
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 1,
+    q.tipo_camas = '1 cama queen size',
+    q.cafe_incluso = 1,
+    q.area_m2 = 29.00,
+    q.descricao = 'Quarto superior com cama queen, mais espaço, Wi-Fi, café incluso e vista agradável da região.',
+    q.politica_cancelamento = 'Alterações e cancelamentos seguem as regras do pacote e da hospedagem.'
+WHERE h.nome = 'Villa Toscana Hotel'
+  AND q.tipo_quarto = 'Quarto Superior';
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 1,
+    q.tipo_camas = '1 cama king size',
+    q.cafe_incluso = 1,
+    q.area_m2 = 35.00,
+    q.descricao = 'Quarto luxo com cama king, ambiente amplo, Wi-Fi, café incluso, frigobar e maior conforto para a estadia.',
+    q.politica_cancelamento = 'Alterações e cancelamentos seguem as regras do pacote e da hospedagem.'
+WHERE h.nome = 'Villa Toscana Hotel'
+  AND q.tipo_quarto = 'Quarto Luxo';
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 3,
+    q.tipo_camas = '1 cama de casal e 2 camas de solteiro',
+    q.cafe_incluso = 1,
+    q.area_m2 = 41.00,
+    q.descricao = 'Suíte família espaçosa, ideal para adultos e crianças, com camas múltiplas, Wi-Fi, café incluso e banheiro privativo.',
+    q.politica_cancelamento = 'Alterações e cancelamentos seguem as regras do pacote e da hospedagem.'
+WHERE h.nome = 'Villa Toscana Hotel'
+  AND q.tipo_quarto = 'Suíte Família';
+
+
+-- =========================
+-- TÓQUIO - Tokyo Central Hotel
+-- =========================
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 1,
+    q.tipo_camas = '1 cama de casal',
+    q.cafe_incluso = 1,
+    q.area_m2 = 19.00,
+    q.descricao = 'Quarto funcional em Tóquio, com Wi-Fi, ar-condicionado, banheiro privativo e café da manhã incluso.',
+    q.politica_cancelamento = 'Alterações seguem as regras internacionais da hospedagem e do pacote contratado.'
+WHERE h.nome = 'Tokyo Central Hotel'
+  AND q.tipo_quarto = 'Quarto Standard';
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 1,
+    q.tipo_camas = '1 cama queen size',
+    q.cafe_incluso = 1,
+    q.area_m2 = 24.00,
+    q.descricao = 'Quarto superior com cama queen, Wi-Fi, café incluso e estrutura confortável para estadia em Tóquio.',
+    q.politica_cancelamento = 'Alterações seguem as regras internacionais da hospedagem e do pacote contratado.'
+WHERE h.nome = 'Tokyo Central Hotel'
+  AND q.tipo_quarto = 'Quarto Superior';
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 2,
+    q.tipo_camas = '1 cama queen size e 1 cama auxiliar',
+    q.cafe_incluso = 1,
+    q.area_m2 = 30.00,
+    q.descricao = 'Quarto deluxe com espaço adicional, Wi-Fi, ar-condicionado, frigobar e café incluso.',
+    q.politica_cancelamento = 'Alterações seguem as regras internacionais da hospedagem e do pacote contratado.'
+WHERE h.nome = 'Tokyo Central Hotel'
+  AND q.tipo_quarto = 'Quarto Deluxe';
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 3,
+    q.tipo_camas = '1 cama de casal e 2 camas de solteiro',
+    q.cafe_incluso = 1,
+    q.area_m2 = 36.00,
+    q.descricao = 'Suíte família com camas múltiplas, indicada para grupos, com Wi-Fi, café incluso e banheiro privativo.',
+    q.politica_cancelamento = 'Alterações seguem as regras internacionais da hospedagem e do pacote contratado.'
+WHERE h.nome = 'Tokyo Central Hotel'
+  AND q.tipo_quarto = 'Suíte Família';
+
+
+-- =========================
+-- BALI - Bali Paradise Resort
+-- =========================
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 1,
+    q.tipo_camas = '1 cama de casal',
+    q.cafe_incluso = 1,
+    q.area_m2 = 25.00,
+    q.descricao = 'Quarto confortável em resort, com Wi-Fi, café incluso, ar-condicionado e acesso às áreas comuns da hospedagem.',
+    q.politica_cancelamento = 'Cancelamentos seguem as regras do resort e do pacote contratado.'
+WHERE h.nome = 'Bali Paradise Resort'
+  AND q.tipo_quarto = 'Quarto Standard';
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 1,
+    q.tipo_camas = '1 cama queen size',
+    q.cafe_incluso = 1,
+    q.area_m2 = 32.00,
+    q.descricao = 'Quarto deluxe com cama queen, ambiente amplo, Wi-Fi, café incluso, frigobar e acesso à estrutura do resort.',
+    q.politica_cancelamento = 'Cancelamentos seguem as regras do resort e do pacote contratado.'
+WHERE h.nome = 'Bali Paradise Resort'
+  AND q.tipo_quarto = 'Quarto Deluxe';
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 1,
+    q.tipo_camas = '1 cama king size',
+    q.cafe_incluso = 1,
+    q.area_m2 = 48.00,
+    q.descricao = 'Villa privativa com cama king, ambiente reservado, Wi-Fi, café incluso, frigobar e maior conforto para descanso.',
+    q.politica_cancelamento = 'Cancelamentos seguem as regras do resort e do pacote contratado.'
+WHERE h.nome = 'Bali Paradise Resort'
+  AND q.tipo_quarto = 'Villa Privativa';
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 3,
+    q.tipo_camas = '2 camas de casal e 1 cama de solteiro',
+    q.cafe_incluso = 1,
+    q.area_m2 = 58.00,
+    q.descricao = 'Villa família espaçosa, ideal para grupos com adultos e crianças, com camas múltiplas, Wi-Fi, café incluso e área privativa.',
+    q.politica_cancelamento = 'Cancelamentos seguem as regras do resort e do pacote contratado.'
+WHERE h.nome = 'Bali Paradise Resort'
+  AND q.tipo_quarto = 'Villa Família';
+
+
+-- =========================
+-- DUBAI - Dubai Skyline Hotel
+-- =========================
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 1,
+    q.tipo_camas = '1 cama queen size',
+    q.cafe_incluso = 1,
+    q.area_m2 = 28.00,
+    q.descricao = 'Quarto standard luxo com cama queen, Wi-Fi, café incluso, ar-condicionado e estrutura de hotel de alto padrão.',
+    q.politica_cancelamento = 'Cancelamentos e alterações seguem regras do hotel e fornecedores internacionais.'
+WHERE h.nome = 'Dubai Skyline Hotel'
+  AND q.tipo_quarto = 'Quarto Standard Luxo';
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 1,
+    q.tipo_camas = '1 cama king size',
+    q.cafe_incluso = 1,
+    q.area_m2 = 36.00,
+    q.descricao = 'Quarto deluxe com cama king, ambiente sofisticado, Wi-Fi, café incluso, frigobar e excelente estrutura.',
+    q.politica_cancelamento = 'Cancelamentos e alterações seguem regras do hotel e fornecedores internacionais.'
+WHERE h.nome = 'Dubai Skyline Hotel'
+  AND q.tipo_quarto = 'Quarto Deluxe';
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 1,
+    q.tipo_camas = '1 cama king size',
+    q.cafe_incluso = 1,
+    q.area_m2 = 42.00,
+    q.descricao = 'Quarto premium com cama king, vista diferenciada, Wi-Fi, café incluso, frigobar e ambiente de alto conforto.',
+    q.politica_cancelamento = 'Cancelamentos e alterações seguem regras do hotel e fornecedores internacionais.'
+WHERE h.nome = 'Dubai Skyline Hotel'
+  AND q.tipo_quarto = 'Quarto Premium';
+
+UPDATE quartos q
+INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+SET
+    q.numero_camas = 3,
+    q.tipo_camas = '2 camas de casal e 1 sofá-cama',
+    q.cafe_incluso = 1,
+    q.area_m2 = 60.00,
+    q.descricao = 'Suíte família luxo, ampla e sofisticada, com camas múltiplas, Wi-Fi, café incluso e estrutura ideal para famílias.',
+    q.politica_cancelamento = 'Cancelamentos e alterações seguem regras do hotel e fornecedores internacionais.'
+WHERE h.nome = 'Dubai Skyline Hotel'
+  AND q.tipo_quarto = 'Suíte Família Luxo';
+
+SET SQL_SAFE_UPDATES = 1;  
+
 CREATE INDEX idx_hospedagens_pacote ON hospedagens(pacote_id);
 CREATE INDEX idx_quartos_hospedagem ON quartos(hospedagem_id);
 -- ============================================================
@@ -207,6 +795,8 @@ CREATE INDEX idx_quartos_hospedagem ON quartos(hospedagem_id);
 -- ------------------------------------------------------------
 INSERT INTO usuarios (nome, email, senha, tipo) VALUES
     ('Julia Costa', 'julia@gmail.com', '$2a$11$KG8AxkIziG2A6C9aOIzWkeD82eW96KTcXrDiM2JMYZGlSmLVoU2am', 'admin');
+
+
 -- ------------------------------------------------------------
 -- 3.2 Destinos (com imagem_url e preco_por_pessoa)
 -- ------------------------------------------------------------
@@ -341,14 +931,6 @@ UPDATE quartos SET imagem_url = 'https://images.unsplash.com/photo-1582719508461
 UPDATE quartos SET imagem_url = 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=600&q=80' WHERE tipo_quarto = 'Quarto Simples';
 UPDATE quartos SET imagem_url = 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=600&q=80' WHERE tipo_quarto = 'Quarto Família';
 
-SET SQL_SAFE_UPDATES = 1;
-
--- ============================================================
--- 4. ALTERAÇÕES E ATUALIZAÇÕES
--- ============================================================
-
-SET SQL_SAFE_UPDATES = 0;
-
 -- ------------------------------------------------------------
 -- 4.1 Promover usuário para administrador
 -- ------------------------------------------------------------
@@ -421,29 +1003,6 @@ WHERE id = 9;
 UPDATE pacotes
 SET imagem_url = 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80'
 WHERE id = 10;
-
-SET SQL_SAFE_UPDATES = 1;
-
-
--- ============================================================
--- VERIFICAÇÃO FINAL
--- ============================================================
-
--- Destinos com imagem
-SELECT id,
-       CONCAT(pais, ' / ', estado) AS destino,
-       imagem_url
-FROM destinos
-ORDER BY id;
-
--- Pacotes com imagem
-SELECT p.id,
-       p.nome                           AS pacote,
-       CONCAT(d.pais, ' / ', d.estado) AS destino_vinculado,
-       p.imagem_url
-FROM pacotes p
-JOIN destinos d ON d.id = p.destino_id
-ORDER BY p.id;
 
 -- ------------------------------------------------------------
 -- 4.2 Atualizar imagem_url dos destinos (por id — chave primária)
@@ -616,20 +1175,6 @@ WHERE id = 10;
 -- ============================================================
 -- HOSPEDAGENS E QUARTOS POR PACOTE
 -- ============================================================
-USE bdpartiudestino;
-
--- ==========================================
--- APAGANDO HOSPEDAGENS ANTIGAS
--- ==========================================
--- Como os quartos estão ligados nas hospedagens,
--- ao apagar as hospedagens os quartos também são apagados.
-
-DELETE FROM hospedagens;
-
--- Reiniciando os IDs para ficar mais fácil de entender
-ALTER TABLE hospedagens AUTO_INCREMENT = 1;
-ALTER TABLE quartos AUTO_INCREMENT = 1;
-
 
 -- ==========================================
 -- INSERINDO 1 HOSPEDAGEM PARA CADA PACOTE
@@ -706,8 +1251,6 @@ VALUES
 'Wi-Fi, Ar-condicionado, 2 camas e espaço família',
 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=600&q=80');
 
-select * from hospedagens;
-select* from quartos;
 
 -- ==========================================
 -- QUARTOS DO PACOTE 2 - BAHIA

@@ -271,7 +271,7 @@
 <div class="voo-page">
 
     <div class="voo-hero">
-        <h1><i class="fas fa-plane-departure"></i> Escolha sua Passagem</h1>
+      <h1>Escolha sua Passagem</h1>
         <p>Etapa 1 de 3 — Pacote selecionado: @Model.Nome</p>
     </div>
 
@@ -299,35 +299,105 @@
         <form method="post" asp-action="Passagem" id="formVoo">
             <input type="hidden" name="pacoteId" value="@Model.Id" />
             <input type="hidden" name="numeroAssento" id="inputAssento" value="" />
-            <input type="hidden" name="tipoAssento" id="inputTipoAssento" value="Janela" />
+            <input type="hidden" name="tipoAssento" id="inputTipoAssento" value="Múltiplos" />
 
             <div class="card-secao-voo">
-                <h3><style="color:var(--accent);"></i> Classe de Viagem</h3>
-                <div class="opcoes-classe">
-                    <div class="opcao-classe">
-                        <input type="radio" name="classeViagem" id="classeEco" value="Econômica" checked />
-                        <label class="opcao-classe-label" for="classeEco">
-                            <span class="nome-classe">Econômica</span>
-                            <span class="preco-classe">Incluído no pacote</span>
+                <h3>
+                    <i class="fas fa-users" style="color:var(--accent);"></i>
+                    Quantidade de viajantes
+                </h3>
+
+                <p style="color:var(--text-muted);margin-top:-8px;margin-bottom:20px;">
+                    Informe quantas pessoas vão viajar. A quantidade de assentos deverá ser igual ao total de viajantes.
+                </p>
+
+                <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;">
+                    <div>
+                        <label style="font-weight:700;color:#1f2937;margin-bottom:6px;display:block;">
+                            Adultos
                         </label>
+
+                        <input type="number"
+                               name="quantidadeAdultos"
+                               id="quantidadeAdultos"
+                               value="1"
+                               min="1"
+                               max="@Model.VagasDisponiveis"
+                               onchange="atualizarQuantidadeViajantes()"
+                               onkeyup="atualizarQuantidadeViajantes()"
+                               style="width:100%;padding:13px;border:1px solid var(--border);border-radius:12px;font-weight:700;" />
                     </div>
-                    <div class="opcao-classe">
-                        <input type="radio" name="classeViagem" id="classeExec" value="Executiva" />
-                        <label class="opcao-classe-label" for="classeExec">
-                            <span class="nome-classe">Executiva</span>
-                            <span class="preco-classe">+ R$ 450,00 /pessoa</span>
+
+                    <div>
+                        <label style="font-weight:700;color:#1f2937;margin-bottom:6px;display:block;">
+                            Crianças
                         </label>
-                    </div>
-                    <div class="opcao-classe">
-                        <input type="radio" name="classeViagem" id="classePrim" value="Primeira Classe" />
-                        <label class="opcao-classe-label" for="classePrim">
-                            <span class="nome-classe">Primeira Classe</span>
-                            <span class="preco-classe">+ R$ 1.200,00 /pessoa</span>
-                        </label>
+
+                        <input type="number"
+                               name="quantidadeCriancas"
+                               id="quantidadeCriancas"
+                               value="0"
+                               min="0"
+                               max="@Model.VagasDisponiveis"
+                               onchange="atualizarQuantidadeViajantes()"
+                               onkeyup="atualizarQuantidadeViajantes()"
+                               style="width:100%;padding:13px;border:1px solid var(--border);border-radius:12px;font-weight:700;" />
                     </div>
                 </div>
 
-                <h3><i class="fas fa-couch" style="color:var(--accent);"></i> Selecione seu Assento</h3>
+                <div style="margin-top:18px;background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a;border-radius:14px;padding:14px 18px;font-weight:800;">
+                    Total de viajantes:
+                    <span id="totalViajantes">   1 </span>
+
+                    <span style="font-weight:600;color:#475569;">
+                        — selecione essa mesma quantidade de assentos.
+                    </span>
+                </div>
+            </div>
+            <div class="card-secao-voo">
+                <h3>
+                    <i class="fas fa-plane-departure" style="color:var(--accent);"></i>
+                    Classe da passagem
+                </h3>
+
+                <p style="color:var(--text-muted);margin-top:-8px;margin-bottom:20px;">
+                    Escolha a classe do voo. Classes superiores possuem valor adicional por viajante.
+                </p>
+
+                <div class="opcoes-classe">
+                    <label class="opcao-classe">
+                        <input type="radio" name="classeViagem" value="Econômica" checked />
+                        <span class="opcao-classe-label">
+                            <span class="nome-classe">Econômica</span>
+                            <span class="preco-classe">Sem adicional</span>
+                        </span>
+                    </label>
+
+                    <label class="opcao-classe">
+                        <input type="radio" name="classeViagem" value="Executiva" />
+                        <span class="opcao-classe-label">
+                            <span class="nome-classe">Executiva</span>
+                            <span class="preco-classe">+ R$ 450,00 por pessoa</span>
+                        </span>
+                    </label>
+
+                    <label class="opcao-classe">
+                        <input type="radio" name="classeViagem" value="Primeira Classe" />
+                        <span class="opcao-classe-label">
+                            <span class="nome-classe">Primeira Classe</span>
+                            <span class="preco-classe">+ R$ 1.200,00 por pessoa</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+            <h3>
+               
+                Selecione os Assentos
+            </h3>
+
+            <p style="color:var(--text-muted);margin-top:-8px;margin-bottom:20px;">
+                Clique nos assentos disponíveis. A quantidade precisa bater com o total de viajantes.
+            </p>
 
                 <div class="airplane-map">
                     <div class="airplane-header">Cabine de Passageiros</div>
@@ -374,49 +444,124 @@
                     </div>
                 </div>
 
-                <div id="seat-info" style="margin-top:20px; text-align:center; font-weight:700; color:var(--primary); display:none;">
-                    Assento Selecionado: <span id="selected-seat-display">--</span>
-                    (<span id="selected-type-display">--</span>)
-                </div>
+            <div id="seat-info" style="margin-top:20px; text-align:center; font-weight:700; color:var(--primary); display:none;">
+                Assentos selecionados:
+                <span id="selected-seat-display">--</span>
+
+                <br />
+
+                <span style="font-size:.85rem;color:#64748b;">
+                    Selecionados:
+                    <span id="qtdAssentosSelecionados">0</span>
+                    de
+                    <span id="qtdAssentosNecessarios">1</span>
+                </span>
+            </div>
 
                 <button type="submit" class="btn-continuar-voo">
                     Continuar para Hospedagem <i class="fas fa-arrow-right"></i>
                 </button>
-            </div>
+            
         </form>
-
     </div>
 </div>
+        
+
+ 
 
 <script>
-    function selectSeat(element) {
-        if (element.classList.contains('occupied')) return;
+    
+     let assentosSelecionados = [];
 
-        // Remover seleção anterior
-        document.querySelectorAll('.seat.selected').forEach(s => s.classList.remove('selected'));
+     function getTotalViajantes() {
+         const adultos = parseInt(document.getElementById('quantidadeAdultos').value) || 0;
+         const criancas = parseInt(document.getElementById('quantidadeCriancas').value) || 0;
 
-        // Adicionar nova seleção
-        element.classList.add('selected');
+         return adultos + criancas;
+     }
 
-        // Atualizar inputs escondidos
-        const seatId = element.getAttribute('data-seat');
-        const seatType = element.getAttribute('data-type');
+     function atualizarQuantidadeViajantes() {
+         const total = getTotalViajantes();
 
-        document.getElementById('inputAssento').value = seatId;
-        document.getElementById('inputTipoAssento').value = seatType;
+         document.getElementById('totalViajantes').innerText = total;
+         document.getElementById('qtdAssentosNecessarios').innerText = total;
 
-        // Mostrar info
-        document.getElementById('seat-info').style.display = 'block';
-        document.getElementById('selected-seat-display').innerText = seatId;
-        document.getElementById('selected-type-display').innerText = seatType;
-    }
+         if (assentosSelecionados.length > total) {
+             assentosSelecionados = assentosSelecionados.slice(0, total);
 
-    // Validação básica antes de enviar
-    document.getElementById('formVoo').onsubmit = function(e) {
-        if (!document.getElementById('inputAssento').value) {
-            alert('Por favor, selecione um assento no mapa antes de continuar.');
-            return false;
-        }
-        return true;
-    };
+             document.querySelectorAll('.seat.selected').forEach(s => {
+                 const seatId = s.getAttribute('data-seat');
+
+                 if (!assentosSelecionados.includes(seatId)) {
+                     s.classList.remove('selected');
+                 }
+             });
+         }
+
+         atualizarAssentosNaTela();
+     }
+
+     function selectSeat(element) {
+         if (element.classList.contains('occupied')) {
+             return;
+         }
+
+         const totalNecessario = getTotalViajantes();
+         const seatId = element.getAttribute('data-seat');
+
+         if (totalNecessario <= 0) {
+             alert('Informe a quantidade de viajantes antes de escolher os assentos.');
+             return;
+         }
+
+         if (element.classList.contains('selected')) {
+             element.classList.remove('selected');
+             assentosSelecionados = assentosSelecionados.filter(a => a !== seatId);
+             atualizarAssentosNaTela();
+             return;
+         }
+
+         if (assentosSelecionados.length >= totalNecessario) {
+             alert('Você já selecionou a quantidade necessária de assentos.');
+             return;
+         }
+
+         element.classList.add('selected');
+         assentosSelecionados.push(seatId);
+
+         atualizarAssentosNaTela();
+     }
+
+     function atualizarAssentosNaTela() {
+         const textoAssentos = assentosSelecionados.join(', ');
+
+         document.getElementById('inputAssento').value = textoAssentos;
+         document.getElementById('qtdAssentosSelecionados').innerText = assentosSelecionados.length;
+
+         if (assentosSelecionados.length > 0) {
+             document.getElementById('seat-info').style.display = 'block';
+             document.getElementById('selected-seat-display').innerText = textoAssentos;
+         } else {
+             document.getElementById('seat-info').style.display = 'none';
+             document.getElementById('selected-seat-display').innerText = '--';
+         }
+     }
+
+     document.getElementById('formVoo').onsubmit = function (e) {
+         const totalViajantes = getTotalViajantes();
+
+         if (totalViajantes <= 0) {
+             alert('Informe a quantidade de viajantes.');
+             return false;
+         }
+
+         if (assentosSelecionados.length !== totalViajantes) {
+             alert('Você precisa escolher exatamente ' + totalViajantes + ' assento(s).');
+             return false;
+         }
+
+         return true;
+     };
+
+     atualizarQuantidadeViajantes();
 </script>

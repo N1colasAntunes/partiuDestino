@@ -60,9 +60,20 @@ namespace projectPartiuDestino.Controllers
         // POST: /Carrinho/AdicionarPacote
         // ============================================================
         [HttpPost]
-        public IActionResult AdicionarPacote(int pacoteId, int? quartoId)
+        public IActionResult AdicionarPacote(
+    int pacoteId,
+    int? quartoId,
+    bool aceitouTermos = false,
+    int quantidadeAdultos = 1,
+    int quantidadeCriancas = 0,
+    int quantidadeTotal = 1,
+    List<string>? nomesViajantes = null,
+    List<string>? documentosViajantes = null,
+    List<string>? nascimentosViajantes = null,
+    List<string>? tiposViajantes = null)
         {
             int? usuarioId = HttpContext.Session.GetInt32("UserId");
+
             if (usuarioId == null)
                 return RedirectToAction("Index", "Login");
 
@@ -72,22 +83,95 @@ namespace projectPartiuDestino.Controllers
                 return RedirectToAction("Index", "Carrinho");
             }
 
+            if (!aceitouTermos)
+            {
+                TempData["Erro"] = "Você precisa aceitar os termos da reserva para continuar.";
+                return RedirectToAction("Detalhes", "Pacotes", new { id = pacoteId });
+            }
+
+            if (quartoId == null || quartoId <= 0)
+            {
+                TempData["Erro"] = "Escolha um quarto antes de adicionar o pacote ao carrinho.";
+                return RedirectToAction("Detalhes", "Pacotes", new { id = pacoteId });
+            }
+
+            string? vooJson = HttpContext.Session.GetString($"Voo_pacote_{pacoteId}");
+
+            if (string.IsNullOrEmpty(vooJson))
+            {
+                TempData["Erro"] = "Escolha a passagem antes de continuar.";
+                return RedirectToAction("Passagem", "Pacotes", new { id = pacoteId });
+            }
+
+            var voo = System.Text.Json.JsonSerializer.Deserialize<projectPartiuDestino.Models.SelecaoVoo>(vooJson);
+
+            if (voo == null)
+            {
+                TempData["Erro"] = "Não foi possível recuperar os dados da passagem.";
+                return RedirectToAction("Passagem", "Pacotes", new { id = pacoteId });
+            }
+
+            quantidadeAdultos = voo.QuantidadeAdultos;
+            quantidadeCriancas = voo.QuantidadeCriancas;
+            quantidadeTotal = voo.QuantidadeTotal > 0 ? voo.QuantidadeTotal : 1;
+
+            if (nomesViajantes == null ||
+                documentosViajantes == null ||
+                nascimentosViajantes == null ||
+                tiposViajantes == null)
+            {
+                TempData["Erro"] = "Preencha os dados dos viajantes antes de continuar.";
+                return RedirectToAction("Detalhes", "Pacotes", new { id = pacoteId });
+            }
+
+            if (nomesViajantes.Count != quantidadeTotal ||
+                documentosViajantes.Count != quantidadeTotal ||
+                nascimentosViajantes.Count != quantidadeTotal ||
+                tiposViajantes.Count != quantidadeTotal)
+            {
+                TempData["Erro"] = "A quantidade de viajantes preenchidos não bate com a quantidade selecionada.";
+                return RedirectToAction("Detalhes", "Pacotes", new { id = pacoteId });
+            }
+
+            for (int i = 0; i < quantidadeTotal; i++)
+            {
+                if (string.IsNullOrWhiteSpace(nomesViajantes[i]) ||
+                    string.IsNullOrWhiteSpace(documentosViajantes[i]) ||
+                    string.IsNullOrWhiteSpace(nascimentosViajantes[i]))
+                {
+                    TempData["Erro"] = "Todos os viajantes precisam ter nome, documento e data de nascimento.";
+                    return RedirectToAction("Detalhes", "Pacotes", new { id = pacoteId });
+                }
+            }
+
+            int totalAdultosInformados = tiposViajantes.Count(t => t == "Adulto");
+            int totalCriancasInformadas = tiposViajantes.Count(t => t == "Criança");
+
+            if (totalAdultosInformados != quantidadeAdultos ||
+                totalCriancasInformadas != quantidadeCriancas)
+            {
+                TempData["Erro"] = "A quantidade de adultos e crianças preenchidos não bate com a passagem.";
+                return RedirectToAction("Detalhes", "Pacotes", new { id = pacoteId });
+            }
+
             using MySqlConnection conn = new MySqlConnection(conexao);
             conn.Open();
 
-            string sqlPacote = "SELECT nome, preco_por_pessoa FROM pacotes WHERE id = @id";
-            using MySqlCommand cmdP = new MySqlCommand(sqlPacote, conn);
-            cmdP.Parameters.AddWithValue("@id", pacoteId);
-
             string nomePacote = "";
-            decimal preco = 0;
+            decimal precoBasePacote = 0;
 
-            using (MySqlDataReader r = cmdP.ExecuteReader())
+            string sqlPacote = "SELECT nome, preco_por_pessoa FROM pacotes WHERE id = @id";
+
+            using (MySqlCommand cmdP = new MySqlCommand(sqlPacote, conn))
             {
+                cmdP.Parameters.AddWithValue("@id", pacoteId);
+
+                using MySqlDataReader r = cmdP.ExecuteReader();
+
                 if (r.Read())
                 {
                     nomePacote = r["nome"].ToString()!;
-                    preco = Convert.ToDecimal(r["preco_por_pessoa"]);
+                    precoBasePacote = Convert.ToDecimal(r["preco_por_pessoa"]);
                 }
                 else
                 {
@@ -96,74 +180,119 @@ namespace projectPartiuDestino.Controllers
                 }
             }
 
-            string nomeItem = nomePacote;
+            string tipoQuarto = "";
+            decimal precoAdicionalQuarto = 0;
+            int capacidadeAdultos = 0;
+            int capacidadeCriancas = 0;
+            int quantidadeDisponivel = 0;
 
-            // ADICIONADO: aplica a passagem escolhida na etapa anterior (lida da Session,
-            // nunca de um campo do formulário — evita manipulação de preço pelo cliente)
-            string? vooJson = HttpContext.Session.GetString($"Voo_pacote_{pacoteId}");
-            if (!string.IsNullOrEmpty(vooJson))
-            {
-                var voo = System.Text.Json.JsonSerializer.Deserialize<Models.SelecaoVoo>(vooJson);
-                if (voo != null)
-                {
-                    preco += voo.PrecoAdicional;
-                    if (voo.ClasseViagem != "Econômica")
-                    {
-                        nomeItem += $" — Classe {voo.ClasseViagem}";
-                    }
-                    if (!string.IsNullOrEmpty(voo.NumeroAssento))
-                    {
-                        nomeItem += $" — Assento: {voo.NumeroAssento}";
-                    }
-                }
-            }
+            string sqlQuarto = @"
+        SELECT 
+            q.tipo_quarto,
+            q.preco_adicional,
+            q.capacidade_adultos,
+            q.capacidade_criancas,
+            q.quantidade_disponivel
+        FROM quartos q
+        INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+        WHERE q.id = @quartoId
+          AND h.pacote_id = @pacoteId";
 
-            // soma o valor do quarto escolhido (se houver)
-            if (quartoId.HasValue)
+            using (MySqlCommand cmdQ = new MySqlCommand(sqlQuarto, conn))
             {
-                string sqlQuarto = "SELECT tipo_quarto, preco_adicional FROM quartos WHERE id = @id";
-                using MySqlCommand cmdQ = new MySqlCommand(sqlQuarto, conn);
-                cmdQ.Parameters.AddWithValue("@id", quartoId.Value);
+                cmdQ.Parameters.AddWithValue("@quartoId", quartoId.Value);
+                cmdQ.Parameters.AddWithValue("@pacoteId", pacoteId);
 
                 using MySqlDataReader rq = cmdQ.ExecuteReader();
+
                 if (rq.Read())
                 {
-                    string tipoQuarto = rq["tipo_quarto"].ToString()!;
-                    preco += Convert.ToDecimal(rq["preco_adicional"]);
-                    nomeItem = $"{nomeItem} — Quarto: {tipoQuarto}";
+                    tipoQuarto = rq["tipo_quarto"].ToString()!;
+                    precoAdicionalQuarto = Convert.ToDecimal(rq["preco_adicional"]);
+                    capacidadeAdultos = Convert.ToInt32(rq["capacidade_adultos"]);
+                    capacidadeCriancas = Convert.ToInt32(rq["capacidade_criancas"]);
+                    quantidadeDisponivel = Convert.ToInt32(rq["quantidade_disponivel"]);
+                }
+                else
+                {
+                    TempData["Erro"] = "Quarto inválido para este pacote.";
+                    return RedirectToAction("Detalhes", "Pacotes", new { id = pacoteId });
                 }
             }
 
-            string sqlCheck = @"SELECT id FROM carrinho
-                WHERE usuario_id = @uid AND tipo_item = 'pacote'
-                  AND item_id = @iid AND nome_item = @nome";
+            if (quantidadeDisponivel <= 0)
+            {
+                TempData["Erro"] = "Este quarto está indisponível.";
+                return RedirectToAction("Detalhes", "Pacotes", new { id = pacoteId });
+            }
+
+            if (quantidadeAdultos > capacidadeAdultos || quantidadeCriancas > capacidadeCriancas)
+            {
+                TempData["Erro"] = "O quarto escolhido não comporta a quantidade de viajantes selecionada.";
+                return RedirectToAction("Detalhes", "Pacotes", new { id = pacoteId });
+            }
+
+            decimal precoTotal = precoBasePacote * quantidadeTotal;
+
+            precoTotal += voo.PrecoAdicional;
+            precoTotal += precoAdicionalQuarto;
+
+            string nomeItem = nomePacote;
+
+            if (voo.ClasseViagem != "Econômica")
+            {
+                nomeItem += $" — Classe {voo.ClasseViagem}";
+            }
+
+            nomeItem += $" — Viajantes: {quantidadeTotal}";
+            nomeItem += $" ({quantidadeAdultos} adulto(s), {quantidadeCriancas} criança(s))";
+
+            if (!string.IsNullOrEmpty(voo.NumeroAssento))
+            {
+                nomeItem += $" — Assento: {voo.NumeroAssento}";
+            }
+
+            nomeItem += $" — Quarto: {tipoQuarto}";
+
+            string sqlCheck = @"
+        SELECT id 
+        FROM carrinho
+        WHERE usuario_id = @uid 
+          AND tipo_item = 'pacote'
+          AND item_id = @iid 
+          AND nome_item = @nome";
+
             using MySqlCommand cmdCheck = new MySqlCommand(sqlCheck, conn);
             cmdCheck.Parameters.AddWithValue("@uid", usuarioId);
             cmdCheck.Parameters.AddWithValue("@iid", pacoteId);
             cmdCheck.Parameters.AddWithValue("@nome", nomeItem);
+
             object? existente = cmdCheck.ExecuteScalar();
 
             if (existente != null)
             {
                 string sqlUp = "UPDATE carrinho SET quantidade = quantidade + 1 WHERE id = @cid";
+
                 using MySqlCommand cmdUp = new MySqlCommand(sqlUp, conn);
                 cmdUp.Parameters.AddWithValue("@cid", Convert.ToInt32(existente));
                 cmdUp.ExecuteNonQuery();
             }
             else
             {
-                string sqlIns = @"INSERT INTO carrinho
-                  (usuario_id, tipo_item, item_id, nome_item, preco_unitario, quantidade)
-                  VALUES (@uid, 'pacote', @iid, @nome, @preco, 1)";
+                string sqlIns = @"
+            INSERT INTO carrinho
+            (usuario_id, tipo_item, item_id, nome_item, preco_unitario, quantidade)
+            VALUES 
+            (@uid, 'pacote', @iid, @nome, @preco, 1)";
+
                 using MySqlCommand cmdIns = new MySqlCommand(sqlIns, conn);
                 cmdIns.Parameters.AddWithValue("@uid", usuarioId);
                 cmdIns.Parameters.AddWithValue("@iid", pacoteId);
                 cmdIns.Parameters.AddWithValue("@nome", nomeItem);
-                cmdIns.Parameters.AddWithValue("@preco", preco);
+                cmdIns.Parameters.AddWithValue("@preco", precoTotal);
                 cmdIns.ExecuteNonQuery();
             }
 
-            // ADICIONADO: limpa a passagem da Session após concluir a adição ao carrinho
             HttpContext.Session.Remove($"Voo_pacote_{pacoteId}");
 
             TempData["Sucesso"] = $"{nomeItem} adicionado ao carrinho!";

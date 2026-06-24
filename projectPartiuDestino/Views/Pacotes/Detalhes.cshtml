@@ -1,6 +1,15 @@
-﻿@model projectPartiuDestino.Models.Pacotes
+﻿@using projectPartiuDestino.Models
+@model projectPartiuDestino.Models.Pacotes
+
+
 @{
     ViewData["Title"] = $"{Model.Nome}";
+
+    var voo = ViewBag.Voo as SelecaoVoo;
+
+    int quantidadeAdultos = voo?.QuantidadeAdultos ?? 1;
+    int quantidadeCriancas = voo?.QuantidadeCriancas ?? 0;
+    int quantidadeTotal = voo?.QuantidadeTotal ?? 1;
 }
 
 <style>
@@ -26,11 +35,16 @@
         text-align: center;
     }
 
-        .det-pct-hero h1 {
-            font-size: 2.4rem;
-            font-weight: 900;
-            margin-bottom: 8px;
-        }
+    .det-pct-hero h1 {
+        font-size: 2.4rem;
+        font-weight: 900;
+        margin-bottom: 8px;
+    }
+
+    .det-pct-hero p {
+        opacity: .95;
+        margin: 0;
+    }
 
     .det-pct-resumo {
         max-width: 900px;
@@ -48,26 +62,80 @@
     .resumo-item {
         text-align: center;
         flex: 1;
+        min-width: 130px;
     }
 
-        .resumo-item span {
-            display: block;
-            font-size: .7rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
+    .resumo-item span {
+        display: block;
+        font-size: .7rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
 
-        .resumo-item strong {
-            font-size: 1.05rem;
-            color: #1f2937;
-        }
+    .resumo-item strong {
+        font-size: 1.05rem;
+        color: #1f2937;
+    }
 
     .det-pct-layout {
         max-width: 900px;
         margin: 0 auto;
         padding: 0 20px;
+    }
+
+    .alerta-erro {
+        background: #fee2e2;
+        border: 1px solid #fca5a5;
+        color: #991b1b;
+        padding: 14px 20px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+
+    .voo-card {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 18px 24px;
+        margin-bottom: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .voo-card-label {
+        font-size: .7rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+
+    .voo-card-info {
+        font-weight: 800;
+        color: #1f2937;
+        margin-top: 2px;
+    }
+
+    .voo-card-sub {
+        font-size: .9rem;
+        color: #64748b;
+        margin-top: 4px;
+    }
+
+    .link-alterar {
+        color: var(--accent);
+        font-weight: 700;
+        font-size: .85rem;
+        text-decoration: none;
+    }
+
+    .link-alterar:hover {
+        text-decoration: underline;
     }
 
     .det-pct-desc {
@@ -98,108 +166,11 @@
         border: 1px solid var(--border);
         margin-bottom: 24px;
         overflow: hidden;
-    }
-
-    .hosp-cabecalho {
-        padding: 20px 26px;
-        background: #f9fafb;
-        border-bottom: 1px solid var(--border);
-    }
-
-        .hosp-cabecalho h3 {
-            font-size: 1.15rem;
-            font-weight: 800;
-            color: #1f2937;
-            margin: 0 0 4px;
-        }
-
-    .hosp-categoria-badge {
-        display: inline-block;
-        background: #eff6ff;
-        color: var(--primary);
-        font-size: .72rem;
-        font-weight: 700;
-        padding: 3px 10px;
-        border-radius: 20px;
-        margin-bottom: 6px;
-    }
-
-    .hosp-end {
-        font-size: .85rem;
-        color: var(--text-muted);
-    }
-
-    .quartos-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill,minmax(260px,1fr));
-        gap: 18px;
-        padding: 22px 26px;
-    }
-
-    .quarto-card {
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        padding: 18px;
-    }
-
-        .quarto-card h4 {
-            font-size: 1rem;
-            font-weight: 800;
-            color: #1f2937;
-            margin-bottom: 8px;
-        }
-
-    .quarto-cap {
-        font-size: .8rem;
-        color: var(--text-muted);
-        margin-bottom: 8px;
-    }
-
-    .quarto-comodidades {
-        font-size: .78rem;
-        color: var(--text-muted);
-        margin-bottom: 14px;
-        line-height: 1.5;
-    }
-
-    .quarto-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .quarto-preco {
-        font-size: .95rem;
-        font-weight: 800;
-        color: var(--success);
-    }
-
-    .btn-add-quarto {
-        background: var(--primary);
-        color: white;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 10px;
-        font-size: .82rem;
-        font-weight: 700;
-        cursor: pointer;
-    }
-
-        .btn-add-quarto:hover {
-            background: var(--accent);
-        }
-
-    .sem-hosp {
-        text-align: center;
-        padding: 50px 20px;
-        background: white;
-        border-radius: 16px;
-        border: 2px dashed var(--border);
-        color: var(--text-muted);
+        box-shadow: 0 4px 14px rgba(0,0,0,.04);
     }
 
     .hosp-banner {
-        height: 160px;
+        height: 190px;
         position: relative;
         overflow: hidden;
     }
@@ -220,73 +191,212 @@
         justify-content: center;
     }
 
-        .hosp-banner-fallback i {
-            font-size: 2.5rem;
-            color: rgba(255,255,255,.35);
-        }
-
-    .quarto-card-img {
-        width: 100%;
-        height: 110px;
-        object-fit: cover;
-        border-radius: 10px;
-        margin-bottom: 10px;
-        display: block;
-        background: #f1f5f9;
+    .hosp-banner-fallback i {
+        font-size: 3rem;
+        color: rgba(255,255,255,.35);
     }
 
+    .hosp-conteudo {
+        padding: 24px 28px;
+    }
+
+    .hosp-categoria-badge {
+        display: inline-block;
+        background: #eff6ff;
+        color: var(--primary);
+        font-size: .72rem;
+        font-weight: 700;
+        padding: 4px 12px;
+        border-radius: 20px;
+        margin-bottom: 8px;
+    }
+
+    .hosp-conteudo h3 {
+        font-size: 1.3rem;
+        font-weight: 900;
+        color: #1f2937;
+        margin: 0 0 6px;
+    }
+
+    .hosp-end {
+        font-size: .9rem;
+        color: var(--text-muted);
+        margin-bottom: 14px;
+    }
+
+    .hosp-desc {
+        color: #4b5563;
+        line-height: 1.6;
+        margin-bottom: 18px;
+    }
+
+    .hosp-info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .hosp-info-box {
+        background: #f9fafb;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 13px 14px;
+    }
+
+    .hosp-info-box span {
+        display: block;
+        color: var(--text-muted);
+        font-size: .72rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+    }
+
+    .hosp-info-box strong {
+        color: #1f2937;
+        font-size: .9rem;
+    }
+
+    .btn-detalhes-hosp {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 12px;
+        font-size: .9rem;
+        font-weight: 800;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: .2s;
+    }
+
+    .btn-detalhes-hosp:hover {
+        background: var(--accent);
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 14px rgba(30,58,138,.2);
+    }
+
+    .sem-hosp {
+        text-align: center;
+        padding: 50px 20px;
+        background: white;
+        border-radius: 16px;
+        border: 2px dashed var(--border);
+        color: var(--text-muted);
+    }
+
+    .sem-hosp h4 {
+        color: #1f2937;
+        font-weight: 800;
+        margin-top: 12px;
+    }
+
+    @@media (max-width:700px) {
+        .det-pct-resumo {
+            flex-direction: column;
+        }
+
+        .resumo-item {
+            text-align: left;
+        }
+
+        .voo-card {
+            align-items: flex-start;
+        }
+    }
 </style>
 
 <div class="det-pct-page">
+
     <div class="det-pct-hero">
         <h1>@Model.Nome</h1>
         <p>@Model.TipoViagem · @Model.DuracaoDias dias</p>
     </div>
 
     <div class="det-pct-resumo">
-        <div class="resumo-item"><span>Partida</span><strong>@Model.DataPartida.ToString("dd/MM/yyyy")</strong></div>
-        <div class="resumo-item"><span>Retorno</span><strong>@Model.DataRetorno.ToString("dd/MM/yyyy")</strong></div>
-        <div class="resumo-item"><span>Vagas</span><strong>@Model.VagasDisponiveis</strong></div>
-        <div class="resumo-item"><span>Preço base / pessoa</span><strong style="color:var(--primary);">@Model.PrecoPorPessoa.ToString("C")</strong></div>
+        <div class="resumo-item">
+            <span>Partida</span>
+            <strong>@Model.DataPartida.ToString("dd/MM/yyyy")</strong>
+        </div>
+
+        <div class="resumo-item">
+            <span>Retorno</span>
+            <strong>@Model.DataRetorno.ToString("dd/MM/yyyy")</strong>
+        </div>
+
+        <div class="resumo-item">
+            <span>Vagas</span>
+            <strong>@Model.VagasDisponiveis</strong>
+        </div>
+
+        <div class="resumo-item">
+            <span>Preço base / pessoa</span>
+            <strong style="color:var(--primary);">@Model.PrecoPorPessoa.ToString("C")</strong>
+        </div>
     </div>
 
     <div class="det-pct-layout">
 
-        @{
-            var voo = ViewBag.Voo as projectPartiuDestino.Models.SelecaoVoo;
+        @if (TempData["Erro"] != null)
+        {
+            <div class="alerta-erro">
+                <i class="fas fa-exclamation-circle"></i> @TempData["Erro"]
+            </div>
         }
 
         @if (voo != null)
         {
-            <div style="background:white;border:1px solid var(--border);border-radius:16px;padding:18px 24px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+            <div class="voo-card">
                 <div>
-                    <span style="font-size:.7rem;color:var(--text-muted);text-transform:uppercase;font-weight:700;">Passagem selecionada</span>
-                    <div style="font-weight:800;color:#1f2937;margin-top:2px;">
+                    <span class="voo-card-label">Passagem selecionada</span>
+
+                    <div class="voo-card-info">
                         <i class="fas fa-plane" style="color:var(--accent);"></i>
-                        Classe @voo.ClasseViagem · Assento @voo.TipoAssento (@voo.NumeroAssento)
+                        Classe @voo.ClasseViagem · Assentos: @voo.NumeroAssento
+
                         @if (voo.PrecoAdicional > 0)
                         {
-                            <span style="color:var(--success);"> (+ @voo.PrecoAdicional.ToString("C") /pessoa)</span>
+                            <span style="color:var(--success);">
+                                (+ @voo.PrecoAdicional.ToString("C"))
+                            </span>
                         }
                     </div>
+
+                    <div class="voo-card-sub">
+                        @quantidadeAdultos adulto(s), @quantidadeCriancas criança(s)
+                        — Total: @quantidadeTotal viajante(s)
+                    </div>
                 </div>
-                <a asp-controller="Pacotes" asp-action="Passagem" asp-route-id="@Model.Id"
-                   style="color:var(--accent);font-weight:700;font-size:.85rem;text-decoration:none;">
-                    <i class="fas fa-edit"></i> Alterar voo
+
+                <a asp-controller="Pacotes"
+                   asp-action="Passagem"
+                   asp-route-id="@Model.Id"
+                   class="link-alterar">
+                    <i class="fas fa-edit"></i> Alterar passagem
                 </a>
             </div>
         }
-        <div class="det-pct-desc">@Model.Descricao</div>
 
-        <h2 class="sec-titulo-h"> Opções de Hospedagem</h2>
-        <p class="sec-sub-h">Escolha a hospedagem e o tipo de quarto. O valor extra é somado ao preço base do pacote.</p>
+        <div class="det-pct-desc">
+            @Model.Descricao
+        </div>
 
-        @if (!Model.Hospedagens.Any())
+        <h2 class="sec-titulo-h">Hospedagem do pacote</h2>
+        <p class="sec-sub-h">
+            Veja os detalhes da hospedagem, horários, regras e quartos disponíveis antes de escolher.
+        </p>
+
+        @if (Model.Hospedagens == null || !Model.Hospedagens.Any())
         {
             <div class="sem-hosp">
-                <i class="fas fa-bed fa-3x mb-3" style="color:#cbd5e1;"></i>
+                <i class="fas fa-bed fa-3x" style="color:#cbd5e1;"></i>
                 <h4>Nenhuma hospedagem cadastrada ainda</h4>
-                <p>Você pode adicionar este pacote ao carrinho com o preço base.</p>
+                <p>Este pacote ainda não possui uma hospedagem vinculada.</p>
             </div>
         }
         else
@@ -295,13 +405,15 @@
             {
                 <div class="hosp-bloco">
 
-                    <!-- ADICIONADO: banner da hospedagem -->
                     <div class="hosp-banner">
                         @if (!string.IsNullOrEmpty(hosp.ImagemUrl))
                         {
-                            <img src="@hosp.ImagemUrl" alt="@hosp.Nome" class="hosp-banner-img"
+                            <img src="@hosp.ImagemUrl"
+                                 alt="@hosp.Nome"
+                                 class="hosp-banner-img"
                                  loading="lazy"
                                  onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+
                             <div class="hosp-banner-fallback" style="display:none;">
                                 <i class="fas fa-hotel"></i>
                             </div>
@@ -309,84 +421,96 @@
                         else
                         {
                             <div class="hosp-banner-fallback">
+                                <i class="fas fa-hotel"></i>
                             </div>
                         }
                     </div>
 
-                    <div class="hosp-cabecalho">
+                    <div class="hosp-conteudo">
+
                         @if (!string.IsNullOrEmpty(hosp.Categoria))
                         {
-                            <span class="hosp-categoria-badge">@hosp.Categoria</span>
+                            <span class="hosp-categoria-badge">
+                                @hosp.Categoria
+                            </span>
                         }
+
                         <h3>@hosp.Nome</h3>
+
                         @if (!string.IsNullOrEmpty(hosp.Endereco))
                         {
-                            <p class="hosp-end"><i class="fas fa-map-marker-alt"></i> @hosp.Endereco</p>
+                            <p class="hosp-end">
+                                <i class="fas fa-map-marker-alt"></i> @hosp.Endereco
+                            </p>
                         }
-                    </div>
 
-                    <div class="quartos-grid">
-                        @foreach (var quarto in hosp.Quartos)
+                        @if (!string.IsNullOrEmpty(hosp.Descricao))
                         {
-                            decimal precoFinal = Model.PrecoPorPessoa + quarto.PrecoAdicional;
-                            bool esgotado = quarto.QuantidadeDisponivel == 0;
+                            <p class="hosp-desc">
+                                @hosp.Descricao
+                            </p>
+                        }
 
-                            <div class="quarto-card">
-                                @* ADICIONADO: miniatura do quarto (só aparece se tiver URL cadastrada) *@
-                                @if (!string.IsNullOrEmpty(quarto.ImagemUrl))
-                                {
-                                    <img src="@quarto.ImagemUrl" alt="@quarto.TipoQuarto" class="quarto-card-img"
-                                         loading="lazy"
-                                         onerror="this.style.display='none';" />
-                                }
-
-                                <h4>@quarto.TipoQuarto</h4>
-                                <div class="quarto-cap">
-                                    <i class="fas fa-user-friends"></i> @quarto.CapacidadeAdultos adultos, @quarto.CapacidadeCriancas crianças
-                                </div>
-                                <div class="quarto-comodidades">@quarto.Comodidades</div>
-                                <div class="quarto-footer">
-                                    <span class="quarto-preco">@precoFinal.ToString("C") /pessoa</span>
-
-                                    @if (Context.Session.GetString("UserName") != null)
-                                    {
-                                        if (!esgotado)
-                                        {
-                                            <form asp-controller="Carrinho" asp-action="AdicionarPacote" method="post" style="margin:0;">
-                                                <input type="hidden" name="pacoteId" value="@Model.Id" />
-                                                <input type="hidden" name="quartoId" value="@quarto.Id" />
-                                                <button type="submit" class="btn-add-quarto">
-                                                    <i class="fas fa-cart-plus"></i> Escolher
-                                                </button>
-                                            </form>
-                                        }
-                                        else
-                                        {
-                                            <span style="color:#ef4444;font-weight:700;font-size:.8rem;">Esgotado</span>
-                                        }
-                                    }
-                                    else
-                                    {
-                                        <a asp-controller="Login" asp-action="Index" class="btn-add-quarto" style="text-decoration:none;display:inline-block;">
-                                            Entrar
-                                        </a>
-                                    }
-                                </div>
+                        <div class="hosp-info-grid">
+                            <div class="hosp-info-box">
+                                <span>Check-in</span>
+                                <strong>
+                                    @($"A partir das {hosp.Checkin}")
+                                </strong>
                             </div>
+
+                            <div class="hosp-info-box">
+                                <span>Check-out</span>
+                                <strong>
+                                     @($"A partir das {hosp.Checkout}")
+                                </strong>
+                            </div>
+
+                            <div class="hosp-info-box">
+                                <span>Café</span>
+                                <strong>
+                                    @(hosp.CafeIncluso ? "Incluso" : "Não incluso")
+                                </strong>
+                            </div>
+
+                            <div class="hosp-info-box">
+                                <span>Wi-Fi</span>
+                                <strong>
+                                    @(hosp.WifiIncluso ? "Incluso" : "A consultar")
+                                </strong>
+                            </div>
+
+                            @if (hosp.Avaliacao != null)
+                            {
+                                <div class="hosp-info-box">
+                                    <span>Avaliação</span>
+                                    <strong>@hosp.Avaliacao / 10</strong>
+                                </div>
+                            }
+                        </div>
+
+                        @if (Context.Session.GetString("UserName") != null)
+                        {
+                            <a asp-controller="Pacotes"
+                               asp-action="DetalhesHospedagem"
+                               asp-route-pacoteId="@Model.Id"
+                               asp-route-hospedagemId="@hosp.Id"
+                               class="btn-detalhes-hosp">
+                                Ver detalhes e escolher quarto
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Login"
+                               asp-action="Index"
+                               class="btn-detalhes-hosp">
+                                <i class="fas fa-sign-in-alt"></i>
+                                Entrar para continuar
+                            </a>
                         }
                     </div>
                 </div>
             }
-        }
-
-        @if (Context.Session.GetString("UserName") != null)
-        {
-            <form asp-controller="Carrinho" asp-action="AdicionarPacote" method="post" style="margin-top:10px;">
-                <input type="hidden" name="pacoteId" value="@Model.Id" />
-                <button type="submit" class="btn-add-quarto" style="padding:12px 24px;">
-                    <i class="fas fa-cart-plus"></i> Adicionar ao Carrinho (sem hospedagem)
-                </button>
-            </form>
         }
     </div>
 </div>

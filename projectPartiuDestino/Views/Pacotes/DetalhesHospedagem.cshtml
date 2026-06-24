@@ -1,0 +1,781 @@
+﻿@using projectPartiuDestino.Models
+@model projectPartiuDestino.Models.Hospedagem
+
+@{
+    var pacote = ViewBag.Pacote as Pacotes;
+    var voo = ViewBag.Voo as SelecaoVoo;
+
+    int quantidadeAdultos = voo?.QuantidadeAdultos ?? 1;
+    int quantidadeCriancas = voo?.QuantidadeCriancas ?? 0;
+    int quantidadeTotal = voo?.QuantidadeTotal ?? 1;
+
+    ViewData["Title"] = $"Detalhes da Hospedagem - {Model.Nome}";
+}
+
+<style>
+    :root {
+        --primary: #1e3a8a;
+        --accent: #3b82f6;
+        --success: #10b981;
+        --text-muted: #6b7280;
+        --border: #e5e7eb;
+    }
+
+    .hosp-page {
+        background: #f8fafc;
+        min-height: 100vh;
+        padding-bottom: 80px;
+        font-family: 'Inter','Segoe UI',sans-serif;
+    }
+
+    .hosp-hero {
+        height: 320px;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        position: relative;
+        overflow: hidden;
+        color: white;
+    }
+
+        .hosp-hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: .45;
+        }
+
+    .hosp-hero-info {
+        position: absolute;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        max-width: 1000px;
+    }
+
+        .hosp-hero-info h1 {
+            font-size: 2.4rem;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+    .hosp-container {
+        max-width: 1000px;
+        margin: -40px auto 0;
+        padding: 0 20px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .card {
+        background: white;
+        border-radius: 18px;
+        border: 1px solid var(--border);
+        padding: 26px;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 14px rgba(0,0,0,.04);
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit,minmax(160px,1fr));
+        gap: 16px;
+    }
+
+    .info-box {
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 16px;
+        background: #f9fafb;
+    }
+
+        .info-box span {
+            display: block;
+            color: var(--text-muted);
+            font-size: .75rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .info-box strong {
+            color: #1f2937;
+            font-size: .95rem;
+        }
+
+    .section-title {
+        font-size: 1.35rem;
+        font-weight: 900;
+        color: #1f2937;
+        margin-bottom: 14px;
+    }
+
+    .comodidades-lista {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .comodidade {
+        background: #eff6ff;
+        color: #1e3a8a;
+        border-radius: 999px;
+        padding: 8px 14px;
+        font-size: .82rem;
+        font-weight: 700;
+    }
+
+    .quartos-lista {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .quarto-card {
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        gap: 22px;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        overflow: hidden;
+        background: white;
+    }
+
+        .quarto-card.incompativel {
+            opacity: .55;
+        }
+
+    .quarto-img {
+        width: 100%;
+        height: 100%;
+        min-height: 230px;
+        object-fit: cover;
+        background: #e5e7eb;
+    }
+
+    .quarto-info {
+        padding: 22px;
+    }
+
+        .quarto-info h3 {
+            font-size: 1.25rem;
+            font-weight: 900;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+
+    .quarto-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 12px 0;
+    }
+
+    .tag {
+        background: #f1f5f9;
+        color: #334155;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: .78rem;
+        font-weight: 700;
+    }
+
+    .quarto-footer {
+        margin-top: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+    }
+
+    .preco {
+        font-size: 1.1rem;
+        color: var(--success);
+        font-weight: 900;
+    }
+
+    .btn-primary {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 12px 18px;
+        border-radius: 12px;
+        font-weight: 800;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-primary:hover {
+            background: var(--accent);
+        }
+
+        .btn-primary:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+    .btn-secondary {
+        background: #e5e7eb;
+        color: #374151;
+        border: none;
+        padding: 12px 18px;
+        border-radius: 12px;
+        font-weight: 800;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .aviso {
+        margin-top: 12px;
+        padding: 12px;
+        border-radius: 12px;
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #991b1b;
+        font-size: .85rem;
+        font-weight: 700;
+    }
+
+    .modal-fundo {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(15,23,42,.65);
+        z-index: 99999;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .modal-caixa {
+        background: white;
+        width: 100%;
+        border-radius: 18px;
+        box-shadow: 0 20px 60px rgba(0,0,0,.25);
+        overflow: hidden;
+    }
+
+    .modal-termos-caixa {
+        max-width: 620px;
+    }
+
+    .modal-documentos-caixa {
+        max-width: 760px;
+    }
+
+    .modal-header {
+        padding: 22px 26px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+        .modal-header h3 {
+            margin: 0;
+            color: #1e3a8a;
+            font-weight: 900;
+        }
+
+        .modal-header p {
+            margin: 6px 0 0;
+            color: #64748b;
+            font-size: .9rem;
+        }
+
+    .modal-body {
+        padding: 24px 26px;
+        color: #374151;
+        font-size: .92rem;
+        line-height: 1.6;
+    }
+
+    .modal-body-scroll {
+        max-height: 430px;
+        overflow-y: auto;
+    }
+
+    .modal-footer {
+        padding: 18px 26px;
+        border-top: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+    }
+
+    @@media (max-width: 800px) {
+        .quarto-card {
+            grid-template-columns: 1fr;
+        }
+
+        .quarto-img {
+            height: 220px;
+        }
+    }
+</style>
+
+<div class="hosp-page">
+
+    <div class="hosp-hero">
+        @if (!string.IsNullOrEmpty(Model.ImagemUrl))
+        {
+            <img src="@Model.ImagemUrl" alt="@Model.Nome" />
+        }
+
+        <div class="hosp-hero-info">
+            <h1>@Model.Nome</h1>
+            <p>
+                @Model.Categoria · @Model.Endereco
+            </p>
+
+            @if (Model.Avaliacao != null)
+            {
+                <p style="font-weight:800;margin-top:8px;">
+                    Avaliação @Model.Avaliacao / 10
+                </p>
+            }
+        </div>
+    </div>
+
+    <div class="hosp-container">
+
+        <a asp-controller="Pacotes"
+           asp-action="Detalhes"
+           asp-route-id="@pacote?.Id"
+           class="btn-secondary"
+           style="margin-bottom:20px;">
+            ← Voltar para o pacote
+        </a>
+
+        @if (voo != null)
+        {
+            <div class="card">
+                <div class="section-title">Resumo da passagem</div>
+
+                <p style="margin:0;color:#374151;font-weight:700;">
+                    Classe @voo.ClasseViagem · Assentos: @voo.NumeroAssento
+                </p>
+
+                <p style="margin:6px 0 0;color:#64748b;">
+                    @quantidadeAdultos adulto(s), @quantidadeCriancas criança(s) — Total: @quantidadeTotal viajante(s)
+                </p>
+            </div>
+        }
+
+        <div class="card">
+            <div class="section-title">Informações da hospedagem</div>
+
+            <div class="info-grid">
+                <div class="info-box">
+                    <span>Check-in</span>
+                    <strong>A partir das @Model.Checkin</strong>
+                </div>
+
+                <div class="info-box">
+                    <span>Check-out</span>
+                    <strong>Até @Model.Checkout</strong>
+                </div>
+
+                <div class="info-box">
+                    <span>Café da manhã</span>
+                    <strong>@(Model.CafeIncluso ? "Incluso" : "Não incluso")</strong>
+                </div>
+
+                <div class="info-box">
+                    <span>Wi-Fi</span>
+                    <strong>@(Model.WifiIncluso ? "Incluso" : "Não incluso")</strong>
+                </div>
+
+                <div class="info-box">
+                    <span>Estacionamento</span>
+                    <strong>@(Model.Estacionamento ? "Disponível" : "Não incluso")</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="section-title">Sobre a hospedagem</div>
+            <p style="color:#374151;line-height:1.7;">
+                @Model.Descricao
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="section-title">Comodidades</div>
+
+            <div class="comodidades-lista">
+                @if (!string.IsNullOrEmpty(Model.Comodidades))
+                {
+                    foreach (var item in Model.Comodidades.Split(","))
+                    {
+                        <span class="comodidade">
+                            @item.Trim()
+                        </span>
+                    }
+                }
+                else
+                {
+                    <span class="comodidade">Wi-Fi</span>
+                    <span class="comodidade">Recepção</span>
+                    <span class="comodidade">Ar-condicionado</span>
+                }
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="section-title">Políticas e regras</div>
+
+            <p style="color:#374151;line-height:1.7;">
+                <strong>Política de cancelamento:</strong><br />
+                @Model.PoliticaCancelamento
+            </p>
+
+            <p style="color:#374151;line-height:1.7;">
+                <strong>Regras da hospedagem:</strong><br />
+                @Model.RegrasHospedagem
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="section-title">Quartos disponíveis</div>
+
+            <div class="quartos-lista">
+                @foreach (var quarto in Model.Quartos)
+                {
+                    decimal precoFinal = pacote!.PrecoPorPessoa + quarto.PrecoAdicional;
+
+                    bool esgotado = quarto.QuantidadeDisponivel == 0;
+
+                    bool quartoCompativel =
+                    quarto.CapacidadeAdultos >= quantidadeAdultos &&
+                    quarto.CapacidadeCriancas >= quantidadeCriancas &&
+                    !esgotado;
+
+                    <div class="quarto-card @(quartoCompativel ? "" : "incompativel")">
+                        @if (!string.IsNullOrEmpty(quarto.ImagemUrl))
+                        {
+                            <img src="@quarto.ImagemUrl" alt="@quarto.TipoQuarto" class="quarto-img" />
+                        }
+                        else
+                        {
+                            <div class="quarto-img"></div>
+                        }
+
+                        <div class="quarto-info">
+                            <h3>@quarto.TipoQuarto</h3>
+
+                            <p style="color:#64748b;line-height:1.6;">
+                                @quarto.Descricao
+                            </p>
+
+                            <div class="quarto-tags">
+                                <span class="tag">Até @quarto.CapacidadeAdultos adulto(s)</span>
+                                <span class="tag">Até @quarto.CapacidadeCriancas criança(s)</span>
+                                <span class="tag">@quarto.NumeroCamas cama(s)</span>
+                                <span class="tag">@quarto.TipoCamas</span>
+
+                                @if (quarto.AreaM2 != null)
+                                {
+                                    <span class="tag">@quarto.AreaM2 m²</span>
+                                }
+
+                                <span class="tag">
+                                    Café @(quarto.CafeIncluso ? "incluso" : "não incluso")
+                                </span>
+                            </div>
+
+                            <p style="color:#64748b;font-size:.9rem;">
+                                <strong>Comodidades:</strong> @quarto.Comodidades
+                            </p>
+
+                            <p style="color:#64748b;font-size:.9rem;">
+                                <strong>Política:</strong> @quarto.PoliticaCancelamento
+                            </p>
+
+                            <p style="color:#64748b;font-size:.9rem;">
+                                Disponíveis: @quarto.QuantidadeDisponivel
+                            </p>
+
+                            <div class="quarto-footer">
+                                <span class="preco">
+                                    @precoFinal.ToString("C") /pessoa
+                                </span>
+
+                                @if (quartoCompativel)
+                                {
+                                    <button type="button"
+                                            class="btn-primary"
+                                            onclick="abrirModalTermos(@pacote.Id, @quarto.Id)">
+                                        Escolher quarto
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn-primary" disabled>
+                                        Indisponível
+                                    </button>
+                                }
+                            </div>
+
+                            @if (!quartoCompativel)
+                            {
+                                <div class="aviso">
+                                    @if (esgotado)
+                                    {
+                                        <span>Este quarto está esgotado.</span>
+                                    }
+                                    else
+                                    {
+                                        <span>
+                                            Este quarto não comporta @quantidadeAdultos adulto(s) e @quantidadeCriancas criança(s).
+                                        </span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalTermos" class="modal-fundo">
+    <div class="modal-caixa modal-termos-caixa">
+
+        <div class="modal-header">
+            <h3>Termos e condições da reserva</h3>
+            <p>Leia e aceite os termos para continuar.</p>
+        </div>
+
+        <div class="modal-body">
+            <p>Ao continuar, você confirma que:</p>
+
+            <ul style="padding-left:20px;">
+                <li>Os dados dos viajantes deverão ser verdadeiros.</li>
+                <li>Alterações em nomes, documentos, datas, hospedagem ou assentos podem gerar custos adicionais.</li>
+                <li>A reserva depende da disponibilidade de passagens, quartos e vagas.</li>
+                <li>Cancelamentos seguem as políticas da empresa e dos fornecedores.</li>
+                <li>A confirmação final depende da validação dos dados e da finalização do pedido.</li>
+            </ul>
+
+            <label style="display:flex;gap:10px;margin-top:18px;font-weight:700;color:#1f2937;">
+                <input type="checkbox" id="checkTermos" onchange="controlarBotaoTermos()" />
+                <span>Li e aceito os termos da reserva.</span>
+            </label>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button"
+                    class="btn-secondary"
+                    onclick="fecharModalTermos()">
+                Cancelar
+            </button>
+
+            <button type="button"
+                    id="btnContinuarTermos"
+                    class="btn-primary"
+                    disabled
+                    onclick="continuarParaDocumentos()">
+                Continuar
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="modalDocumentos" class="modal-fundo">
+    <div class="modal-caixa modal-documentos-caixa">
+
+        <div class="modal-header">
+            <h3>Dados dos viajantes</h3>
+            <p>Preencha os dados de todos os passageiros.</p>
+        </div>
+
+        <form asp-controller="Carrinho" asp-action="AdicionarPacote" method="post" id="formDocumentos" style="margin:0;">
+            <input type="hidden" name="pacoteId" id="docPacoteId" />
+            <input type="hidden" name="quartoId" id="docQuartoId" />
+            <input type="hidden" name="aceitouTermos" value="true" />
+
+            <input type="hidden" name="quantidadeAdultos" value="@quantidadeAdultos" />
+            <input type="hidden" name="quantidadeCriancas" value="@quantidadeCriancas" />
+            <input type="hidden" name="quantidadeTotal" value="@quantidadeTotal" />
+
+            <div class="modal-body modal-body-scroll">
+                <div style="background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a;border-radius:14px;padding:14px 18px;margin-bottom:20px;font-weight:800;">
+                    Total:
+                    @quantidadeAdultos adulto(s),
+                    @quantidadeCriancas criança(s)
+                    — @quantidadeTotal viajante(s)
+                </div>
+
+                <div id="camposViajantes"></div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn-secondary"
+                        onclick="voltarParaTermos()">
+                    Voltar
+                </button>
+
+                <button type="submit"
+                        class="btn-primary">
+                    Adicionar ao carrinho
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    let pacoteSelecionadoId = null;
+    let quartoSelecionadoId = null;
+
+    const quantidadeAdultos = @quantidadeAdultos;
+    const quantidadeCriancas = @quantidadeCriancas;
+    const quantidadeTotal = @quantidadeTotal;
+
+    function abrirModalTermos(pacoteId, quartoId) {
+        pacoteSelecionadoId = pacoteId;
+        quartoSelecionadoId = quartoId;
+
+        document.getElementById('checkTermos').checked = false;
+        controlarBotaoTermos();
+
+        document.getElementById('modalTermos').style.display = 'flex';
+    }
+
+    function fecharModalTermos() {
+        document.getElementById('modalTermos').style.display = 'none';
+    }
+
+    function controlarBotaoTermos() {
+        const check = document.getElementById('checkTermos');
+        const botao = document.getElementById('btnContinuarTermos');
+
+        if (check.checked) {
+            botao.disabled = false;
+            botao.style.background = '#1e3a8a';
+            botao.style.cursor = 'pointer';
+        } else {
+            botao.disabled = true;
+            botao.style.background = '#9ca3af';
+            botao.style.cursor = 'not-allowed';
+        }
+    }
+
+    function continuarParaDocumentos() {
+        const check = document.getElementById('checkTermos');
+
+        if (!check.checked) {
+            alert('Você precisa aceitar os termos para continuar.');
+            return;
+        }
+
+        document.getElementById('modalTermos').style.display = 'none';
+
+        document.getElementById('docPacoteId').value = pacoteSelecionadoId;
+        document.getElementById('docQuartoId').value = quartoSelecionadoId;
+
+        gerarCamposViajantes();
+
+        document.getElementById('modalDocumentos').style.display = 'flex';
+    }
+
+    function voltarParaTermos() {
+        document.getElementById('modalDocumentos').style.display = 'none';
+        document.getElementById('modalTermos').style.display = 'flex';
+    }
+
+    function gerarCamposViajantes() {
+        const container = document.getElementById('camposViajantes');
+        container.innerHTML = '';
+
+        let contador = 1;
+
+        for (let i = 1; i <= quantidadeAdultos; i++) {
+            container.innerHTML += criarCardViajante(contador, 'Adulto');
+            contador++;
+        }
+
+        for (let i = 1; i <= quantidadeCriancas; i++) {
+            container.innerHTML += criarCardViajante(contador, 'Criança');
+            contador++;
+        }
+    }
+
+    function criarCardViajante(numero, tipo) {
+        return `
+            <div style="border:1px solid #e5e7eb;border-radius:16px;padding:18px;margin-bottom:16px;background:#ffffff;">
+                <h4 style="margin:0 0 14px;color:#1f2937;font-weight:900;">
+                    Viajante ${numero} — ${tipo}
+                </h4>
+
+                <input type="hidden" name="tiposViajantes" value="${tipo}" />
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+                    <div>
+                        <label style="display:block;font-weight:700;color:#374151;margin-bottom:6px;">
+                            Nome completo
+                        </label>
+                        <input type="text"
+                               name="nomesViajantes"
+                               required
+                               placeholder="Digite o nome completo"
+                               style="width:100%;padding:12px;border:1px solid #d1d5db;border-radius:10px;" />
+                    </div>
+
+                    <div>
+                        <label style="display:block;font-weight:700;color:#374151;margin-bottom:6px;">
+                            Documento
+                        </label>
+                        <input type="text"
+                               name="documentosViajantes"
+                               required
+                               placeholder="CPF ou documento"
+                               style="width:100%;padding:12px;border:1px solid #d1d5db;border-radius:10px;" />
+                    </div>
+
+                    <div>
+                        <label style="display:block;font-weight:700;color:#374151;margin-bottom:6px;">
+                            Data de nascimento
+                        </label>
+                        <input type="date"
+                               name="nascimentosViajantes"
+                               required
+                               style="width:100%;padding:12px;border:1px solid #d1d5db;border-radius:10px;" />
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    document.getElementById('formDocumentos').onsubmit = function () {
+        const nomes = document.getElementsByName('nomesViajantes');
+        const documentos = document.getElementsByName('documentosViajantes');
+        const nascimentos = document.getElementsByName('nascimentosViajantes');
+
+        if (nomes.length !== quantidadeTotal) {
+            alert('A quantidade de viajantes está incorreta.');
+            return false;
+        }
+
+        for (let i = 0; i < quantidadeTotal; i++) {
+            if (!nomes[i].value.trim()) {
+                alert('Preencha o nome de todos os viajantes.');
+                return false;
+            }
+
+            if (!documentos[i].value.trim()) {
+                alert('Preencha o documento de todos os viajantes.');
+                return false;
+            }
+
+            if (!nascimentos[i].value) {
+                alert('Preencha a data de nascimento de todos os viajantes.');
+                return false;
+            }
+        }
+
+        return true;
+    };
+</script>
