@@ -1228,29 +1228,15 @@ VALUES
 'Sheikh Zayed Road, 1200 - Dubai',
 'https://images.unsplash.com/photo-1561501878-aabd62634533?w=700&q=80');
 
+
+
+
+
+
+
 -- ==========================================
 -- QUARTOS DO PACOTE 1 - RIO DE JANEIRO
 -- ==========================================
-
-INSERT INTO quartos
-(hospedagem_id, tipo_quarto, capacidade_adultos, capacidade_criancas, preco_adicional, quantidade_disponivel, comodidades, imagem_url)
-VALUES
-(12, 'Quarto Standard', 2, 1, 0.00, 10, 
-'Wi-Fi, Ar-condicionado, TV e café da manhã',
-'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=600&q=80'),
-
-(12, 'Quarto Luxo', 2, 1, 350.00, 6, 
-'Wi-Fi, Ar-condicionado, Frigobar e vista para a cidade',
-'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&q=80'),
-
-(12, 'Suíte Vista Mar', 2, 1, 700.00, 4, 
-'Wi-Fi, Ar-condicionado, Varanda e vista para o mar',
-'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=600&q=80'),
-
-(12, 'Quarto Família', 4, 2, 900.00, 3, 
-'Wi-Fi, Ar-condicionado, 2 camas e espaço família',
-'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=600&q=80');
-
 
 -- ==========================================
 -- QUARTOS DO PACOTE 2 - BAHIA
@@ -1454,5 +1440,5 @@ CREATE INDEX idx_viagem_usuario   ON viagem_personalizada(usuario_id);
     SELECT * FROM destinos;
     SELECT * FROM pedidos;
     
-    
+    DESCRIBE usuarios;
     
