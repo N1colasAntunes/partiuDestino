@@ -16,7 +16,9 @@ namespace projectPartiuDestino.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(ViagemPersonalizada viagem)
+        public IActionResult Index(
+    ViagemPersonalizada viagem,
+    string[] PreferenciasHospedagem)
         {
             int? usuarioId = HttpContext.Session.GetInt32("UserId");
 
@@ -25,75 +27,77 @@ namespace projectPartiuDestino.Controllers
                 return RedirectToAction("Index", "Login");
             }
 
+            viagem.PreferenciasHospedagem = string.Join(", ", PreferenciasHospedagem);
+
             using (MySqlConnection conn = new MySqlConnection(conexao))
             {
                 conn.Open();
 
                 string sql = @"
-                INSERT INTO viagem_personalizada
-                (
-                    usuario_id,
-                    nome_completo,
-                    cpf,
-                    email,
-                    whatsapp,
+        INSERT INTO viagem_personalizada
+        (
+            usuario_id,
+            nome_completo,
+            cpf,
+            email,
+            whatsapp,
 
-                    origem,
-                    destino,
-                    regiao_interesse,
-                    data_partida,
-                    duracao_dias,
-                    transporte,
+            origem,
+            destino,
+            regiao_interesse,
+            data_partida,
+            duracao_dias,
+            transporte,
 
-                    tipo_hospedagem,
-                    categoria_hospedagem,
-                    preferencias_hospedagem,
+            tipo_hospedagem,
+            categoria_hospedagem,
+            preferencias_hospedagem,
 
-                    adultos,
-                    criancas,
-                    idosos,
-                    tipo_grupo,
+            adultos,
+            criancas,
+            idosos,
+            tipo_grupo,
 
-                    objetivo_viagem,
-                    ritmo_viagem,
-                    clima_viagem,
+            objetivo_viagem,
+            ritmo_viagem,
+            clima_viagem,
 
-                    faixa_orcamento,
+            faixa_orcamento,
 
-                    desejos_especiais
-                )
-                VALUES
-                (
-                    @usuario_id,
-                    @nome_completo,
-                    @cpf,
-                    @email,
-                    @whatsapp,
+            desejos_especiais
+        )
+        VALUES
+        (
+            @usuario_id,
+            @nome_completo,
+            @cpf,
+            @email,
+            @whatsapp,
 
-                    @origem,
-                    @destino,
-                    @regiao_interesse,
-                    @data_partida,
-                    @duracao_dias,
-                    @transporte,
+            @origem,
+            @destino,
+            @regiao_interesse,
+            @data_partida,
+            @duracao_dias,
+            @transporte,
 
-                    @tipo_hospedagem,
-                    @categoria_hospedagem,
-                    @preferencias_hospedagem,
+            @tipo_hospedagem,
+            @categoria_hospedagem,
+            @preferencias_hospedagem,
 
-                    @adultos,
-                    @criancas,
-                    @idosos,
-                    @tipo_grupo,
+            @adultos,
+            @criancas,
+            @idosos,
+            @tipo_grupo,
 
-                    @objetivo_viagem,
-                    @ritmo_viagem,
-                    @clima_viagem,
+            @objetivo_viagem,
+            @ritmo_viagem,
+            @clima_viagem,
 
-                    @faixa_orcamento,
+            @faixa_orcamento,
 
-                    @desejos_especiais
-                )";
+            @desejos_especiais
+        )";
 
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
 
@@ -132,6 +136,7 @@ namespace projectPartiuDestino.Controllers
             }
 
             TempData["Sucesso"] = "Solicitação enviada com sucesso!";
+
             return RedirectToAction("Index", "Home");
         }
     }

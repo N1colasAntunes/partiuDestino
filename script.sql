@@ -1484,5 +1484,6 @@ CREATE INDEX idx_pacotes_destino  ON pacotes(destino_id);
     SELECT * FROM usuarios;
     SELECT * FROM destinos;
     SELECT * FROM pedidos;
+    SELECT * FROM viagem_personalizada;
     
     DESCRIBE usuarios;
