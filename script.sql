@@ -58,23 +58,51 @@ CREATE TABLE pacotes (
 -- 2.4 Tabela: viagem_personalizada
 -- ------------------------------------------------------------
 CREATE TABLE viagem_personalizada (
-    id                INT          PRIMARY KEY AUTO_INCREMENT,
-    usuario_id        INT          NOT NULL,
-    nome_completo     VARCHAR(150),
-    cpf               VARCHAR(14),
-    email             VARCHAR(150),
-    whatsapp          VARCHAR(20),
-    destino           VARCHAR(100),
-    hospedagem        VARCHAR(100),
-    data_partida      DATE,
-    duracao_dias      INT,
-    clima_viagem      VARCHAR(100),
-    orcamento         VARCHAR(100),
-    adultos           INT,
-    criancas          INT,
+    id INT PRIMARY KEY AUTO_INCREMENT,
+
+    usuario_id INT NOT NULL,
+
+    -- Identificação pessoal
+    nome_completo VARCHAR(150) NOT NULL,
+    cpf VARCHAR(14) NOT NULL,
+    email VARCHAR(150) NOT NULL,
+    whatsapp VARCHAR(20) NOT NULL,
+
+    -- Destino & Logística
+    origem VARCHAR(100),
+    destino VARCHAR(100),
+    regiao_interesse VARCHAR(50),
+    data_partida DATE,
+    duracao_dias INT,
+    transporte VARCHAR(50),
+
+    -- Hospedagem
+    tipo_hospedagem VARCHAR(50),
+    categoria_hospedagem VARCHAR(50),
+    preferencias_hospedagem TEXT,
+
+    -- Perfil dos viajantes
+    adultos INT DEFAULT 1,
+    criancas INT DEFAULT 0,
+    idosos INT DEFAULT 0,
+    tipo_grupo VARCHAR(50),
+
+    -- Estilo da experiência
+    objetivo_viagem VARCHAR(100),
+    ritmo_viagem VARCHAR(50),
+    clima_viagem VARCHAR(50),
+
+    -- Orçamento
+    faixa_orcamento VARCHAR(50),
+
+    -- Desejos especiais
     desejos_especiais TEXT,
-    data_criacao      TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (usuario_id)
+        REFERENCES usuarios(id)
+        ON DELETE CASCADE
 );
 
 -- ------------------------------------------------------------
@@ -136,7 +164,25 @@ ALTER TABLE hospedagens
     ADD COLUMN avaliacao DECIMAL(3,1) NULL DEFAULT 8.5,
     ADD COLUMN comodidades TEXT NULL;
     
-    
+ALTER TABLE usuarios
+    ADD COLUMN foto_perfil VARCHAR(500) NULL DEFAULT NULL
+    COMMENT 'Caminho relativo da foto: /uploads/perfis/nome.jpg';
+
+-- Telefone
+ALTER TABLE usuarios
+    ADD COLUMN telefone VARCHAR(20) NULL DEFAULT NULL;
+
+-- CPF / Documento
+ALTER TABLE usuarios
+    ADD COLUMN documento VARCHAR(20) NULL DEFAULT NULL;
+
+-- Data de nascimento
+ALTER TABLE usuarios
+    ADD COLUMN data_nascimento DATE NULL DEFAULT NULL;
+
+ALTER TABLE usuarios
+	ADD COLUMN ativo TINYINT(1) NOT NULL DEFAULT 1;
+
 USE bdpartiudestino;
 
 SET SQL_SAFE_UPDATES = 0;
@@ -1433,7 +1479,6 @@ VALUES
 
 CREATE INDEX idx_carrinho_usuario ON carrinho(usuario_id);
 CREATE INDEX idx_pacotes_destino  ON pacotes(destino_id);
-CREATE INDEX idx_viagem_usuario   ON viagem_personalizada(usuario_id);
     
     SELECT * FROM pacotes;
     SELECT * FROM usuarios;
@@ -1441,4 +1486,3 @@ CREATE INDEX idx_viagem_usuario   ON viagem_personalizada(usuario_id);
     SELECT * FROM pedidos;
     
     DESCRIBE usuarios;
-    

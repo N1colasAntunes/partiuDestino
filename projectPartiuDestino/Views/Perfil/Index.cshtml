@@ -449,12 +449,16 @@
                 <!-- Informações pessoais -->
                 <ul class="info-lista" style="margin-top:14px;">
                     <li>
-                        <span class="label"><i class="fas fa-phone" style="width:14px;"></i> Telefone</span>
-                        <span class="valor">@(string.IsNullOrEmpty(ViewBag.Telefone as string) ? "—" : ViewBag.Telefone)</span>
+                        <span class="label"><i class="fas fa-user style="width:14px;"></i> Email</span>
+                        <span class="valor">@dataNasc</span>
                     </li>
                     <li>
-                        <span class="label"><i class="fas fa-id-card" style="width:14px;"></i> CPF</span>
-                        <span class="valor">@(string.IsNullOrEmpty(ViewBag.Documento as string) ? "—" : ViewBag.Documento)</span>
+                        <span class="label"><i class="fas fa-pen" style="width:14px;"></i> Nome</span>
+                        <span class="valor">@dataNasc</span>
+                    </li>
+                    <li>
+                        <span class="label"><i class="fas fa-phone" style="width:14px;"></i> Telefone</span>
+                        <span class="valor">@(string.IsNullOrEmpty(ViewBag.Telefone as string) ? "—" : ViewBag.Telefone)</span>
                     </li>
                     <li>
                         <span class="label"><i class="fas fa-calendar" style="width:14px;"></i> Nascimento</span>
