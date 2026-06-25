@@ -1487,3 +1487,24 @@ CREATE INDEX idx_pacotes_destino  ON pacotes(destino_id);
     SELECT * FROM viagem_personalizada;
     
     DESCRIBE usuarios;
+    
+    -- ============================================================
+-- MIGRAÇÃO: Hospedagens próprias do fluxo de Passagens (Destinos)
+-- ============================================================
+ALTER TABLE hospedagens
+    MODIFY COLUMN pacote_id INT NULL,
+    ADD COLUMN destino_id INT NULL AFTER pacote_id;
+
+ALTER TABLE hospedagens
+    ADD CONSTRAINT fk_hospedagens_destino
+        FOREIGN KEY (destino_id) REFERENCES destinos(id) ON DELETE CASCADE;
+
+-- Garante que toda hospedagem pertence a EXATAMENTE um "dono": pacote OU destino
+-- (requer MySQL 8.0.16+; se seu servidor for mais antigo, comente este bloco)
+ALTER TABLE hospedagens
+    ADD CONSTRAINT chk_hospedagem_dono CHECK (
+        (pacote_id IS NOT NULL AND destino_id IS NULL) OR
+        (pacote_id IS NULL AND destino_id IS NOT NULL)
+    );
+
+CREATE INDEX idx_hospedagens_destino ON hospedagens(destino_id);

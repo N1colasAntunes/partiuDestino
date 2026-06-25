@@ -77,13 +77,9 @@
 
                     @if (Context.Session.GetString("UserName") != null)
                     {
-                        <form asp-controller="Carrinho" asp-action="AdicionarDestino"
-                              method="post" style="margin:0;">
-                            <input type="hidden" name="destinoId" value="@item.Id" />
-                            <button type="submit" class="btn-adicionar-destino">
-                                <i class="fas fa-cart-plus"></i> Adicionar ao Carrinho
-                            </button>
-                        </form>
+                        <a asp-controller="Destinos" asp-action="Passagem" asp-route-id="@item.Id" class="btn-adicionar-destino">
+                            <i class="fas fa-arrow-right"></i> Ver mais
+                        </a>
                     }
                     else
                     {

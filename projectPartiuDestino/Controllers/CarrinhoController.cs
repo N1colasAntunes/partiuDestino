@@ -304,7 +304,17 @@ namespace projectPartiuDestino.Controllers
         // ATUALIZADO: agora salva o preco_por_pessoa do destino
         // ============================================================
         [HttpPost]
-        public IActionResult AdicionarDestino(int destinoId)
+        public IActionResult AdicionarDestino(
+    int destinoId,
+    int? quartoId,
+    bool aceitouTermos = false,
+    int quantidadeAdultos = 1,
+    int quantidadeCriancas = 0,
+    int quantidadeTotal = 1,
+    List<string>? nomesViajantes = null,
+    List<string>? documentosViajantes = null,
+    List<string>? nascimentosViajantes = null,
+    List<string>? tiposViajantes = null)
         {
             int? usuarioId = HttpContext.Session.GetInt32("UserId");
             if (usuarioId == null)
@@ -316,23 +326,72 @@ namespace projectPartiuDestino.Controllers
                 return RedirectToAction("Index", "Carrinho");
             }
 
+            if (!aceitouTermos)
+            {
+                TempData["Erro"] = "Você precisa aceitar os termos da reserva para continuar.";
+                return RedirectToAction("Detalhes", "Destinos", new { id = destinoId });
+            }
+
+            string? vooJson = HttpContext.Session.GetString($"Voo_destino_{destinoId}");
+            if (string.IsNullOrEmpty(vooJson))
+            {
+                TempData["Erro"] = "Escolha a passagem antes de continuar.";
+                return RedirectToAction("Passagem", "Destinos", new { id = destinoId });
+            }
+
+            var voo = System.Text.Json.JsonSerializer.Deserialize<projectPartiuDestino.Models.SelecaoVoo>(vooJson);
+            if (voo == null)
+            {
+                TempData["Erro"] = "Não foi possível recuperar os dados da passagem.";
+                return RedirectToAction("Passagem", "Destinos", new { id = destinoId });
+            }
+
+            quantidadeAdultos = voo.QuantidadeAdultos;
+            quantidadeCriancas = voo.QuantidadeCriancas;
+            quantidadeTotal = voo.QuantidadeTotal > 0 ? voo.QuantidadeTotal : 1;
+
+            if (nomesViajantes == null || documentosViajantes == null ||
+                nascimentosViajantes == null || tiposViajantes == null)
+            {
+                TempData["Erro"] = "Preencha os dados dos viajantes antes de continuar.";
+                return RedirectToAction("Detalhes", "Destinos", new { id = destinoId });
+            }
+
+            if (nomesViajantes.Count != quantidadeTotal ||
+                documentosViajantes.Count != quantidadeTotal ||
+                nascimentosViajantes.Count != quantidadeTotal ||
+                tiposViajantes.Count != quantidadeTotal)
+            {
+                TempData["Erro"] = "A quantidade de viajantes preenchidos não bate com a quantidade selecionada.";
+                return RedirectToAction("Detalhes", "Destinos", new { id = destinoId });
+            }
+
+            for (int i = 0; i < quantidadeTotal; i++)
+            {
+                if (string.IsNullOrWhiteSpace(nomesViajantes[i]) ||
+                    string.IsNullOrWhiteSpace(documentosViajantes[i]) ||
+                    string.IsNullOrWhiteSpace(nascimentosViajantes[i]))
+                {
+                    TempData["Erro"] = "Todos os viajantes precisam ter nome, documento e data de nascimento.";
+                    return RedirectToAction("Detalhes", "Destinos", new { id = destinoId });
+                }
+            }
+
             using MySqlConnection conn = new MySqlConnection(conexao);
             conn.Open();
 
-            // ATUALIZADO: busca nome E preco_por_pessoa do destino
-            string sqlD = "SELECT pais, estado, preco_por_pessoa FROM destinos WHERE id = @id";
-            using MySqlCommand cmdD = new MySqlCommand(sqlD, conn);
-            cmdD.Parameters.AddWithValue("@id", destinoId);
+            string nomeDestino;
+            decimal precoBaseDestino;
 
-            string nomeDestino = "";
-            decimal preco = 0;
-
-            using (MySqlDataReader r = cmdD.ExecuteReader())
+            string sqlDestino = "SELECT pais, estado, preco_por_pessoa FROM destinos WHERE id = @id";
+            using (var cmdD = new MySqlCommand(sqlDestino, conn))
             {
+                cmdD.Parameters.AddWithValue("@id", destinoId);
+                using var r = cmdD.ExecuteReader();
                 if (r.Read())
                 {
-                    nomeDestino = $"{r["estado"]} - {r["pais"]}";
-                    preco = Convert.ToDecimal(r["preco_por_pessoa"]);  // ADICIONADO
+                    nomeDestino = $"{r["pais"]} - {r["estado"]}";
+                    precoBaseDestino = Convert.ToDecimal(r["preco_por_pessoa"]);
                 }
                 else
                 {
@@ -341,12 +400,79 @@ namespace projectPartiuDestino.Controllers
                 }
             }
 
-            // Verifica se já existe no carrinho
-            string sqlCheck = @"SELECT id FROM carrinho
-                                WHERE usuario_id = @uid AND tipo_item = 'destino' AND item_id = @iid";
+            string tipoQuarto = "Sem hospedagem";
+            decimal precoAdicionalQuarto = 0;
+
+            // Hospedagem é OPCIONAL no fluxo de Passagens
+            if (quartoId.HasValue && quartoId > 0)
+            {
+                int capacidadeAdultos = 0, capacidadeCriancas = 0, quantidadeDisponivel = 0;
+
+                string sqlQuarto = @"
+            SELECT q.tipo_quarto, q.preco_adicional, q.capacidade_adultos,
+                   q.capacidade_criancas, q.quantidade_disponivel
+            FROM quartos q
+            INNER JOIN hospedagens h ON h.id = q.hospedagem_id
+            WHERE q.id = @quartoId AND h.destino_id = @destinoId";
+
+                using (var cmdQ = new MySqlCommand(sqlQuarto, conn))
+                {
+                    cmdQ.Parameters.AddWithValue("@quartoId", quartoId.Value);
+                    cmdQ.Parameters.AddWithValue("@destinoId", destinoId);
+
+                    using var rq = cmdQ.ExecuteReader();
+                    if (rq.Read())
+                    {
+                        tipoQuarto = rq["tipo_quarto"].ToString()!;
+                        precoAdicionalQuarto = Convert.ToDecimal(rq["preco_adicional"]);
+                        capacidadeAdultos = Convert.ToInt32(rq["capacidade_adultos"]);
+                        capacidadeCriancas = Convert.ToInt32(rq["capacidade_criancas"]);
+                        quantidadeDisponivel = Convert.ToInt32(rq["quantidade_disponivel"]);
+                    }
+                    else
+                    {
+                        TempData["Erro"] = "Quarto inválido para esta passagem.";
+                        return RedirectToAction("Detalhes", "Destinos", new { id = destinoId });
+                    }
+                }
+
+                if (quantidadeDisponivel <= 0)
+                {
+                    TempData["Erro"] = "Este quarto está indisponível.";
+                    return RedirectToAction("Detalhes", "Destinos", new { id = destinoId });
+                }
+
+                if (quantidadeAdultos > capacidadeAdultos || quantidadeCriancas > capacidadeCriancas)
+                {
+                    TempData["Erro"] = "O quarto escolhido não comporta a quantidade de viajantes selecionada.";
+                    return RedirectToAction("Detalhes", "Destinos", new { id = destinoId });
+                }
+            }
+
+            decimal precoTotal = precoBaseDestino * quantidadeTotal;
+            precoTotal += voo.PrecoAdicional;
+            precoTotal += precoAdicionalQuarto; // mesma regra do fluxo de Pacotes: adicional fixo por reserva
+
+            string nomeItem = nomeDestino;
+
+            if (voo.ClasseViagem != "Econômica")
+                nomeItem += $" — Classe {voo.ClasseViagem}";
+
+            nomeItem += $" — Viajantes: {quantidadeTotal} ({quantidadeAdultos} adulto(s), {quantidadeCriancas} criança(s))";
+
+            if (!string.IsNullOrEmpty(voo.NumeroAssento))
+                nomeItem += $" — Assento: {voo.NumeroAssento}";
+
+            nomeItem += $" — Hospedagem: {tipoQuarto}";
+
+            string sqlCheck = @"
+        SELECT id FROM carrinho
+        WHERE usuario_id = @uid AND tipo_item = 'destino' AND item_id = @iid AND nome_item = @nome";
+
             using MySqlCommand cmdCheck = new MySqlCommand(sqlCheck, conn);
             cmdCheck.Parameters.AddWithValue("@uid", usuarioId);
             cmdCheck.Parameters.AddWithValue("@iid", destinoId);
+            cmdCheck.Parameters.AddWithValue("@nome", nomeItem);
             object? existente = cmdCheck.ExecuteScalar();
 
             if (existente != null)
@@ -358,19 +484,21 @@ namespace projectPartiuDestino.Controllers
             }
             else
             {
-                // ATUALIZADO: preco agora vem do banco em vez de 0.00
-                string sqlIns = @"INSERT INTO carrinho
-                                  (usuario_id, tipo_item, item_id, nome_item, preco_unitario, quantidade)
-                                  VALUES (@uid, 'destino', @iid, @nome, @preco, 1)";
+                string sqlIns = @"
+            INSERT INTO carrinho (usuario_id, tipo_item, item_id, nome_item, preco_unitario, quantidade)
+            VALUES (@uid, 'destino', @iid, @nome, @preco, 1)";
+
                 using MySqlCommand cmdIns = new MySqlCommand(sqlIns, conn);
                 cmdIns.Parameters.AddWithValue("@uid", usuarioId);
                 cmdIns.Parameters.AddWithValue("@iid", destinoId);
-                cmdIns.Parameters.AddWithValue("@nome", nomeDestino);
-                cmdIns.Parameters.AddWithValue("@preco", preco);         // ATUALIZADO
+                cmdIns.Parameters.AddWithValue("@nome", nomeItem);
+                cmdIns.Parameters.AddWithValue("@preco", precoTotal);
                 cmdIns.ExecuteNonQuery();
             }
 
-            TempData["Sucesso"] = $"{nomeDestino} adicionado ao carrinho!";
+            HttpContext.Session.Remove($"Voo_destino_{destinoId}");
+
+            TempData["Sucesso"] = $"{nomeItem} adicionado ao carrinho!";
             return RedirectToAction("Index", "Carrinho");
         }
 
@@ -527,24 +655,20 @@ namespace projectPartiuDestino.Controllers
         public IActionResult FinalizarPedido()
         {
             int? usuarioId = HttpContext.Session.GetInt32("UserId");
-
             if (usuarioId == null)
                 return RedirectToAction("Index", "Login");
 
             using MySqlConnection conn = new MySqlConnection(conexao);
             conn.Open();
 
-            // 1. Buscar itens do carrinho
             string sql = @"SELECT tipo_item, item_id, nome_item, preco_unitario, quantidade
-                   FROM carrinho
-                   WHERE usuario_id = @uid";
+                   FROM carrinho WHERE usuario_id = @uid";
 
             List<CarrinhoItem> itens = new();
 
             using (MySqlCommand cmd = new MySqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@uid", usuarioId);
-
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -561,13 +685,29 @@ namespace projectPartiuDestino.Controllers
                 }
             }
 
-            // 2. Inserir no "pedidos"
+            if (!itens.Any())
+            {
+                TempData["Erro"] = "Seu carrinho está vazio.";
+                return RedirectToAction("Index");
+            }
+
+            // Guarda o resumo ANTES de limpar, pra mostrar na tela de confirmação ("Resumo Final")
+            var resumoFinal = itens.Select(i => new ResumoPedidoItem
+            {
+                NomeItem = i.NomeItem,
+                TipoItem = i.TipoItem,
+                Quantidade = i.Quantidade,
+                PrecoUnitario = i.PrecoUnitario,
+                Subtotal = i.Subtotal
+            }).ToList();
+
+            HttpContext.Session.SetString("UltimoPedidoResumo", System.Text.Json.JsonSerializer.Serialize(resumoFinal));
+
             foreach (var item in itens)
             {
                 string insert = @"INSERT INTO pedidos
-                          (usuario_id, tipo_item, item_id, nome_item, preco_unitario, quantidade)
-                          VALUES
-                          (@uid, @tipo, @itemId, @nome, @preco, @qtd)";
+                  (usuario_id, tipo_item, item_id, nome_item, preco_unitario, quantidade)
+                  VALUES (@uid, @tipo, @itemId, @nome, @preco, @qtd)";
 
                 using MySqlCommand cmdIns = new MySqlCommand(insert, conn);
                 cmdIns.Parameters.AddWithValue("@uid", usuarioId);
@@ -576,18 +716,29 @@ namespace projectPartiuDestino.Controllers
                 cmdIns.Parameters.AddWithValue("@nome", item.NomeItem);
                 cmdIns.Parameters.AddWithValue("@preco", item.PrecoUnitario);
                 cmdIns.Parameters.AddWithValue("@qtd", item.Quantidade);
-
                 cmdIns.ExecuteNonQuery();
             }
 
-            // 3. Limpar carrinho
             string delete = "DELETE FROM carrinho WHERE usuario_id = @uid";
             using MySqlCommand cmdDel = new MySqlCommand(delete, conn);
             cmdDel.Parameters.AddWithValue("@uid", usuarioId);
             cmdDel.ExecuteNonQuery();
 
-            TempData["Sucesso"] = "Pedido finalizado com sucesso!";
-            return RedirectToAction("Index");
+            return RedirectToAction("PedidoConfirmado");
+        }
+
+        // ETAPA FINAL — RESUMO FINAL (depois de "pagamento e carrinho")
+        [HttpGet]
+        public IActionResult PedidoConfirmado()
+        {
+            var json = HttpContext.Session.GetString("UltimoPedidoResumo");
+            if (string.IsNullOrEmpty(json))
+                return RedirectToAction("Index");
+
+            var itens = System.Text.Json.JsonSerializer.Deserialize<List<ResumoPedidoItem>>(json) ?? new();
+            HttpContext.Session.Remove("UltimoPedidoResumo");
+
+            return View(itens);
         }
     }
 }

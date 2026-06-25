@@ -9,5 +9,8 @@
         public string Estado { get; set; }
         public string ImagemUrl { get; set; }
         public decimal PrecoPorPessoa { get; set; }
+
+        // NOVO — hospedagens próprias da Passagem (opcional)
+        public List<Hospedagem> Hospedagens { get; set; } = new();
     }
 }
