@@ -239,12 +239,33 @@ namespace projectPartiuDestino.Controllers
 
             string nomeItem = nomePacote;
 
+            if (!string.IsNullOrEmpty(voo.CompanhiaAerea))
+            {
+                nomeItem += $" — Companhia: {voo.CompanhiaAerea}";
+            }
+
+            if (!string.IsNullOrEmpty(voo.TituloVoo))
+            {
+                nomeItem += $" — Voo: {voo.TituloVoo}";
+            }
+
             if (voo.ClasseViagem != "Econômica")
             {
                 nomeItem += $" — Classe {voo.ClasseViagem}";
             }
 
+            if (!string.IsNullOrEmpty(voo.AeroportoOrigem) || !string.IsNullOrEmpty(voo.AeroportoDestino))
+            {
+                nomeItem += $" — Rota: {voo.AeroportoOrigem} → {voo.AeroportoDestino}";
+            }
+
+            if (!string.IsNullOrEmpty(voo.HorarioIda) || !string.IsNullOrEmpty(voo.HorarioVolta))
+            {
+                nomeItem += $" — Ida: {voo.HorarioIda} / Volta: {voo.HorarioVolta}";
+            }
+
             nomeItem += $" — Viajantes: {quantidadeTotal}";
+
             nomeItem += $" ({quantidadeAdultos} adulto(s), {quantidadeCriancas} criança(s))";
 
             if (!string.IsNullOrEmpty(voo.NumeroAssento))

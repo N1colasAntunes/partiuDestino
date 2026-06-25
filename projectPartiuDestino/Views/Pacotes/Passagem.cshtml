@@ -1,4 +1,5 @@
 ﻿@model projectPartiuDestino.Models.Pacotes
+
 @{
     ViewData["Title"] = $"Passagem - {Model.Nome}";
     var assentosOcupados = ViewBag.AssentosOcupados as List<string> ?? new List<string>();
@@ -41,7 +42,7 @@
         }
 
     .voo-resumo {
-        max-width: 800px;
+        max-width: 920px;
         margin: -40px auto 40px;
         background: white;
         border-radius: 18px;
@@ -50,31 +51,109 @@
         display: flex;
         justify-content: space-between;
         flex-wrap: wrap;
-        gap: 16px;
-    }
-
-    .resumo-rota {
-        display: flex;
+        gap: 22px;
         align-items: center;
-        gap: 14px;
-        font-weight: 700;
-        color: #1f2937;
     }
 
-        .resumo-rota i {
+    .resumo-rota-real {
+        flex: 1;
+        min-width: 320px;
+    }
+
+    .resumo-rota-cidade {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: #eff6ff;
+        border: 1px solid #dbeafe;
+        color: #1e3a8a;
+        border-radius: 999px;
+        padding: 8px 14px;
+        font-size: .9rem;
+        font-weight: 900;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+    }
+
+        .resumo-rota-cidade i {
             color: var(--accent);
         }
 
-    .resumo-datas {
-        display: flex;
-        gap: 24px;
-        font-size: .85rem;
-        color: var(--text-muted);
+        .resumo-rota-cidade strong {
+            color: #0f172a;
+            font-weight: 900;
+        }
+
+    .resumo-companhia {
+        margin-bottom: 14px;
     }
 
-        .resumo-datas strong {
-            color: #1f2937;
+        .resumo-companhia span,
+        .resumo-rota-linha span,
+        .resumo-datas-real strong {
             display: block;
+            font-size: .70rem;
+            color: #64748b;
+            text-transform: uppercase;
+            font-weight: 900;
+            margin-bottom: 4px;
+        }
+
+        .resumo-companhia strong {
+            color: #0f172a;
+            font-size: 1rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .resumo-companhia i {
+            color: var(--accent);
+        }
+
+    .resumo-rota-linha {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+    }
+
+        .resumo-rota-linha div {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 14px;
+            min-width: 155px;
+        }
+
+        .resumo-rota-linha strong {
+            color: #1f2937;
+            font-size: .92rem;
+        }
+
+        .resumo-rota-linha i {
+            color: var(--accent);
+        }
+
+    .resumo-datas-real {
+        display: grid;
+        grid-template-columns: repeat(5, auto);
+        gap: 14px;
+        align-items: center;
+    }
+
+        .resumo-datas-real div {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 14px;
+            min-width: 95px;
+            color: #475569;
+        }
+
+        .resumo-datas-real strong {
+            color: #64748b;
         }
 
     .voo-layout {
@@ -141,7 +220,147 @@
         background: #eff6ff;
     }
 
-    /* Mapa de Assentos */
+    .voo-incluso-card {
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 22px;
+        background: #f8fafc;
+    }
+
+    .voo-incluso-topo {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 18px;
+        flex-wrap: wrap;
+    }
+
+    .voo-incluso-info {
+        flex: 1;
+        min-width: 260px;
+    }
+
+    .voo-incluso-titulo {
+        font-weight: 900;
+        color: #1f2937;
+        font-size: 1.08rem;
+        margin-bottom: 6px;
+    }
+
+    .voo-incluso-desc {
+        color: #64748b;
+        font-size: .9rem;
+        line-height: 1.5;
+        margin-bottom: 16px;
+    }
+
+    .voo-incluso-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(110px, 1fr));
+        gap: 12px;
+        margin-top: 14px;
+    }
+
+    .voo-info-box {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px 14px;
+    }
+
+        .voo-info-box span {
+            display: block;
+            font-size: .7rem;
+            color: #64748b;
+            text-transform: uppercase;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .voo-info-box strong {
+            color: #0f172a;
+            font-weight: 900;
+            font-size: .9rem;
+        }
+
+        .voo-info-box small {
+            display: block;
+            margin-top: 4px;
+            color: #64748b;
+            font-size: .75rem;
+            font-weight: 700;
+        }
+
+    .voo-meta {
+        margin-top: 14px;
+        color: #64748b;
+        font-size: .86rem;
+        line-height: 1.7;
+    }
+
+    .voo-preco-box {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 16px;
+        min-width: 210px;
+        text-align: right;
+    }
+
+        .voo-preco-box span {
+            display: block;
+            font-size: .72rem;
+            color: #64748b;
+            text-transform: uppercase;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .voo-preco-box strong {
+            display: block;
+            color: var(--success);
+            font-size: 1rem;
+            font-weight: 900;
+        }
+
+        .voo-preco-box small {
+            display: block;
+            color: #64748b;
+            margin-top: 6px;
+        }
+
+    .voo-resumo-dinamico {
+        margin-top: 18px;
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 14px;
+        padding: 14px 18px;
+        color: #1e3a8a;
+        font-weight: 800;
+    }
+
+    .assentos-resumo-card {
+        margin-top: 14px;
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 14px 16px;
+    }
+
+        .assentos-resumo-card span {
+            display: block;
+            font-size: .72rem;
+            text-transform: uppercase;
+            font-weight: 900;
+            color: #64748b;
+            margin-bottom: 6px;
+        }
+
+        .assentos-resumo-card strong {
+            color: #1e3a8a;
+            font-weight: 900;
+        }
+
     .airplane-map {
         background: #f1f5f9;
         border-radius: 50px 50px 20px 20px;
@@ -162,7 +381,7 @@
 
     .seat-grid {
         display: grid;
-        grid-template-columns: repeat(7, 1fr); /* A B C [espaço] D E F */
+        grid-template-columns: repeat(7, 1fr);
         gap: 10px;
         align-items: center;
     }
@@ -261,8 +480,212 @@
             box-shadow: 0 8px 20px rgba(30,58,138,.25);
         }
 
-    @@media (max-width:700px) {
+    @@media (max-width: 900px) {
+        .resumo-datas-real {
+            grid-template-columns: repeat(2, 1fr);
+            width: 100%;
+        }
+
+        .voo-incluso-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .voo-preco-box {
+            text-align: left;
+            width: 100%;
+        }
+    }
+
+    @@media (max-width: 700px) {
         .opcoes-classe {
+            grid-template-columns: 1fr;
+        }
+
+        .resumo-rota-cidade {
+            border-radius: 16px;
+            line-height: 1.5;
+            align-items: flex-start;
+        }
+
+        .resumo-datas-real {
+            grid-template-columns: 1fr;
+        }
+
+        .resumo-rota-linha {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+            .resumo-rota-linha i {
+                transform: rotate(90deg);
+                align-self: center;
+            }
+    }
+
+    .voo-resumo-card-padrao {
+        max-width: 980px;
+        margin: -40px auto 40px;
+        background: #ffffff;
+        border-radius: 18px;
+        padding: 24px 30px;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, .10);
+        border: 1px solid #e5e7eb;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 28px;
+        flex-wrap: wrap;
+    }
+
+        .voo-resumo-card-padrao .resumo-info-principal {
+            flex: 1;
+            min-width: 340px;
+        }
+
+        .voo-resumo-card-padrao .resumo-rota-cidade {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #eff6ff;
+            border: 1px solid #dbeafe;
+            color: #1e3a8a;
+            border-radius: 999px;
+            padding: 8px 14px;
+            font-size: .9rem;
+            font-weight: 900;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+            .voo-resumo-card-padrao .resumo-rota-cidade i {
+                color: var(--accent);
+            }
+
+            .voo-resumo-card-padrao .resumo-rota-cidade strong {
+                color: #0f172a;
+                font-weight: 900;
+            }
+
+        .voo-resumo-card-padrao .resumo-companhia {
+            margin-bottom: 14px;
+        }
+
+            .voo-resumo-card-padrao .resumo-companhia span,
+            .voo-resumo-card-padrao .resumo-rota-linha span,
+            .voo-resumo-card-padrao .resumo-dados-voo strong {
+                display: block;
+                font-size: .68rem;
+                color: #64748b;
+                text-transform: uppercase;
+                font-weight: 900;
+                margin-bottom: 4px;
+                letter-spacing: .02em;
+            }
+
+            .voo-resumo-card-padrao .resumo-companhia strong {
+                color: #0f172a;
+                font-size: 1rem;
+                font-weight: 900;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .voo-resumo-card-padrao .resumo-companhia i {
+                color: var(--accent);
+            }
+
+        .voo-resumo-card-padrao .resumo-rota-linha {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+            .voo-resumo-card-padrao .resumo-rota-linha div {
+                background: #f8fafc;
+                border: 1px solid #e5e7eb;
+                border-radius: 12px;
+                padding: 10px 14px;
+                min-width: 165px;
+            }
+
+            .voo-resumo-card-padrao .resumo-rota-linha strong {
+                color: #1f2937;
+                font-size: .9rem;
+                font-weight: 900;
+            }
+
+            .voo-resumo-card-padrao .resumo-rota-linha i {
+                color: var(--accent);
+            }
+
+        .voo-resumo-card-padrao .resumo-dados-voo {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(100px, auto));
+            gap: 12px;
+            align-items: stretch;
+        }
+
+            .voo-resumo-card-padrao .resumo-dados-voo div {
+                background: #f8fafc;
+                border: 1px solid #e5e7eb;
+                border-radius: 12px;
+                padding: 10px 14px;
+                min-width: 105px;
+            }
+
+            .voo-resumo-card-padrao .resumo-dados-voo span {
+                display: block;
+                color: #334155;
+                font-weight: 800;
+                font-size: .88rem;
+            }
+
+        .voo-resumo-card-padrao .resumo-preco-completo {
+            background: #ecfdf5 !important;
+            border-color: #bbf7d0 !important;
+        }
+
+            .voo-resumo-card-padrao .resumo-preco-completo span {
+                color: #047857;
+                font-size: 1rem;
+                font-weight: 900;
+            }
+
+    @@media (max-width: 900px) {
+        .voo-resumo-card-padrao {
+            padding: 22px;
+        }
+
+            .voo-resumo-card-padrao .resumo-dados-voo {
+                grid-template-columns: repeat(2, 1fr);
+                width: 100%;
+            }
+
+                .voo-resumo-card-padrao .resumo-dados-voo div {
+                    min-width: unset;
+                }
+    }
+
+    @@media (max-width: 600px) {
+        .voo-resumo-card-padrao .resumo-rota-cidade {
+            border-radius: 16px;
+            line-height: 1.5;
+            align-items: flex-start;
+        }
+
+        .voo-resumo-card-padrao .resumo-rota-linha {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+            .voo-resumo-card-padrao .resumo-rota-linha i {
+                transform: rotate(90deg);
+                align-self: center;
+            }
+
+        .voo-resumo-card-padrao .resumo-dados-voo {
             grid-template-columns: 1fr;
         }
     }
@@ -271,20 +694,96 @@
 <div class="voo-page">
 
     <div class="voo-hero">
-      <h1>Escolha sua Passagem</h1>
+        <h1>Escolha sua Passagem</h1>
         <p>Etapa 1 de 3 — Pacote selecionado: @Model.Nome</p>
     </div>
+    <div class="voo-resumo voo-resumo-card-padrao">
 
-    <div class="voo-resumo">
-        <div class="resumo-rota">
-            <i class="fas fa-map-marker-alt"></i> @ViewBag.OrigemEstado - @ViewBag.OrigemPais
-            <i class="fas fa-arrow-right"></i> @ViewBag.DestinoEstado - @ViewBag.DestinoPais
+        <div class="resumo-info-principal">
+
+            <div class="resumo-rota-cidade">
+                <i class="fas fa-map-marker-alt"></i>
+
+                <strong>
+                    @ViewBag.OrigemEstado - @ViewBag.OrigemPais
+                </strong>
+
+                <i class="fas fa-arrow-right"></i>
+
+                <strong>
+                    @ViewBag.DestinoEstado - @ViewBag.DestinoPais
+                </strong>
+            </div>
+
+            <div class="resumo-companhia">
+                <span>Companhia aérea</span>
+                <strong>
+                    
+                    
+                    @(string.IsNullOrEmpty(Model.VooCompanhiaAerea) ? "Companhia não informada" : Model.VooCompanhiaAerea)
+                </strong>
+            </div>
+
+            <div class="resumo-rota-linha">
+                <div>
+                    <span>Origem</span>
+                    <strong>
+                        @(string.IsNullOrEmpty(Model.VooAeroportoOrigem) ? "Aeroporto não informado" : Model.VooAeroportoOrigem)
+                    </strong>
+                </div>
+
+                <i class="fas fa-arrow-right"></i>
+
+                <div>
+                    <span>Destino</span>
+                    <strong>
+                        @(string.IsNullOrEmpty(Model.VooAeroportoDestino) ? "Aeroporto não informado" : Model.VooAeroportoDestino)
+                    </strong>
+                </div>
+            </div>
+
         </div>
-        <div class="resumo-datas">
-            <div><strong>Ida</strong>@Model.DataPartida.ToString("dd/MM/yyyy")</div>
-            <div><strong>Volta</strong>@Model.DataRetorno.ToString("dd/MM/yyyy")</div>
-            <div><strong>Duração</strong>@Model.DuracaoDias dias</div>
+
+        <div class="resumo-dados-voo">
+
+            <div>
+                <strong>Data ida</strong>
+                <span>@Model.DataPartida.ToString("dd/MM/yyyy")</span>
+            </div>
+
+            <div>
+                <strong>Horário ida</strong>
+                <span>
+                    @(string.IsNullOrEmpty(Model.VooHorarioIda) ? "--:--" : Model.VooHorarioIda)
+                </span>
+            </div>
+
+            <div>
+                <strong>Data volta</strong>
+                <span>@Model.DataRetorno.ToString("dd/MM/yyyy")</span>
+            </div>
+
+            <div>
+                <strong>Horário volta</strong>
+                <span>
+                    @(string.IsNullOrEmpty(Model.VooHorarioVolta) ? "--:--" : Model.VooHorarioVolta)
+                </span>
+            </div>
+
+            <div>
+                <strong>Duração</strong>
+                <span>
+                    @(string.IsNullOrEmpty(Model.VooDuracaoMedia) ? $"{Model.DuracaoDias} dias" : Model.VooDuracaoMedia)
+                </span>
+            </div>
+
+            <div class="resumo-preco-completo">
+                <strong>Preço por pessoa</strong>
+                <span>@Model.PrecoPorPessoa.ToString("C")</span>
+            </div>
+
         </div>
+
     </div>
 
     <div class="voo-layout">
@@ -347,13 +846,14 @@
 
                 <div style="margin-top:18px;background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a;border-radius:14px;padding:14px 18px;font-weight:800;">
                     Total de viajantes:
-                    <span id="totalViajantes">   1 </span>
+                    <span id="totalViajantes">1</span>
 
                     <span style="font-weight:600;color:#475569;">
                         — selecione essa mesma quantidade de assentos.
                     </span>
                 </div>
             </div>
+
             <div class="card-secao-voo">
                 <h3>
                     <i class="fas fa-plane-departure" style="color:var(--accent);"></i>
@@ -390,20 +890,112 @@
                     </label>
                 </div>
             </div>
-            <h3>
-               
-                Selecione os Assentos
-            </h3>
 
-            <p style="color:var(--text-muted);margin-top:-8px;margin-bottom:20px;">
-                Clique nos assentos disponíveis. A quantidade precisa bater com o total de viajantes.
-            </p>
+            <div class="card-secao-voo">
+                <h3>
+                    <i class="fas fa-plane-departure" style="color:var(--accent);"></i>
+                    Passagem incluída no pacote
+                </h3>
+
+                <p style="color:var(--text-muted);margin-top:-8px;margin-bottom:20px;">
+                    Este pacote já possui uma passagem aérea de ida e volta predefinida. Escolha a classe e os assentos para continuar.
+                </p>
+
+                <div class="voo-incluso-card">
+                    <div class="voo-incluso-topo">
+
+                        <div class="voo-incluso-info">
+                            <div class="voo-incluso-titulo">
+                                @Model.VooCompanhiaAerea — @Model.VooTitulo
+                            </div>
+
+                            <p class="voo-incluso-desc">
+                                @Model.VooDescricao
+                            </p>
+
+                            <div class="voo-incluso-grid">
+                                <div class="voo-info-box">
+                                    <span>Origem</span>
+                                    <strong>@ViewBag.OrigemEstado</strong>
+                                    <small>@Model.VooAeroportoOrigem</small>
+                                </div>
+
+                                <div class="voo-info-box">
+                                    <span>Destino</span>
+                                    <strong>@ViewBag.DestinoEstado</strong>
+                                    <small>@Model.VooAeroportoDestino</small>
+                                </div>
+
+                                <div class="voo-info-box">
+                                    <span>Ida</span>
+                                    <strong>@Model.VooHorarioIda</strong>
+                                </div>
+
+                                <div class="voo-info-box">
+                                    <span>Volta</span>
+                                    <strong>@Model.VooHorarioVolta</strong>
+                                </div>
+
+                                <div class="voo-info-box">
+                                    <span>Duração</span>
+                                    <strong>@Model.VooDuracaoMedia</strong>
+                                </div>
+                            </div>
+
+                            <div class="voo-meta">
+                                <strong>Bagagem:</strong> @Model.VooBagagemInclusa<br />
+                                <strong>Tarifa:</strong> @Model.VooTipoTarifa<br />
+                                <strong>Escala:</strong> @Model.VooEscala
+                            </div>
+                        </div>
+
+                        <div class="voo-preco-box">
+                            <span>Passagem base</span>
+
+                            @if (Model.VooPrecoAdicionalPorPessoa <= 0)
+                            {
+                                <strong>Inclusa no pacote</strong>
+                            }
+                            else
+                            {
+                                <strong>+ @Model.VooPrecoAdicionalPorPessoa.ToString("C") por pessoa</strong>
+                            }
+
+                            <small>
+                                Classes superiores alteram o valor final.
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="voo-resumo-dinamico">
+                        <span id="resumoPassagemDinamico">
+                            1 viajante em classe Econômica — passagem inclusa no pacote.
+                        </span>
+                    </div>
+
+                    <div class="assentos-resumo-card">
+                        <span>Assentos da passagem</span>
+                        <strong id="assentosResumoCard">
+                            Nenhum assento selecionado ainda.
+                        </strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-secao-voo">
+                <h3>
+                  
+                    Selecione os Assentos
+                </h3>
+
+                <p style="color:var(--text-muted);margin-top:-8px;margin-bottom:20px;">
+                    Clique nos assentos disponíveis. A quantidade precisa bater com o total de viajantes.
+                </p>
 
                 <div class="airplane-map">
                     <div class="airplane-header">Cabine de Passageiros</div>
 
                     <div class="seat-grid">
-                        <!-- Cabeçalho das colunas -->
                         <div style="text-align:center;font-weight:bold;">A</div>
                         <div style="text-align:center;font-weight:bold;">B</div>
                         <div style="text-align:center;font-weight:bold;">C</div>
@@ -415,7 +1007,7 @@
                         @for (int i = 1; i <= 10; i++)
                         {
                             string[] cols = { "A", "B", "C", "D", "E", "F" };
-                            int colIdx = 0;
+
                             foreach (var col in cols)
                             {
                                 string seatId = $"{i}{col}";
@@ -438,130 +1030,215 @@
                     </div>
 
                     <div class="seat-legend">
-                        <div class="legend-item"><div class="legend-box" style="background:var(--available);"></div> Disponível</div>
-                        <div class="legend-item"><div class="legend-box" style="background:var(--occupied);"></div> Ocupado</div>
-                        <div class="legend-item"><div class="legend-box" style="background:var(--selected);"></div> Selecionado</div>
+                        <div class="legend-item">
+                            <div class="legend-box" style="background:var(--available);"></div>
+                            Disponível
+                        </div>
+
+                        <div class="legend-item">
+                            <div class="legend-box" style="background:var(--occupied);"></div>
+                            Ocupado
+                        </div>
+
+                        <div class="legend-item">
+                            <div class="legend-box" style="background:var(--selected);"></div>
+                            Selecionado
+                        </div>
                     </div>
                 </div>
 
-            <div id="seat-info" style="margin-top:20px; text-align:center; font-weight:700; color:var(--primary); display:none;">
-                Assentos selecionados:
-                <span id="selected-seat-display">--</span>
+                <div id="seat-info" style="margin-top:20px; text-align:center; font-weight:700; color:var(--primary); display:none;">
+                    Assentos selecionados:
+                    <span id="selected-seat-display">--</span>
 
-                <br />
+                    <br />
 
-                <span style="font-size:.85rem;color:#64748b;">
-                    Selecionados:
-                    <span id="qtdAssentosSelecionados">0</span>
-                    de
-                    <span id="qtdAssentosNecessarios">1</span>
-                </span>
-            </div>
+                    <span style="font-size:.85rem;color:#64748b;">
+                        Selecionados:
+                        <span id="qtdAssentosSelecionados">0</span>
+                        de
+                        <span id="qtdAssentosNecessarios">1</span>
+                    </span>
+                </div>
 
                 <button type="submit" class="btn-continuar-voo">
                     Continuar para Hospedagem <i class="fas fa-arrow-right"></i>
                 </button>
-            
+            </div>
         </form>
     </div>
 </div>
-        
-
- 
 
 <script>
-    
-     let assentosSelecionados = [];
+    let assentosSelecionados = [];
 
-     function getTotalViajantes() {
-         const adultos = parseInt(document.getElementById('quantidadeAdultos').value) || 0;
-         const criancas = parseInt(document.getElementById('quantidadeCriancas').value) || 0;
+    function getTotalViajantes() {
+        const adultos = parseInt(document.getElementById('quantidadeAdultos').value) || 0;
+        const criancas = parseInt(document.getElementById('quantidadeCriancas').value) || 0;
 
-         return adultos + criancas;
-     }
+        return adultos + criancas;
+    }
 
-     function atualizarQuantidadeViajantes() {
-         const total = getTotalViajantes();
+    function formatarMoeda(valor) {
+        return valor.toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        });
+    }
 
-         document.getElementById('totalViajantes').innerText = total;
-         document.getElementById('qtdAssentosNecessarios').innerText = total;
+    function getClasseSelecionada() {
+        const selecionada = document.querySelector('input[name="classeViagem"]:checked');
 
-         if (assentosSelecionados.length > total) {
-             assentosSelecionados = assentosSelecionados.slice(0, total);
+        if (!selecionada) {
+            return 'Econômica';
+        }
 
-             document.querySelectorAll('.seat.selected').forEach(s => {
-                 const seatId = s.getAttribute('data-seat');
+        return selecionada.value;
+    }
 
-                 if (!assentosSelecionados.includes(seatId)) {
-                     s.classList.remove('selected');
-                 }
-             });
-         }
+    function getAdicionalClassePorPessoa() {
+        const classe = getClasseSelecionada();
 
-         atualizarAssentosNaTela();
-     }
+        if (classe === 'Executiva') {
+            return 450;
+        }
 
-     function selectSeat(element) {
-         if (element.classList.contains('occupied')) {
-             return;
-         }
+        if (classe === 'Primeira Classe') {
+            return 1200;
+        }
 
-         const totalNecessario = getTotalViajantes();
-         const seatId = element.getAttribute('data-seat');
+        return 0;
+    }
 
-         if (totalNecessario <= 0) {
-             alert('Informe a quantidade de viajantes antes de escolher os assentos.');
-             return;
-         }
+    function atualizarResumoPassagem() {
+        const totalViajantes = getTotalViajantes();
+        const classe = getClasseSelecionada();
+        const adicionalClasse = getAdicionalClassePorPessoa();
+        const adicionalVoo = parseFloat('@Model.VooPrecoAdicionalPorPessoa.ToString(System.Globalization.CultureInfo.InvariantCulture)') || 0;
 
-         if (element.classList.contains('selected')) {
-             element.classList.remove('selected');
-             assentosSelecionados = assentosSelecionados.filter(a => a !== seatId);
-             atualizarAssentosNaTela();
-             return;
-         }
+        const totalAdicional = (adicionalClasse + adicionalVoo) * totalViajantes;
 
-         if (assentosSelecionados.length >= totalNecessario) {
-             alert('Você já selecionou a quantidade necessária de assentos.');
-             return;
-         }
+        let texto = totalViajantes + ' viajante(s)';
+        texto += ' · Classe ' + classe;
 
-         element.classList.add('selected');
-         assentosSelecionados.push(seatId);
+        if (assentosSelecionados.length > 0) {
+            texto += ' · Assento(s): ' + assentosSelecionados.join(', ');
+        } else {
+            texto += ' · Assentos ainda não selecionados';
+        }
 
-         atualizarAssentosNaTela();
-     }
+        if (totalAdicional > 0) {
+            texto += ' · adicional total da passagem: ' + formatarMoeda(totalAdicional) + '.';
+        } else {
+            texto += ' · passagem inclusa no pacote.';
+        }
 
-     function atualizarAssentosNaTela() {
-         const textoAssentos = assentosSelecionados.join(', ');
+        const elemento = document.getElementById('resumoPassagemDinamico');
 
-         document.getElementById('inputAssento').value = textoAssentos;
-         document.getElementById('qtdAssentosSelecionados').innerText = assentosSelecionados.length;
+        if (elemento) {
+            elemento.innerText = texto;
+        }
+    }
 
-         if (assentosSelecionados.length > 0) {
-             document.getElementById('seat-info').style.display = 'block';
-             document.getElementById('selected-seat-display').innerText = textoAssentos;
-         } else {
-             document.getElementById('seat-info').style.display = 'none';
-             document.getElementById('selected-seat-display').innerText = '--';
-         }
-     }
+    document.querySelectorAll('input[name="classeViagem"]').forEach(input => {
+        input.addEventListener('change', atualizarResumoPassagem);
+    });
 
-     document.getElementById('formVoo').onsubmit = function (e) {
-         const totalViajantes = getTotalViajantes();
+    function atualizarQuantidadeViajantes() {
+        const total = getTotalViajantes();
 
-         if (totalViajantes <= 0) {
-             alert('Informe a quantidade de viajantes.');
-             return false;
-         }
+        document.getElementById('totalViajantes').innerText = total;
+        document.getElementById('qtdAssentosNecessarios').innerText = total;
 
-         if (assentosSelecionados.length !== totalViajantes) {
-             alert('Você precisa escolher exatamente ' + totalViajantes + ' assento(s).');
-             return false;
-         }
+        if (assentosSelecionados.length > total) {
+            assentosSelecionados = assentosSelecionados.slice(0, total);
 
-         return true;
-     };
+            document.querySelectorAll('.seat.selected').forEach(s => {
+                const seatId = s.getAttribute('data-seat');
 
-     atualizarQuantidadeViajantes();
+                if (!assentosSelecionados.includes(seatId)) {
+                    s.classList.remove('selected');
+                }
+            });
+        }
+
+        atualizarAssentosNaTela();
+        atualizarResumoPassagem();
+    }
+
+    function selectSeat(element) {
+        if (element.classList.contains('occupied')) {
+            return;
+        }
+
+        const totalNecessario = getTotalViajantes();
+        const seatId = element.getAttribute('data-seat');
+
+        if (totalNecessario <= 0) {
+            alert('Informe a quantidade de viajantes antes de escolher os assentos.');
+            return;
+        }
+
+        if (element.classList.contains('selected')) {
+            element.classList.remove('selected');
+            assentosSelecionados = assentosSelecionados.filter(a => a !== seatId);
+            atualizarAssentosNaTela();
+            return;
+        }
+
+        if (assentosSelecionados.length >= totalNecessario) {
+            alert('Você já selecionou a quantidade necessária de assentos.');
+            return;
+        }
+
+        element.classList.add('selected');
+        assentosSelecionados.push(seatId);
+
+        atualizarAssentosNaTela();
+    }
+
+    function atualizarAssentosNaTela() {
+        const textoAssentos = assentosSelecionados.join(', ');
+
+        document.getElementById('inputAssento').value = textoAssentos;
+        document.getElementById('qtdAssentosSelecionados').innerText = assentosSelecionados.length;
+
+        const assentosResumoCard = document.getElementById('assentosResumoCard');
+
+        if (assentosSelecionados.length > 0) {
+            document.getElementById('seat-info').style.display = 'block';
+            document.getElementById('selected-seat-display').innerText = textoAssentos;
+
+            if (assentosResumoCard) {
+                assentosResumoCard.innerText = textoAssentos;
+            }
+        } else {
+            document.getElementById('seat-info').style.display = 'none';
+            document.getElementById('selected-seat-display').innerText = '--';
+
+            if (assentosResumoCard) {
+                assentosResumoCard.innerText = 'Nenhum assento selecionado ainda.';
+            }
+        }
+
+        atualizarResumoPassagem();
+    }
+
+    document.getElementById('formVoo').onsubmit = function (e) {
+        const totalViajantes = getTotalViajantes();
+
+        if (totalViajantes <= 0) {
+            alert('Informe a quantidade de viajantes.');
+            return false;
+        }
+
+        if (assentosSelecionados.length !== totalViajantes) {
+            alert('Você precisa escolher exatamente ' + totalViajantes + ' assento(s).');
+            return false;
+        }
+
+        return true;
+    };
+
+    atualizarQuantidadeViajantes();
 </script>

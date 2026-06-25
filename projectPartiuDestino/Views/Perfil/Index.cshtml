@@ -508,8 +508,7 @@
         <!-- Card: histórico de pedidos -->
         <div class="card">
             <div class="secao-titulo">
-                <i class="fas fa-receipt" style="color:var(--azul-medio);"></i>
-                Histórico de Pedidos
+                Minhas Reservas
                 <span>(@Model.Count @(Model.Count == 1 ? "pedido" : "pedidos"))</span>
             </div>
 
@@ -529,11 +528,11 @@
                     <table class="tabela-pedidos">
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th>Item</th>
+                                <th>Reserva</th>
+                                <th>Viagem</th>
                                 <th>Tipo</th>
+                                <th>Pagamento</th>
                                 <th>Data</th>
-                                <th>Qtd.</th>
                                 <th>Total</th>
                             </tr>
                         </thead>
@@ -552,20 +551,57 @@
                                     "destino" => "Passagem",
                                     _ => p.TipoItem
                                 };
-
                                 <tr>
-                                    <td style="color:var(--sub);font-size:.8rem;">@p.Id</td>
-                                    <td style="font-weight:600;">@p.NomeItem</td>
+                                    <td>
+                                        <div style="font-weight:800;color:var(--azul);">
+                                            @(string.IsNullOrEmpty(p.CodigoReserva) ? $"#{p.Id}" : p.CodigoReserva)
+                                        </div>
+
+                                        @if (!string.IsNullOrEmpty(p.Comprovante))
+                                        {
+                                            <div style="font-size:.75rem;color:var(--sub);margin-top:3px;">
+                                                Comprovante: @p.Comprovante
+                                            </div>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        <div style="font-weight:700;color:var(--texto);line-height:1.35;">
+                                            @p.NomeItem
+                                        </div>
+
+                                        <div style="font-size:.78rem;color:var(--sub);margin-top:5px;">
+                                            @p.Quantidade @(p.Quantidade == 1 ? "viajante/reserva" : "viajantes/reservas")
+                                        </div>
+                                    </td>
+
                                     <td>
                                         <span class="badge-tipo-item @badgeClass">@labelTipo</span>
                                     </td>
+
+                                    <td>
+                                        <div style="font-weight:800;color:var(--verde);">
+                                            @(string.IsNullOrEmpty(p.StatusPagamento) ? "Confirmado" : p.StatusPagamento)
+                                        </div>
+
+                                        <div style="font-size:.78rem;color:var(--sub);margin-top:4px;">
+                                            @(string.IsNullOrEmpty(p.FormaPagamento) ? "Pagamento não informado" : p.FormaPagamento)
+                                            @if (p.Parcelas > 1)
+                                            {
+                                                <span> — @p.Parcelas x</span>
+                                            }
+                                        </div>
+                                    </td>
+
                                     <td style="color:var(--sub);">
                                         @p.DataPedido.ToString("dd/MM/yyyy")
                                         <br />
                                         <span style="font-size:.78rem;">@p.DataPedido.ToString("HH:mm")</span>
                                     </td>
-                                    <td style="text-align:center;">@p.Quantidade</td>
-                                    <td class="preco-destaque">@p.Total.ToString("C")</td>
+
+                                    <td class="preco-destaque">
+                                        @(p.ValorTotalPedido > 0 ? p.ValorTotalPedido.ToString("C") : p.Total.ToString("C"))
+                                    </td>
                                 </tr>
                             }
                         </tbody>

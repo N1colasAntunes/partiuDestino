@@ -42,10 +42,23 @@ namespace projectPartiuDestino.Controllers
 
             var pedidos = new List<PedidoConfirmado>();
             using var cmdP = new MySqlCommand(
-                @"SELECT id, nome_item, data_pedido, preco_unitario, quantidade, tipo_item
-                  FROM pedidos
-                  WHERE usuario_id = @id
-                  ORDER BY id DESC",
+                @"SELECT 
+      id,
+      codigo_reserva,
+      nome_item,
+      data_pedido,
+      preco_unitario,
+      quantidade,
+      tipo_item,
+      forma_pagamento,
+      status_pagamento,
+      valor_total_pedido,
+      parcelas,
+      comprovante,
+      data_pagamento
+  FROM pedidos
+  WHERE usuario_id = @id
+  ORDER BY id DESC",
                 conn);
             cmdP.Parameters.AddWithValue("@id", userId);
             using var readerP = cmdP.ExecuteReader();
@@ -54,11 +67,18 @@ namespace projectPartiuDestino.Controllers
                 pedidos.Add(new PedidoConfirmado
                 {
                     Id = Convert.ToInt32(readerP["id"]),
-                    NomeItem = readerP["nome_item"].ToString(),
+                    CodigoReserva = readerP["codigo_reserva"]?.ToString(),
+                    NomeItem = readerP["nome_item"].ToString() ?? "",
                     DataPedido = Convert.ToDateTime(readerP["data_pedido"]),
                     PrecoUnitario = Convert.ToDecimal(readerP["preco_unitario"]),
                     Quantidade = Convert.ToInt32(readerP["quantidade"]),
-                    TipoItem = readerP["tipo_item"].ToString()
+                    TipoItem = readerP["tipo_item"].ToString() ?? "",
+                    FormaPagamento = readerP["forma_pagamento"]?.ToString(),
+                    StatusPagamento = readerP["status_pagamento"]?.ToString(),
+                    ValorTotalPedido = readerP["valor_total_pedido"] == DBNull.Value ? 0 : Convert.ToDecimal(readerP["valor_total_pedido"]),
+                    Parcelas = readerP["parcelas"] == DBNull.Value ? 1 : Convert.ToInt32(readerP["parcelas"]),
+                    Comprovante = readerP["comprovante"]?.ToString(),
+                    DataPagamento = readerP["data_pagamento"] == DBNull.Value ? null : Convert.ToDateTime(readerP["data_pagamento"])
                 });
             }
 

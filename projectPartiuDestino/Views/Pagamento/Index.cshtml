@@ -1,0 +1,853 @@
+﻿@model projectPartiuDestino.Models.PagamentoResumoViewModel
+
+@{
+    ViewData["Title"] = "Pagamento da Reserva";
+
+    decimal total = Model.Total;
+}
+
+<style>
+    body {
+        background: #f8fafc;
+    }
+
+    .checkout-page {
+        min-height: 100vh;
+        padding: 50px 16px 80px;
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+    }
+
+    .checkout-container {
+        max-width: 1120px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: 28px;
+        align-items: flex-start;
+    }
+
+    @@media (max-width: 900px) {
+        .checkout-container {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .checkout-header {
+        max-width: 1120px;
+        margin: 0 auto 28px;
+    }
+
+        .checkout-header .etapa {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #eff6ff;
+            color: #1e3a8a;
+            border: 1px solid #bfdbfe;
+            padding: 7px 12px;
+            border-radius: 999px;
+            font-size: .78rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            margin-bottom: 12px;
+        }
+
+        .checkout-header h1 {
+            color: #0f172a;
+            font-size: 2rem;
+            font-weight: 900;
+            margin: 0 0 6px;
+        }
+
+        .checkout-header p {
+            color: #64748b;
+            margin: 0;
+            max-width: 700px;
+        }
+
+    .card-checkout {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        box-shadow: 0 14px 35px rgba(15, 23, 42, .07);
+        overflow: hidden;
+    }
+
+    .card-body-checkout {
+        padding: 28px;
+    }
+
+    .secao-titulo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #0f172a;
+        font-weight: 900;
+        font-size: 1.1rem;
+        margin-bottom: 18px;
+    }
+
+        .secao-titulo i {
+            color: #2563eb;
+        }
+
+    .alerta-erro {
+        max-width: 1120px;
+        margin: 0 auto 20px;
+        background: #fef2f2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+        border-radius: 12px;
+        padding: 14px 18px;
+        font-weight: 700;
+    }
+
+    .opcoes-pagamento {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 22px;
+    }
+
+    @@media (max-width: 700px) {
+        .opcoes-pagamento {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .opcao-radio {
+        position: relative;
+    }
+
+        .opcao-radio input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .opcao-radio label {
+            display: block;
+            height: 100%;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 18px;
+            cursor: pointer;
+            background: #f8fafc;
+            transition: .2s;
+        }
+
+            .opcao-radio label i {
+                font-size: 1.35rem;
+                color: #1e3a8a;
+                margin-bottom: 10px;
+                display: block;
+            }
+
+            .opcao-radio label strong {
+                display: block;
+                color: #0f172a;
+                margin-bottom: 4px;
+            }
+
+            .opcao-radio label span {
+                color: #64748b;
+                font-size: .82rem;
+            }
+
+        .opcao-radio input:checked + label {
+            border-color: #2563eb;
+            background: #eff6ff;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, .12);
+        }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+    }
+
+    @@media (max-width: 700px) {
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .campo {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+        .campo.full {
+            grid-column: 1 / -1;
+        }
+
+        .campo label {
+            font-size: .82rem;
+            color: #334155;
+            font-weight: 800;
+        }
+
+        .campo input,
+        .campo select {
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px 14px;
+            outline: none;
+            font-size: .95rem;
+            background: #ffffff;
+        }
+
+            .campo input:focus,
+            .campo select:focus {
+                border-color: #2563eb;
+                box-shadow: 0 0 0 3px rgba(37, 99, 235, .10);
+            }
+
+        .campo small {
+            color: #94a3b8;
+            font-size: .75rem;
+        }
+
+    .aviso-seguranca {
+        margin-top: 18px;
+        padding: 14px 16px;
+        border-radius: 14px;
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        color: #166534;
+        font-size: .86rem;
+        font-weight: 600;
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .resumo-card {
+        position: sticky;
+        top: 20px;
+    }
+
+    .resumo-topo {
+        background: linear-gradient(135deg, #1e3a8a, #2563eb);
+        color: white;
+        padding: 24px;
+    }
+
+        .resumo-topo span {
+            font-size: .78rem;
+            text-transform: uppercase;
+            letter-spacing: .8px;
+            opacity: .85;
+            font-weight: 800;
+        }
+
+        .resumo-topo h3 {
+            margin: 6px 0 0;
+            font-weight: 900;
+            font-size: 1.15rem;
+        }
+
+    .item-resumo {
+        padding: 18px 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+        .item-resumo:last-child {
+            border-bottom: none;
+        }
+
+        .item-resumo .tipo {
+            display: inline-flex;
+            align-items: center;
+            width: fit-content;
+            font-size: .68rem;
+            font-weight: 900;
+            color: #1e3a8a;
+            background: #eff6ff;
+            padding: 5px 10px;
+            border-radius: 999px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: .45px;
+        }
+
+    .item-resumo-topo {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 14px;
+        margin-bottom: 12px;
+    }
+
+    .item-resumo-titulo {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .item-resumo .nome {
+        color: #0f172a;
+        font-weight: 900;
+        font-size: 1rem;
+        line-height: 1.45;
+        margin-bottom: 4px;
+        word-break: break-word;
+    }
+
+    .item-resumo-subinfo {
+        color: #64748b;
+        font-size: .78rem;
+        line-height: 1.45;
+    }
+
+    .item-resumo-valor {
+        min-width: 105px;
+        text-align: right;
+        flex-shrink: 0;
+    }
+
+        .item-resumo-valor span {
+            display: block;
+            color: #64748b;
+            font-size: .7rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: .35px;
+        }
+
+        .item-resumo-valor strong {
+            display: block;
+            color: #1e3a8a;
+            font-size: 1.05rem;
+            font-weight: 900;
+            line-height: 1.2;
+        }
+
+    .item-resumo-detalhes {
+        display: grid;
+        gap: 8px;
+        margin-top: 12px;
+    }
+
+    .item-resumo-linha {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 9px 11px;
+        border-radius: 10px;
+        background: #f8fafc;
+        border: 1px solid #eef2f7;
+    }
+
+        .item-resumo-linha span {
+            color: #64748b;
+            font-size: .78rem;
+            font-weight: 800;
+        }
+
+        .item-resumo-linha strong {
+            color: #0f172a;
+            font-size: .82rem;
+            font-weight: 850;
+            text-align: right;
+            line-height: 1.35;
+        }
+
+    .item-resumo .preco {
+        margin-top: 12px;
+        color: #64748b;
+        font-size: .82rem;
+        line-height: 1.5;
+    }
+
+        .item-resumo .preco strong {
+            color: #1e3a8a;
+            font-weight: 900;
+        }
+
+    @@media (max-width: 700px) {
+        .item-resumo-topo {
+            flex-direction: column;
+        }
+
+        .item-resumo-valor {
+            text-align: left;
+            min-width: auto;
+        }
+
+        .item-resumo-linha {
+            flex-direction: column;
+            gap: 4px;
+        }
+
+            .item-resumo-linha strong {
+                text-align: left;
+            }
+    }
+
+    .linha-total {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 18px;
+        margin-top: 12px;
+        border-top: 2px solid #e2e8f0;
+    }
+
+        .linha-total span {
+            color: #64748b;
+            font-weight: 800;
+        }
+
+        .linha-total strong {
+            color: #1e3a8a;
+            font-size: 1.45rem;
+            font-weight: 900;
+        }
+
+    .parcelamento-preview {
+        margin-top: 8px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: #f8fafc;
+        color: #475569;
+        font-size: .84rem;
+        font-weight: 700;
+    }
+
+    .btn-confirmar {
+        width: 100%;
+        margin-top: 22px;
+        border: none;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #16a34a, #22c55e);
+        color: white;
+        padding: 15px 18px;
+        font-weight: 900;
+        font-size: .98rem;
+        cursor: pointer;
+        box-shadow: 0 12px 24px rgba(34, 197, 94, .25);
+    }
+
+        .btn-confirmar:hover {
+            filter: brightness(.98);
+            transform: translateY(-1px);
+        }
+
+    .voltar-carrinho {
+        display: block;
+        text-align: center;
+        margin-top: 14px;
+        color: #64748b;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: .88rem;
+    }
+
+        .voltar-carrinho:hover {
+            color: #1e3a8a;
+        }
+
+    .dados-cartao.oculto {
+        display: none;
+    }
+</style>
+
+<div class="checkout-page">
+
+    <div class="checkout-header">
+      
+
+        <h1>Finalize sua reserva</h1>
+        <p>
+            Confira os detalhes da sua viagem e escolha a forma de pagamento para concluir sua reserva na Partiu Destino.
+        </p>
+    </div>
+
+    @if (TempData["Erro"] != null)
+    {
+        <div class="alerta-erro">
+            <i class="fas fa-circle-exclamation"></i>
+            @TempData["Erro"]
+        </div>
+    }
+
+    <form asp-controller="Pagamento" asp-action="Confirmar" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="checkout-container">
+
+            <section class="card-checkout">
+                <div class="card-body-checkout">
+
+                    <div class="secao-titulo">
+                        <i class="fas fa-credit-card"></i>
+                        Forma de pagamento
+                    </div>
+
+                    <div class="opcoes-pagamento">
+                        <div class="opcao-radio">
+                            <input type="radio" id="pagCartao" name="FormaPagamento" value="Cartao" checked />
+                            <label for="pagCartao">
+                                <i class="fas fa-credit-card"></i>
+                                <strong>Cartão</strong>
+                                <span>Aprovação simulada na hora</span>
+                            </label>
+                        </div>
+
+                        <div class="opcao-radio">
+                            <input type="radio" id="pagPix" name="FormaPagamento" value="Pix" />
+                            <label for="pagPix">
+                                <i class="fas fa-qrcode"></i>
+                                <strong>Pix</strong>
+                                <span>Confirmação instantânea</span>
+                            </label>
+                        </div>
+
+                        <div class="opcao-radio">
+                            <input type="radio" id="pagBoleto" name="FormaPagamento" value="Boleto" />
+                            <label for="pagBoleto">
+                                <i class="fas fa-barcode"></i>
+                                <strong>Boleto</strong>
+                                <span>Reserva com boleto gerado</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="secao-titulo" style="margin-top:28px;">
+                        <i class="fas fa-user-shield"></i>
+                        Dados do responsável pela reserva
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="campo full">
+                            <label>Nome do titular</label>
+                            <input type="text"
+                                   id="nomeTitular"
+                                   name="NomeTitular"
+                                   placeholder="Ex.: Gustavo Lima Goes"
+                                   autocomplete="off" />
+                        </div>
+
+                        <div class="campo">
+                            <label>CPF do titular</label>
+                            <input type="text"
+                                   id="cpfTitular"
+                                   name="DocumentoTitular"
+                                   placeholder="000.000.000-00"
+                                   maxlength="14"
+                                   inputmode="numeric"
+                                   autocomplete="off" />
+                        </div>
+
+                        <div class="campo">
+                            <label>Parcelamento</label>
+                            <select name="Parcelas" id="parcelas">
+                                <option value="1">À vista</option>
+                                <option value="2">2x sem juros</option>
+                                <option value="3">3x sem juros</option>
+                                <option value="4">4x sem juros</option>
+                                <option value="5">5x sem juros</option>
+                                <option value="6">6x sem juros</option>
+                                <option value="10">10x sem juros</option>
+                            </select>
+
+                            <div class="parcelamento-preview" id="parcelamentoPreview">
+                                Total à vista: @total.ToString("C")
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dados-cartao" id="dadosCartao">
+                        <div class="secao-titulo" style="margin-top:28px;">
+                            <i class="fas fa-credit-card"></i>
+                            Dados do cartão
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="campo full">
+                                <label>Número do cartão</label>
+                                <input type="text"
+                                       id="numeroCartao"
+                                       name="NumeroCartao"
+                                       placeholder="0000 0000 0000 0000"
+                                       maxlength="19"
+                                       inputmode="numeric"
+                                       autocomplete="off" />
+                                <small>Use apenas números. A máscara será aplicada automaticamente.</small>
+                            </div>
+
+                            <div class="campo">
+                                <label>Validade</label>
+                                <input type="text"
+                                       id="validadeCartao"
+                                       name="Vencimento"
+                                       placeholder="MM/AA"
+                                       maxlength="5"
+                                       inputmode="numeric"
+                                       autocomplete="off" />
+                            </div>
+
+                            <div class="campo">
+                                <label>CVV</label>
+                                <input type="text"
+                                       id="cvvCartao"
+                                       name="Cvv"
+                                       placeholder="123"
+                                       maxlength="4"
+                                       inputmode="numeric"
+                                       autocomplete="off" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="aviso-seguranca">
+                        <i class="fas fa-shield-alt"></i>
+                        <div>
+                            <strong>Ambiente demonstrativo:</strong>
+                            nenhum dado real de pagamento é processado. A reserva será registrada no sistema como simulação aprovada.
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <aside class="card-checkout resumo-card">
+                <div class="resumo-topo">
+                    <span>Código temporário da reserva</span>
+                    <h3>@Model.CodigoReserva</h3>
+                </div>
+
+                <div class="card-body-checkout">
+                    <div class="secao-titulo">
+                        <i class="fas fa-suitcase-rolling"></i>
+                        Resumo da viagem
+                    </div>
+                    @foreach (var item in Model.Itens)
+                    {
+                        string tipoLabel = item.TipoItem switch
+                        {
+                            "pacote" => "Pacote",
+                            "destino" => "Passagem",
+                            "viagem_personalizada" => "Personalizada",
+                            "hospedagem" => "Hospedagem",
+                            "quarto" => "Quarto",
+                            _ => "Reserva"
+                        };
+
+                        var partesNome = (item.NomeItem ?? "")
+                        .Split('—', StringSplitOptions.RemoveEmptyEntries)
+                        .Select(p => p.Trim())
+                        .ToList();
+
+                        string tituloPrincipal = partesNome.Any()
+                        ? partesNome.First()
+                        : item.NomeItem ?? "Reserva";
+
+                        var detalhesExtras = partesNome.Skip(1).ToList();
+
+                        <div class="item-resumo">
+                            <span class="tipo">@tipoLabel</span>
+
+                            <div class="item-resumo-topo">
+                                <div class="item-resumo-titulo">
+                                    <div class="nome">@tituloPrincipal</div>
+                                    <div class="item-resumo-subinfo">
+                                        Detalhes selecionados para esta reserva
+                                    </div>
+                                </div>
+
+                                <div class="item-resumo-valor">
+                                    <span>Subtotal</span>
+
+                                    @if (item.PrecoUnitario > 0)
+                                    {
+                                        <strong>@item.Subtotal.ToString("C")</strong>
+                                    }
+                                    else
+                                    {
+                                        <strong style="color:#10b981;font-size:.9rem;">A orçar</strong>
+                                    }
+                                </div>
+                            </div>
+
+                            @if (detalhesExtras.Any())
+                            {
+                                <div class="item-resumo-detalhes">
+                                    @foreach (var detalhe in detalhesExtras)
+                                    {
+                                        var detalhePartes = detalhe.Split(':', 2, StringSplitOptions.RemoveEmptyEntries);
+
+                                        if (detalhePartes.Length == 2)
+                                        {
+                                            <div class="item-resumo-linha">
+                                                <span>@detalhePartes[0].Trim()</span>
+                                                <strong>@detalhePartes[1].Trim()</strong>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="item-resumo-linha">
+                                                <span>Informação</span>
+                                                <strong>@detalhe.Trim()</strong>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            }
+
+                            <div class="preco">
+                                @item.Quantidade x @item.PrecoUnitario.ToString("C")
+                                <br />
+                                Total do item: <strong>@item.Subtotal.ToString("C")</strong>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="linha-total">
+                        <span>Total</span>
+                        <strong>@total.ToString("C")</strong>
+                    </div>
+
+                    <button type="submit" class="btn-confirmar">
+                        <i class="fas fa-check-circle"></i>
+                        Confirmar pagamento simulado
+                    </button>
+
+                    <a href="/Carrinho/Index" class="voltar-carrinho">
+                        <i class="fas fa-arrow-left"></i>
+                        Voltar para o carrinho
+                    </a>
+                </div>
+            </aside>
+
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const cpfInput = document.getElementById("cpfTitular");
+        const cartaoInput = document.getElementById("numeroCartao");
+        const validadeInput = document.getElementById("validadeCartao");
+        const cvvInput = document.getElementById("cvvCartao");
+        const parcelasSelect = document.getElementById("parcelas");
+        const parcelamentoPreview = document.getElementById("parcelamentoPreview");
+        const dadosCartao = document.getElementById("dadosCartao");
+
+        const formaCartao = document.getElementById("pagCartao");
+        const formaPix = document.getElementById("pagPix");
+        const formaBoleto = document.getElementById("pagBoleto");
+
+        const totalPedido = Number("@total.ToString(System.Globalization.CultureInfo.InvariantCulture)");
+
+        function formatarMoeda(valor) {
+            return valor.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL"
+            });
+        }
+
+        function atualizarParcelamento() {
+            if (!parcelasSelect || !parcelamentoPreview) return;
+
+            const parcelas = parseInt(parcelasSelect.value);
+
+            if (parcelas <= 1) {
+                parcelamentoPreview.innerText = "Total à vista: " + formatarMoeda(totalPedido);
+            } else {
+                const valorParcela = totalPedido / parcelas;
+                parcelamentoPreview.innerText = parcelas + "x de " + formatarMoeda(valorParcela) + " sem juros";
+            }
+        }
+
+        function atualizarFormaPagamento() {
+            if (!dadosCartao || !parcelasSelect || !parcelamentoPreview) return;
+
+            if (formaCartao.checked) {
+                dadosCartao.classList.remove("oculto");
+                parcelasSelect.disabled = false;
+                atualizarParcelamento();
+            }
+
+            if (formaPix.checked) {
+                dadosCartao.classList.add("oculto");
+                parcelasSelect.value = "1";
+                parcelasSelect.disabled = true;
+                parcelamentoPreview.innerText = "Pagamento via Pix: " + formatarMoeda(totalPedido);
+            }
+
+            if (formaBoleto.checked) {
+                dadosCartao.classList.add("oculto");
+                parcelasSelect.value = "1";
+                parcelasSelect.disabled = true;
+                parcelamentoPreview.innerText = "Boleto no valor de: " + formatarMoeda(totalPedido);
+            }
+        }
+
+        if (cpfInput) {
+            cpfInput.addEventListener("input", function () {
+                let valor = cpfInput.value.replace(/\D/g, "");
+
+                valor = valor.replace(/^(\d{3})(\d)/, "$1.$2");
+                valor = valor.replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3");
+                valor = valor.replace(/\.(\d{3})(\d)/, ".$1-$2");
+
+                cpfInput.value = valor.substring(0, 14);
+            });
+        }
+
+        if (cartaoInput) {
+            cartaoInput.addEventListener("input", function () {
+                let valor = cartaoInput.value.replace(/\D/g, "");
+
+                valor = valor.replace(/(\d{4})(?=\d)/g, "$1 ");
+
+                cartaoInput.value = valor.substring(0, 19);
+            });
+        }
+
+        if (validadeInput) {
+            validadeInput.addEventListener("input", function () {
+                let valor = validadeInput.value.replace(/\D/g, "");
+
+                if (valor.length >= 3) {
+                    valor = valor.substring(0, 2) + "/" + valor.substring(2, 4);
+                }
+
+                validadeInput.value = valor.substring(0, 5);
+            });
+        }
+
+        if (cvvInput) {
+            cvvInput.addEventListener("input", function () {
+                let valor = cvvInput.value.replace(/\D/g, "");
+
+                cvvInput.value = valor.substring(0, 4);
+            });
+        }
+
+        if (parcelasSelect) {
+            parcelasSelect.addEventListener("change", atualizarParcelamento);
+        }
+
+        if (formaCartao) {
+            formaCartao.addEventListener("change", atualizarFormaPagamento);
+        }
+
+        if (formaPix) {
+            formaPix.addEventListener("change", atualizarFormaPagamento);
+        }
+
+        if (formaBoleto) {
+            formaBoleto.addEventListener("change", atualizarFormaPagamento);
+        }
+
+        atualizarFormaPagamento();
+        atualizarParcelamento();
+    });
+</script>

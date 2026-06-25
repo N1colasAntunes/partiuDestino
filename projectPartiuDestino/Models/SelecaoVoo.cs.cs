@@ -25,5 +25,24 @@
         public int QuantidadeCriancas { get; set; } = 0;
 
         public int QuantidadeTotal { get; set; } = 1;
+
+        public string? TituloVoo { get; set; }
+
+        public string? DescricaoVoo { get; set; }
+
+        public string? AeroportoOrigem { get; set; }
+
+        public string? AeroportoDestino { get; set; }
+
+        public string? DuracaoMedia { get; set; }
+
+        public string? BagagemInclusa { get; set; }
+
+        public string? TipoTarifa { get; set; }
+
+        public string? Escala { get; set; }
+        public string? CidadeOrigem { get; set; }
+
+        public string? CidadeDestino { get; set; }
     }
 }

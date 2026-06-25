@@ -253,6 +253,174 @@
             grid-template-columns: 1fr;
         }
     }
+
+    .voo-resumo-completo {
+        max-width: 980px;
+        margin: -40px auto 40px;
+        background: #ffffff;
+        border-radius: 18px;
+        padding: 24px 30px;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, .10);
+        border: 1px solid #e5e7eb;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 28px;
+        flex-wrap: wrap;
+    }
+
+    .resumo-info-principal {
+        flex: 1;
+        min-width: 340px;
+    }
+
+    .resumo-rota-cidade {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: #eff6ff;
+        border: 1px solid #dbeafe;
+        color: #1e3a8a;
+        border-radius: 999px;
+        padding: 8px 14px;
+        font-size: .9rem;
+        font-weight: 900;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+    }
+
+        .resumo-rota-cidade i {
+            color: var(--accent);
+        }
+
+        .resumo-rota-cidade strong {
+            color: #0f172a;
+            font-weight: 900;
+        }
+
+    .resumo-companhia {
+        margin-bottom: 14px;
+    }
+
+        .resumo-companhia span,
+        .resumo-rota-linha span,
+        .resumo-dados-voo strong {
+            display: block;
+            font-size: .68rem;
+            color: #64748b;
+            text-transform: uppercase;
+            font-weight: 900;
+            margin-bottom: 4px;
+            letter-spacing: .02em;
+        }
+
+        .resumo-companhia strong {
+            color: #0f172a;
+            font-size: 1rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .resumo-companhia i {
+            color: var(--accent);
+        }
+
+    .resumo-rota-linha {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+    }
+
+        .resumo-rota-linha div {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 10px 14px;
+            min-width: 165px;
+        }
+
+        .resumo-rota-linha strong {
+            color: #1f2937;
+            font-size: .9rem;
+            font-weight: 900;
+        }
+
+        .resumo-rota-linha i {
+            color: var(--accent);
+        }
+
+    .resumo-dados-voo {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(100px, auto));
+        gap: 12px;
+        align-items: stretch;
+    }
+
+        .resumo-dados-voo div {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 10px 14px;
+            min-width: 105px;
+        }
+
+        .resumo-dados-voo span {
+            display: block;
+            color: #334155;
+            font-weight: 800;
+            font-size: .88rem;
+        }
+
+    .resumo-preco-completo {
+        background: #ecfdf5 !important;
+        border-color: #bbf7d0 !important;
+    }
+
+        .resumo-preco-completo span {
+            color: #047857;
+            font-size: 1rem;
+            font-weight: 900;
+        }
+
+    @@media (max-width: 900px) {
+        .voo-resumo-completo {
+            padding: 22px;
+        }
+
+        .resumo-dados-voo {
+            grid-template-columns: repeat(2, 1fr);
+            width: 100%;
+        }
+
+            .resumo-dados-voo div {
+                min-width: unset;
+            }
+    }
+
+    @@media (max-width: 600px) {
+        .resumo-rota-cidade {
+            border-radius: 16px;
+            line-height: 1.5;
+            align-items: flex-start;
+        }
+
+        .resumo-rota-linha {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+            .resumo-rota-linha i {
+                transform: rotate(90deg);
+                align-self: center;
+            }
+
+        .resumo-dados-voo {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>
 
 <div class="voo-page">
@@ -261,13 +429,105 @@
         <p>Etapa 1 — Destino selecionado: @Model.Pais - @Model.Estado</p>
     </div>
 
-    <div class="voo-resumo">
-        <div class="resumo-rota">
-            <i class="fas fa-map-marker-alt"></i> @Model.OrigemEstado - @Model.OrigemPais
-            <i class="fas fa-arrow-right"></i> @Model.Estado - @Model.Pais
+    @{
+        string origemEstado = Model.OrigemEstado ?? "São Paulo";
+        string origemPais = Model.OrigemPais ?? "Brasil";
+
+        string destinoEstado = Model.Estado ?? "Destino";
+        string destinoPais = Model.Pais ?? "Brasil";
+
+        string companhiaAerea = "Azul Linhas Aéreas";
+        string tituloVoo = "Voo nacional direto";
+
+        string aeroportoOrigem = origemEstado == "São Paulo"
+        ? "CGH - Congonhas"
+        : origemEstado + " - Aeroporto principal";
+
+        string aeroportoDestino = destinoEstado == "Rio de Janeiro"
+        ? "SDU - Santos Dumont"
+        : destinoEstado + " - Aeroporto principal";
+
+        DateTime dataIda = DateTime.Today.AddDays(30);
+        DateTime dataVolta = DateTime.Today.AddDays(37);
+
+        string horarioIda = "08:30";
+        string horarioVolta = "18:45";
+        string duracaoMedia = "1h 10min";
+    }
+
+    <div class="voo-resumo voo-resumo-completo">
+
+        <div class="resumo-info-principal">
+
+            <div class="resumo-rota-cidade">
+                <i class="fas fa-map-marker-alt"></i>
+
+                <strong>
+                    @origemEstado - @origemPais
+                </strong>
+
+                <i class="fas fa-arrow-right"></i>
+
+                <strong>
+                    @destinoEstado - @destinoPais
+                </strong>
+            </div>
+
+            <div class="resumo-companhia">
+                <span>Companhia aérea</span>
+                <strong>
+                    <i class="fas fa-plane-departure"></i>
+                    @companhiaAerea
+                </strong>
+            </div>
+
+            <div class="resumo-rota-linha">
+                <div>
+                    <span>Origem</span>
+                    <strong>@aeroportoOrigem</strong>
+                </div>
+
+                <i class="fas fa-arrow-right"></i>
+
+                <div>
+                    <span>Destino</span>
+                    <strong>@aeroportoDestino</strong>
+                </div>
+            </div>
         </div>
-        <div style="font-weight:800;color:var(--primary);font-size:1.1rem;">
-            @Model.PrecoPorPessoa.ToString("C") <span style="font-size:.75rem;color:var(--text-muted);font-weight:600;">/ pessoa</span>
+
+        <div class="resumo-dados-voo">
+
+            <div>
+                <strong>Data ida</strong>
+                <span>@dataIda.ToString("dd/MM/yyyy")</span>
+            </div>
+
+            <div>
+                <strong>Horário ida</strong>
+                <span>@horarioIda</span>
+            </div>
+
+            <div>
+                <strong>Data volta</strong>
+                <span>@dataVolta.ToString("dd/MM/yyyy")</span>
+            </div>
+
+            <div>
+                <strong>Horário volta</strong>
+                <span>@horarioVolta</span>
+            </div>
+
+            <div>
+                <strong>Duração</strong>
+                <span>@duracaoMedia</span>
+            </div>
+
+            <div class="resumo-preco-completo">
+                <strong>Preço por pessoa</strong>
+                <span>R$ 1.200,00</span>
+            </div>
+
         </div>
     </div>
 

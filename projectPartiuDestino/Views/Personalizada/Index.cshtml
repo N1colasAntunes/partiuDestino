@@ -1,162 +1,217 @@
 ﻿@{
-    ViewData["Title"] = "Planejamento Premium ";
-  }
+    ViewData["Title"] = "Viagem Personalizada";
+}
 
 <style>
     :root {
         --primary: #1e3a8a;
-        --primary-light: #eff6ff;
-        --secondary: #3b82f6;
-        --text-main: #1f2937;
-        --text-muted: #6b7280;
-        --bg-body: #f8fafc;
+        --primary-hover: #1d4ed8;
+        --primary-soft: #eff6ff;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --text-main: #0f172a;
+        --text-muted: #64748b;
+        --bg-page: #f8fafc;
         --white: #ffffff;
-        --border: #e5e7eb;
+        --border: #e2e8f0;
+        --soft-border: #edf2f7;
+        --shadow-sm: 0 4px 16px rgba(15, 23, 42, .06);
+        --shadow-md: 0 12px 30px rgba(15, 23, 42, .08);
     }
 
-    .planejamento-wrapper {
-        background-color: var(--bg-body);
-        padding: 80px 0;
-        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    body {
+        background: var(--bg-page);
+    }
+
+    .planejamento-page {
+        background: var(--bg-page);
+        min-height: 100vh;
+        font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
         color: var(--text-main);
+        padding-bottom: 70px;
     }
 
-    .container-premium {
-        max-width: 900px;
+    .planejamento-hero {
+        background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+        color: #fff;
+        padding: 50px 20px 105px;
+    }
+
+    .hero-content {
+        max-width: 1120px;
         margin: 0 auto;
+    }
+
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255,255,255,.14);
+        border: 1px solid rgba(255,255,255,.22);
+        color: white;
+        padding: 8px 14px;
+        border-radius: 999px;
+        font-size: .76rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: .45px;
+        margin-bottom: 16px;
+    }
+
+    .hero-title {
+        margin: 0 0 12px;
+        font-size: 2.25rem;
+        font-weight: 900;
+        letter-spacing: -.4px;
+    }
+
+    .hero-subtitle {
+        margin: 0;
+        max-width: 760px;
+        color: rgba(255,255,255,.92);
+        font-size: .98rem;
+        line-height: 1.7;
+    }
+
+    .planejamento-container {
+        max-width: 1120px;
+        margin: -58px auto 0;
         padding: 0 20px;
     }
 
-    .header-premium {
-        text-align: center;
-        margin-bottom: 70px;
+    .planejamento-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 320px;
+        gap: 24px;
+        align-items: start;
     }
 
-        .header-premium .badge-top {
-            background-color: var(--primary-light);
-            color: var(--primary);
-            padding: 6px 16px;
-            border-radius: 50px;
-            font-size: .8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            display: inline-block;
-            margin-bottom: 15px;
-        }
-
-        .header-premium h1 {
-            font-size: 3rem;
-            font-weight: 900;
-            color: #111827;
-            letter-spacing: -1px;
-            margin-bottom: 15px;
-        }
-
-        .header-premium p {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            max-width: 650px;
-            margin: 0 auto;
-            line-height: 1.7;
-        }
+    .form-coluna,
+    .resumo-coluna {
+        min-width: 0;
+    }
 
     .card-secao {
         background: var(--white);
-        border-radius: 24px;
-        padding: 40px;
-        margin-bottom: 35px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, .05), 0 10px 15px -3px rgba(0, 0, 0, .03);
         border: 1px solid var(--border);
+        border-radius: 20px;
+        box-shadow: var(--shadow-sm);
+        padding: 26px;
+        margin-bottom: 20px;
     }
 
     .titulo-secao-premium {
         display: flex;
         align-items: center;
-        gap: 15px;
-        margin-bottom: 35px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid #f1f5f9;
+        gap: 14px;
+        padding-bottom: 18px;
+        margin-bottom: 22px;
+        border-bottom: 1px solid var(--soft-border);
     }
 
         .titulo-secao-premium i {
-            width: 45px;
-            height: 45px;
-            background-color: var(--primary-light);
+            width: 42px;
+            height: 42px;
+            border-radius: 13px;
+            background: var(--primary-soft);
             color: var(--primary);
-            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1.08rem;
+            flex-shrink: 0;
         }
 
         .titulo-secao-premium h3 {
-            font-size: 1.35rem;
-            font-weight: 800;
             margin: 0;
-            color: #1e293b;
+            color: var(--text-main);
+            font-size: 1.18rem;
+            font-weight: 900;
+        }
+
+        .titulo-secao-premium p {
+            margin: 4px 0 0;
+            color: var(--text-muted);
+            font-size: .84rem;
+            line-height: 1.5;
         }
 
     .form-grid-premium {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 25px;
+        gap: 18px;
     }
 
     .form-grid-3 {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 25px;
+        gap: 18px;
     }
 
     .group-premium {
         display: flex;
         flex-direction: column;
+        gap: 8px;
     }
 
-        .group-premium label {
-            font-size: .85rem;
-            font-weight: 700;
-            color: #475569;
-            margin-bottom: 10px;
+        .group-premium.full {
+            grid-column: 1 / -1;
+        }
+
+        .group-premium label,
+        .section-label {
+            color: #334155;
+            font-size: .84rem;
+            font-weight: 800;
         }
 
     .section-label {
         display: block;
-        margin-top: 10px;
-        margin-bottom: 12px;
-        font-size: .9rem;
-        font-weight: 700;
-        color: #475569;
+        margin: 22px 0 12px;
     }
 
     .input-premium {
         width: 100%;
-        padding: 14px 18px;
         border: 1.5px solid var(--border);
-        border-radius: 14px;
-        font-size: .95rem;
-        background-color: #fcfcfd;
-        transition: all .2s ease;
+        background: #ffffff;
+        border-radius: 13px;
+        padding: 13px 15px;
+        font-size: .94rem;
+        color: var(--text-main);
+        transition: .2s ease;
     }
+
+        .input-premium::placeholder {
+            color: #94a3b8;
+        }
 
         .input-premium:focus {
             outline: none;
-            border-color: var(--secondary);
+            border-color: #3b82f6;
             box-shadow: 0 0 0 4px rgba(59, 130, 246, .10);
         }
 
+    .input-help {
+        color: var(--text-muted);
+        font-size: .76rem;
+        line-height: 1.4;
+    }
+
     textarea.input-premium {
         resize: vertical;
-        min-height: 130px;
+        min-height: 120px;
+        line-height: 1.6;
+    }
+
+    select.input-premium {
+        cursor: pointer;
     }
 
     .chips-group {
         display: flex;
         flex-wrap: wrap;
-        gap: 12px;
-        margin-top: 12px;
+        gap: 10px;
     }
 
     .chip-item input {
@@ -164,51 +219,58 @@
     }
 
     .chip-label {
-        padding: 10px 20px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 40px;
+        padding: 10px 16px;
         border: 1.5px solid var(--border);
-        border-radius: 50px;
-        font-size: .9rem;
-        font-weight: 600;
-        color: var(--text-muted);
-        display: inline-block;
+        border-radius: 999px;
+        background: #fff;
+        color: #475569;
+        font-size: .86rem;
+        font-weight: 750;
         cursor: pointer;
         transition: .2s ease;
-        background: white;
     }
 
         .chip-label:hover {
-            border-color: var(--secondary);
-            color: var(--secondary);
+            border-color: #93c5fd;
+            color: var(--primary);
+            background: #f8fbff;
         }
 
     .chip-item input:checked + .chip-label {
-        background-color: var(--primary);
+        background: var(--primary);
         border-color: var(--primary);
-        color: white;
+        color: #fff;
     }
 
     .checkbox-grid {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-top: 15px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
     }
 
     .checkbox-item {
         display: flex;
         align-items: center;
         gap: 10px;
-        padding: 12px 16px;
         border: 1.5px solid var(--border);
-        border-radius: 12px;
-        background: #fcfcfd;
+        border-radius: 13px;
+        background: #fff;
+        padding: 12px 13px;
+        color: #475569;
+        font-size: .86rem;
+        font-weight: 750;
         cursor: pointer;
         transition: .2s ease;
     }
 
         .checkbox-item:hover {
-            border-color: var(--secondary);
-            background: var(--primary-light);
+            background: #f8fbff;
+            border-color: #93c5fd;
+            color: var(--primary);
         }
 
         .checkbox-item input {
@@ -217,390 +279,814 @@
             accent-color: var(--primary);
         }
 
-    .btn-enviar {
-        width: 100%;
-        max-width: 500px;
-        background: linear-gradient(135deg, var(--primary) 0%, #1e40af 100%);
-        color: white;
-        border: none;
-        padding: 20px;
-        border-radius: 18px;
-        font-size: 1.1rem;
-        font-weight: 800;
-        cursor: pointer;
+    .resumo-card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        box-shadow: var(--shadow-sm);
+        overflow: hidden;
+        position: sticky;
+        top: 20px;
+    }
+
+    .resumo-header {
+        padding: 22px;
+        border-bottom: 1px solid var(--border);
+        background: #fff;
+    }
+
+        .resumo-header span {
+            display: block;
+            color: var(--primary);
+            font-size: .72rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: .45px;
+            margin-bottom: 7px;
+        }
+
+        .resumo-header h3 {
+            margin: 0;
+            color: var(--text-main);
+            font-size: 1.12rem;
+            font-weight: 900;
+        }
+
+    .resumo-body {
+        padding: 22px;
+    }
+
+    .passo-resumo {
+        display: flex;
+        gap: 11px;
+        margin-bottom: 17px;
+    }
+
+    .passo-numero {
+        width: 28px;
+        height: 28px;
+        border-radius: 999px;
+        background: var(--primary-soft);
+        color: var(--primary);
+        font-size: .78rem;
+        font-weight: 900;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .passo-resumo strong {
         display: block;
-        margin: 40px auto 0;
-        transition: all .25s ease;
+        color: var(--text-main);
+        font-size: .88rem;
+        font-weight: 900;
+        margin-bottom: 3px;
+    }
+
+    .passo-resumo span {
+        display: block;
+        color: var(--text-muted);
+        font-size: .78rem;
+        line-height: 1.45;
+    }
+
+    .resumo-aviso {
+        margin-top: 18px;
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+        color: #92400e;
+        padding: 13px 14px;
+        border-radius: 13px;
+        font-size: .78rem;
+        font-weight: 650;
+        line-height: 1.55;
+    }
+
+    .acoes-form {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        box-shadow: var(--shadow-sm);
+        padding: 24px;
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 18px;
+        flex-wrap: wrap;
+    }
+
+    .acoes-form-texto strong {
+        display: block;
+        color: var(--text-main);
+        font-size: 1rem;
+        font-weight: 900;
+        margin-bottom: 4px;
+    }
+
+    .acoes-form-texto span {
+        color: var(--text-muted);
+        font-size: .86rem;
+        line-height: 1.5;
+    }
+
+    .btn-enviar {
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        padding: 14px 22px;
+        border-radius: 13px;
+        font-size: .96rem;
+        font-weight: 900;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        transition: .2s ease;
+        min-width: 230px;
     }
 
         .btn-enviar:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 30px rgba(30, 58, 138, .18);
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 24px rgba(30, 58, 138, .16);
         }
 
-        .btn-enviar:active {
-            transform: translateY(0);
+    @@media (max-width: 1050px) {
+        .planejamento-layout {
+            grid-template-columns: 1fr;
         }
 
-    .input-premium[type="number"]::-webkit-outer-spin-button,
-    .input-premium[type="number"]::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
+        .resumo-card {
+            position: static;
+        }
     }
 
-    .input-premium[type="number"] {
-        -moz-appearance: textfield;
-    }
+    @@media (max-width: 760px) {
+        .planejamento-hero {
+            padding: 38px 16px 92px;
+        }
 
-    select.input-premium {
-        cursor: pointer;
-    }
+        .hero-title {
+            font-size: 1.8rem;
+        }
 
-    /* =========================
-       RESPONSIVO (CELULAR)
-    ========================= */
-    @@media (max-width: 768px) {
-        .header-premium h1
+        .planejamento-container {
+            margin-top: -48px;
+            padding: 0 14px;
+        }
 
-    {
-        font-size: 2.2rem;
-    }
+        .card-secao {
+            padding: 20px;
+        }
 
-    .card-secao {
-        padding: 25px;
-    }
+        .form-grid-premium,
+        .form-grid-3,
+        .checkbox-grid {
+            grid-template-columns: 1fr;
+        }
 
-    .form-grid-premium,
-    .form-grid-3 {
-        grid-template-columns: 1fr;
-    }
+        .acoes-form {
+            align-items: stretch;
+        }
 
-    .btn-enviar {
-        width: 100%;
-        max-width: none;
-    }
-
+        .btn-enviar {
+            width: 100%;
+        }
     }
 </style>
 
-<form method="post">
+<div class="planejamento-page">
 
-    <!-- IDENTIFICAÇÃO PESSOAL -->
-    <div class="card-secao">
-        <div class="titulo-secao-premium">
-            <i class="fas fa-user-tie"></i>
-            <h3>Identificação Pessoal</h3>
+    <section class="planejamento-hero">
+        <div class="hero-content">
+            
+
+            <h1 class="hero-title">Planeje sua viagem personalizada</h1>
+
+            <p class="hero-subtitle">
+                Informe seus dados, preferências e orçamento para que a Partiu Destino monte uma proposta de viagem mais próxima do seu perfil.
+            </p>
         </div>
+    </section>
 
-        <div class="form-grid-premium">
+    <div class="planejamento-container">
 
-            <div class="group-premium">
-                <label>Nome Completo</label>
-                <input type="text" name="NomeCompleto" class="input-premium" required />
+        <form method="post" id="formPlanejamento">
+
+            <div class="planejamento-layout">
+
+                <div class="form-coluna">
+
+                    <!-- IDENTIFICAÇÃO PESSOAL -->
+                    <div class="card-secao">
+                        <div class="titulo-secao-premium">
+                            <i class="fas fa-user"></i>
+                            <div>
+                                <h3>Dados do solicitante</h3>
+                                <p>Essas informações serão usadas para contato e acompanhamento da proposta.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid-premium">
+
+                            <div class="group-premium">
+                                <label>Nome completo</label>
+                                <input type="text"
+                                       name="NomeCompleto"
+                                       id="nomeCompleto"
+                                       class="input-premium"
+                                       placeholder="Ex.: Gustavo Lima Goes"
+                                       autocomplete="name"
+                                       required />
+                            </div>
+
+                            <div class="group-premium">
+                                <label>CPF</label>
+                                <input type="text"
+                                       name="Cpf"
+                                       id="cpfInput"
+                                       class="input-premium"
+                                       placeholder="000.000.000-00"
+                                       maxlength="14"
+                                       inputmode="numeric"
+                                       autocomplete="off"
+                                       required />
+                            </div>
+
+                            <div class="group-premium">
+                                <label>E-mail</label>
+                                <input type="email"
+                                       name="Email"
+                                       id="emailInput"
+                                       class="input-premium"
+                                       placeholder="exemplo@email.com"
+                                       autocomplete="email"
+                                       required />
+                            </div>
+
+                            <div class="group-premium">
+                                <label>WhatsApp</label>
+                                <input type="tel"
+                                       name="Whatsapp"
+                                       id="whatsappInput"
+                                       class="input-premium"
+                                       placeholder="(00) 00000-0000"
+                                       maxlength="15"
+                                       inputmode="numeric"
+                                       autocomplete="tel"
+                                       required />
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- DESTINO E LOGÍSTICA -->
+                    <div class="card-secao">
+                        <div class="titulo-secao-premium">
+                            <i class="fas fa-map-marked-alt"></i>
+                            <div>
+                                <h3>Destino e logística</h3>
+                                <p>Informe de onde você sai, para onde deseja ir e o período aproximado da viagem.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid-premium">
+
+                            <div class="group-premium">
+                                <label>Origem</label>
+                                <input type="text"
+                                       name="Origem"
+                                       class="input-premium"
+                                       placeholder="Ex.: São Paulo, Brasil" />
+                            </div>
+
+                            <div class="group-premium">
+                                <label>Destino desejado</label>
+                                <input type="text"
+                                       name="Destino"
+                                       class="input-premium"
+                                       placeholder="Ex.: Bahia, Paris, Gramado..." />
+                            </div>
+
+                            <div class="group-premium">
+                                <label>Data de partida</label>
+                                <input type="date"
+                                       name="DataPartida"
+                                       id="dataPartida"
+                                       class="input-premium" />
+                            </div>
+
+                            <div class="group-premium">
+                                <label>Duração da viagem</label>
+                                <input type="text"
+                                       name="DuracaoDias"
+                                       id="duracaoInput"
+                                       class="input-premium"
+                                       placeholder="Ex.: 7 dias"
+                                       maxlength="3"
+                                       inputmode="numeric" />
+                            </div>
+
+                        </div>
+
+                        <label class="section-label">Região de interesse</label>
+
+                        <div class="chips-group">
+                            <label class="chip-item">
+                                <input type="radio" name="RegiaoInteresse" value="Praia">
+                                <span class="chip-label">Praia</span>
+                            </label>
+
+                            <label class="chip-item">
+                                <input type="radio" name="RegiaoInteresse" value="Montanha">
+                                <span class="chip-label">Montanha</span>
+                            </label>
+
+                            <label class="chip-item">
+                                <input type="radio" name="RegiaoInteresse" value="Cidade Grande">
+                                <span class="chip-label">Cidade grande</span>
+                            </label>
+
+                            <label class="chip-item">
+                                <input type="radio" name="RegiaoInteresse" value="Interior">
+                                <span class="chip-label">Interior</span>
+                            </label>
+
+                            <label class="chip-item">
+                                <input type="radio" name="RegiaoInteresse" value="Natureza">
+                                <span class="chip-label">Natureza</span>
+                            </label>
+
+                            <label class="chip-item">
+                                <input type="radio" name="RegiaoInteresse" value="Neve">
+                                <span class="chip-label">Neve</span>
+                            </label>
+                        </div>
+
+                        <label class="section-label">Transporte preferido</label>
+
+                        <div class="chips-group">
+                            <label class="chip-item">
+                                <input type="radio" name="Transporte" value="Carro">
+                                <span class="chip-label">Carro</span>
+                            </label>
+
+                            <label class="chip-item">
+                                <input type="radio" name="Transporte" value="Avião">
+                                <span class="chip-label">Avião</span>
+                            </label>
+
+                            <label class="chip-item">
+                                <input type="radio" name="Transporte" value="Ônibus">
+                                <span class="chip-label">Ônibus</span>
+                            </label>
+
+                            <label class="chip-item">
+                                <input type="radio" name="Transporte" value="Carro Próprio">
+                                <span class="chip-label">Carro próprio</span>
+                            </label>
+
+                            <label class="chip-item">
+                                <input type="radio" name="Transporte" value="Sem Preferência">
+                                <span class="chip-label">Sem preferência</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- HOSPEDAGEM -->
+                    <div class="card-secao">
+                        <div class="titulo-secao-premium">
+                            <i class="fas fa-hotel"></i>
+                            <div>
+                                <h3>Hospedagem</h3>
+                                <p>Escolha o estilo de hospedagem que combina melhor com a viagem.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid-premium">
+
+                            <div class="group-premium">
+                                <label>Tipo de hospedagem</label>
+
+                                <select name="TipoHospedagem" class="input-premium">
+                                    <option value="">Selecione</option>
+                                    <option>Hotel</option>
+                                    <option>Resort</option>
+                                    <option>Pousada</option>
+                                    <option>Airbnb</option>
+                                    <option>Hostel</option>
+                                </select>
+                            </div>
+
+                            <div class="group-premium">
+                                <label>Categoria</label>
+
+                                <select name="CategoriaHospedagem" class="input-premium">
+                                    <option value="">Selecione</option>
+                                    <option>Econômico</option>
+                                    <option>Intermediário</option>
+                                    <option>Luxo</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <label class="section-label">Preferências da hospedagem</label>
+
+                        <div class="checkbox-grid">
+
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="PreferenciasHospedagem" value="Café da Manhã">
+                                Café da manhã
+                            </label>
+
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="PreferenciasHospedagem" value="Piscina">
+                                Piscina
+                            </label>
+
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="PreferenciasHospedagem" value="Academia">
+                                Academia
+                            </label>
+
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="PreferenciasHospedagem" value="Vista para o Mar">
+                                Vista para o mar
+                            </label>
+
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="PreferenciasHospedagem" value="Pet Friendly">
+                                Pet friendly
+                            </label>
+
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="PreferenciasHospedagem" value="Próximo ao Centro">
+                                Próximo ao centro
+                            </label>
+
+                        </div>
+                    </div>
+
+                    <!-- PERFIL DOS VIAJANTES -->
+                    <div class="card-secao">
+                        <div class="titulo-secao-premium">
+                            <i class="fas fa-users"></i>
+                            <div>
+                                <h3>Perfil dos viajantes</h3>
+                                <p>Informe a quantidade de pessoas e o tipo do grupo.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid-3">
+
+                            <div class="group-premium">
+                                <label>Adultos</label>
+                                <input type="text"
+                                       name="Adultos"
+                                       id="adultosInput"
+                                       class="input-premium"
+                                       value="1"
+                                       maxlength="2"
+                                       inputmode="numeric" />
+                            </div>
+
+                            <div class="group-premium">
+                                <label>Crianças</label>
+                                <input type="text"
+                                       name="Criancas"
+                                       id="criancasInput"
+                                       class="input-premium"
+                                       value="0"
+                                       maxlength="2"
+                                       inputmode="numeric" />
+                            </div>
+
+                            <div class="group-premium">
+                                <label>Idosos</label>
+                                <input type="text"
+                                       name="Idosos"
+                                       id="idososInput"
+                                       class="input-premium"
+                                       value="0"
+                                       maxlength="2"
+                                       inputmode="numeric" />
+                            </div>
+
+                        </div>
+
+                        <label class="section-label">Tipo do grupo</label>
+
+                        <div class="chips-group">
+                            <label class="chip-item">
+                                <input type="radio" name="TipoGrupo" value="Sozinho">
+                                <span class="chip-label">Sozinho</span>
+                            </label>
+
+                            <label class="chip-item">
+                                <input type="radio" name="TipoGrupo" value="Casal">
+                                <span class="chip-label">Casal</span>
+                            </label>
+
+                            <label class="chip-item">
+                                <input type="radio" name="TipoGrupo" value="Familia">
+                                <span class="chip-label">Família</span>
+                            </label>
+
+                            <label class="chip-item">
+                                <input type="radio" name="TipoGrupo" value="Amigos">
+                                <span class="chip-label">Amigos</span>
+                            </label>
+
+                            <label class="chip-item">
+                                <input type="radio" name="TipoGrupo" value="Lua de Mel">
+                                <span class="chip-label">Lua de mel</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- ESTILO DA EXPERIÊNCIA -->
+                    <div class="card-secao">
+                        <div class="titulo-secao-premium">
+                            <i class="fas fa-compass"></i>
+                            <div>
+                                <h3>Estilo da experiência</h3>
+                                <p>Ajude nossa equipe a entender o clima e o ritmo ideal da viagem.</p>
+                            </div>
+                        </div>
+
+                        <label class="section-label">Objetivo da viagem</label>
+
+                        <div class="chips-group">
+                            <label class="chip-item">
+                                <input type="radio" name="ObjetivoViagem" value="Conhecer Lugares">
+                                <span class="chip-label">Conhecer lugares</span>
+                            </label>
+
+                            <label class="chip-item">
+                                <input type="radio" name="ObjetivoViagem" value="Gastronomia">
+                                <span class="chip-label">Gastronomia</span>
+                            </label>
+
+                            <label class="chip-item">
+                                <input type="radio" name="ObjetivoViagem" value="Compras">
+                                <span class="chip-label">Compras</span>
+                            </label>
+
+                            <label class="chip-item">
+                                <input type="radio" name="ObjetivoViagem" value="Cultura">
+                                <span class="chip-label">Cultura</span>
+                            </label>
+
+                            <label class="chip-item">
+                                <input type="radio" name="ObjetivoViagem" value="Aniversario">
+                                <span class="chip-label">Aniversário</span>
+                            </label>
+                        </div>
+
+                        <label class="section-label">Ritmo da viagem</label>
+
+                        <div class="chips-group">
+                            <label class="chip-item">
+                                <input type="radio" name="RitmoViagem" value="Tranquilo">
+                                <span class="chip-label">Tranquilo</span>
+                            </label>
+
+                            <label class="chip-item">
+                                <input type="radio" name="RitmoViagem" value="Equilibrado">
+                                <span class="chip-label">Equilibrado</span>
+                            </label>
+
+                            <label class="chip-item">
+                                <input type="radio" name="RitmoViagem" value="Intenso">
+                                <span class="chip-label">Intenso</span>
+                            </label>
+                        </div>
+
+                        <label class="section-label">Clima preferido</label>
+
+                        <div class="chips-group">
+                            <label class="chip-item">
+                                <input type="radio" name="ClimaViagem" value="Quente">
+                                <span class="chip-label">Quente</span>
+                            </label>
+
+                            <label class="chip-item">
+                                <input type="radio" name="ClimaViagem" value="Frio">
+                                <span class="chip-label">Frio</span>
+                            </label>
+
+                            <label class="chip-item">
+                                <input type="radio" name="ClimaViagem" value="Tanto Faz">
+                                <span class="chip-label">Sem preferência</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- ORÇAMENTO -->
+                    <div class="card-secao">
+                        <div class="titulo-secao-premium">
+                            <i class="fas fa-wallet"></i>
+                            <div>
+                                <h3>Orçamento</h3>
+                                <p>Informe a faixa de investimento para montarmos uma proposta compatível.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid-premium">
+                            <div class="group-premium full">
+                                <label>Faixa de orçamento</label>
+
+                                <select name="FaixaOrcamento" class="input-premium">
+                                    <option value="">Selecione uma faixa</option>
+                                    <option>Até R$ 2.000</option>
+                                    <option>R$ 2.000 a R$ 5.000</option>
+                                    <option>R$ 5.000 a R$ 10.000</option>
+                                    <option>Acima de R$ 10.000</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DESEJOS ESPECIAIS -->
+                    <div class="card-secao">
+                        <div class="titulo-secao-premium">
+                            <i class="fas fa-comment-dots"></i>
+                            <div>
+                                <h3>Observações da viagem</h3>
+                                <p>Conte detalhes importantes, restrições, comemorações ou preferências específicas.</p>
+                            </div>
+                        </div>
+
+                        <div class="group-premium">
+                            <label>Desejos especiais</label>
+
+                            <textarea name="DesejosEspeciais"
+                                      class="input-premium"
+                                      rows="5"
+                                      placeholder="Ex.: quero uma viagem romântica, perto da praia, com hotel confortável e passeios tranquilos."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="acoes-form">
+                        <div class="acoes-form-texto">
+                            <strong>Enviar solicitação para análise</strong>
+                            <span>Após o envio, a agência poderá analisar os dados e preparar uma proposta personalizada.</span>
+                        </div>
+
+                        <button type="submit" class="btn-enviar">
+                            <i class="fas fa-paper-plane"></i>
+                            Enviar planejamento
+                        </button>
+                    </div>
+
+                </div>
+
+                <aside class="resumo-coluna">
+                    <div class="resumo-card">
+                        <div class="resumo-header">
+                            <span>Como funciona</span>
+                            <h3>Planejamento da viagem</h3>
+                        </div>
+
+                        <div class="resumo-body">
+
+                            <div class="passo-resumo">
+                                <div class="passo-numero">1</div>
+                                <div>
+                                    <strong>Você preenche o formulário</strong>
+                                    <span>Informe destino, perfil dos viajantes, orçamento e preferências.</span>
+                                </div>
+                            </div>
+
+                            <div class="passo-resumo">
+                                <div class="passo-numero">2</div>
+                                <div>
+                                    <strong>A agência analisa</strong>
+                                    <span>Os dados ajudam a montar uma proposta mais próxima do seu perfil.</span>
+                                </div>
+                            </div>
+
+                            <div class="passo-resumo">
+                                <div class="passo-numero">3</div>
+                                <div>
+                                    <strong>Você recebe uma sugestão</strong>
+                                    <span>O planejamento pode incluir transporte, hospedagem e experiências.</span>
+                                </div>
+                            </div>
+
+                            <div class="resumo-aviso">
+                                <i class="fas fa-info-circle"></i>
+                                Esta solicitação não confirma compra automaticamente. Ela registra o interesse para orçamento personalizado.
+                            </div>
+
+                        </div>
+                    </div>
+                </aside>
+
             </div>
 
-            <div class="group-premium">
-                <label>CPF</label>
-                <input type="password" name="Cpf" class="input-premium" required />
-            </div>
+        </form>
 
-            <div class="group-premium">
-                <label>E-mail</label>
-                <input type="email" name="Email" class="input-premium" required />
-            </div>
-
-            <div class="group-premium">
-                <label>WhatsApp</label>
-                <input type="tel" name="Whatsapp" class="input-premium" required />
-            </div>
-
-        </div>
     </div>
+</div>
 
-    <!-- DESTINO E LOGÍSTICA -->
-    <div class="card-secao">
-        <div class="titulo-secao-premium">
-            <i class="fas fa-map-marked-alt"></i>
-            <h3>Destino & Logística</h3>
-        </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
 
-        <div class="form-grid-premium">
+        const cpfInput = document.getElementById("cpfInput");
+        const whatsappInput = document.getElementById("whatsappInput");
+        const duracaoInput = document.getElementById("duracaoInput");
+        const adultosInput = document.getElementById("adultosInput");
+        const criancasInput = document.getElementById("criancasInput");
+        const idososInput = document.getElementById("idososInput");
+        const dataPartida = document.getElementById("dataPartida");
 
-            <div class="group-premium">
-                <label>Origem</label>
-                <input type="text" name="Origem" class="input-premium" />
-            </div>
+        function somenteNumeros(valor) {
+            return valor.replace(/\D/g, "");
+        }
 
-            <div class="group-premium">
-                <label>Destino</label>
-                <input type="text" name="Destino" class="input-premium" />
-            </div>
+        function aplicarMascaraCpf(input) {
+            if (!input) return;
 
-            <div class="group-premium">
-                <label>Data de Partida</label>
-                <input type="date" name="DataPartida" class="input-premium" />
-            </div>
+            input.addEventListener("input", function () {
+                let valor = somenteNumeros(input.value);
 
-            <div class="group-premium">
-                <label>Duração (dias)</label>
-                <input type="number" name="DuracaoDias" class="input-premium" min="1" />
-            </div>
+                valor = valor.replace(/^(\d{3})(\d)/, "$1.$2");
+                valor = valor.replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3");
+                valor = valor.replace(/\.(\d{3})(\d)/, ".$1-$2");
 
-        </div>
+                input.value = valor.substring(0, 14);
+            });
+        }
 
-        <br />
-
-        <label>Região de Interesse</label>
-
-        <div class="chips-group">
-
-            <label class="chip-item">
-                <input type="radio" name="RegiaoInteresse" value="Praia">
-                <span class="chip-label">Praia</span>
-            </label>
+        function aplicarMascaraTelefone(input) {
+            if (!input) return;
 
-            <label class="chip-item">
-                <input type="radio" name="RegiaoInteresse" value="Montanha">
-                <span class="chip-label">Montanha</span>
-            </label>
+            input.addEventListener("input", function () {
+                let valor = somenteNumeros(input.value).substring(0, 11);
 
-            <label class="chip-item">
-                <input type="radio" name="RegiaoInteresse" value="Cidade Grande">
-                <span class="chip-label">Cidade Grande</span>
-            </label>
+                if (valor.length <= 10) {
+                    valor = valor.replace(/^(\d{2})(\d)/, "($1) $2");
+                    valor = valor.replace(/(\d{4})(\d)/, "$1-$2");
+                } else {
+                    valor = valor.replace(/^(\d{2})(\d)/, "($1) $2");
+                    valor = valor.replace(/(\d{5})(\d)/, "$1-$2");
+                }
 
-            <label class="chip-item">
-                <input type="radio" name="RegiaoInteresse" value="Interior">
-                <span class="chip-label">Interior</span>
-            </label>
+                input.value = valor;
+            });
+        }
 
-            <label class="chip-item">
-                <input type="radio" name="RegiaoInteresse" value="Natureza">
-                <span class="chip-label">Natureza</span>
-            </label>
+        function aplicarSomenteNumeros(input, minimo, maximo, padraoQuandoVazio) {
+            if (!input) return;
 
-            <label class="chip-item">
-                <input type="radio" name="RegiaoInteresse" value="Neve">
-                <span class="chip-label">Neve</span>
-            </label>
+            input.addEventListener("input", function () {
+                input.value = somenteNumeros(input.value);
+            });
 
-        </div>
+            input.addEventListener("blur", function () {
+                let valor = input.value === "" ? padraoQuandoVazio : parseInt(input.value);
 
-        <br />
+                if (isNaN(valor)) {
+                    valor = padraoQuandoVazio;
+                }
 
-        <label>Transporte</label>
-
-        <div class="chips-group">
+                if (valor < minimo) {
+                    valor = minimo;
+                }
 
-            <label class="chip-item">
-                <input type="radio" name="Transporte" value="Carro">
-                <span class="chip-label">Carro</span>
-            </label>
+                if (valor > maximo) {
+                    valor = maximo;
+                }
 
-            <label class="chip-item">
-                <input type="radio" name="Transporte" value="Avião">
-                <span class="chip-label">Avião</span>
-            </label>
+                input.value = valor;
+            });
+        }
 
-            <label class="chip-item">
-                <input type="radio" name="Transporte" value="Ônibus">
-                <span class="chip-label">Ônibus</span>
-            </label>
+        function aplicarDataMinima() {
+            if (!dataPartida) return;
 
-            <label class="chip-item">
-                <input type="radio" name="Transporte" value="Carro Próprio">
-                <span class="chip-label">Carro Próprio</span>
-            </label>
+            const hoje = new Date();
+            const ano = hoje.getFullYear();
+            const mes = String(hoje.getMonth() + 1).padStart(2, "0");
+            const dia = String(hoje.getDate()).padStart(2, "0");
 
-            <label class="chip-item">
-                <input type="radio" name="Transporte" value="Sem Preferência">
-                <span class="chip-label">Sem Preferência</span>
-            </label>
+            dataPartida.min = `${ano}-${mes}-${dia}`;
+        }
 
-        </div>
+        aplicarMascaraCpf(cpfInput);
+        aplicarMascaraTelefone(whatsappInput);
 
-    </div>
+        aplicarSomenteNumeros(duracaoInput, 1, 365, 1);
+        aplicarSomenteNumeros(adultosInput, 1, 30, 1);
+        aplicarSomenteNumeros(criancasInput, 0, 30, 0);
+        aplicarSomenteNumeros(idososInput, 0, 30, 0);
 
-    <!-- HOSPEDAGEM -->
-    <div class="card-secao">
-        <div class="titulo-secao-premium">
-            <i class="fas fa-hotel"></i>
-            <h3>Hospedagem</h3>
-        </div>
+        aplicarDataMinima();
 
-        <div class="form-grid-premium">
-
-            <div class="group-premium">
-                <label>Tipo</label>
-
-                <select name="TipoHospedagem" class="input-premium">
-                    <option>Hotel</option>
-                    <option>Resort</option>
-                    <option>Pousada</option>
-                    <option>Airbnb</option>
-                    <option>Hostel</option>
-                </select>
-            </div>
-
-            <div class="group-premium">
-                <label>Categoria</label>
-
-                <select name="CategoriaHospedagem" class="input-premium">
-                    <option>Econômico</option>
-                    <option>Intermediário</option>
-                    <option>Luxo</option>
-                </select>
-            </div>
-
-        </div>
-
-        <br />
-
-        <label>Preferências</label>
-
-        <div class="checkbox-grid">
-
-            <label class="checkbox-item">
-                <input type="checkbox" name="PreferenciasHospedagem" value="Café da Manhã">
-                Café da Manhã
-            </label>
-
-            <label class="checkbox-item">
-                <input type="checkbox" name="PreferenciasHospedagem" value="Piscina">
-                Piscina
-            </label>
-
-            <label class="checkbox-item">
-                <input type="checkbox" name="PreferenciasHospedagem" value="Academia">
-                Academia
-            </label>
-
-            <label class="checkbox-item">
-                <input type="checkbox" name="PreferenciasHospedagem" value="Vista para o Mar">
-                Vista para o Mar
-            </label>
-
-            <label class="checkbox-item">
-                <input type="checkbox" name="PreferenciasHospedagem" value="Pet Friendly">
-                Pet Friendly
-            </label>
-
-            <label class="checkbox-item">
-                <input type="checkbox" name="PreferenciasHospedagem" value="Próximo ao Centro">
-                Próximo ao Centro
-            </label>
-
-        </div>
-
-    </div>
-
-    <!-- PERFIL DOS VIAJANTES -->
-    <div class="card-secao">
-        <div class="titulo-secao-premium">
-            <i class="fas fa-users"></i>
-            <h3>Perfil dos Viajantes</h3>
-        </div>
-
-        <div class="form-grid-premium">
-
-            <div class="group-premium">
-                <label>Adultos</label>
-                <input type="number" name="Adultos" class="input-premium" value="1" />
-            </div>
-
-            <div class="group-premium">
-                <label>Crianças</label>
-                <input type="number" name="Criancas" class="input-premium" value="0" />
-            </div>
-
-            <div class="group-premium">
-                <label>Idosos</label>
-                <input type="number" name="Idosos" class="input-premium" value="0" />
-            </div>
-
-        </div>
-
-        <br />
-
-        <label>Tipo do Grupo</label>
-
-        <div class="chips-group">
-            <label class="chip-item"><input type="radio" name="TipoGrupo" value="Sozinho"><span class="chip-label">Sozinho</span></label>
-            <label class="chip-item"><input type="radio" name="TipoGrupo" value="Casal"><span class="chip-label">Casal</span></label>
-            <label class="chip-item"><input type="radio" name="TipoGrupo" value="Familia"><span class="chip-label">Família</span></label>
-            <label class="chip-item"><input type="radio" name="TipoGrupo" value="Amigos"><span class="chip-label">Amigos</span></label>
-            <label class="chip-item"><input type="radio" name="TipoGrupo" value="Lua de Mel"><span class="chip-label">Lua de Mel</span></label>
-        </div>
-    </div>
-
-    <!-- ESTILO DA EXPERIÊNCIA -->
-    <div class="card-secao">
-        <div class="titulo-secao-premium">
-            <i class="fas fa-cocktail"></i>
-            <h3>Estilo da Experiência</h3>
-        </div>
-
-        <label>Objetivo da Viagem</label>
-
-        <div class="chips-group">
-            <label class="chip-item"><input type="radio" name="ObjetivoViagem" value="Conhecer Lugares"><span class="chip-label">Conhecer Lugares</span></label>
-            <label class="chip-item"><input type="radio" name="ObjetivoViagem" value="Gastronomia"><span class="chip-label">Gastronomia</span></label>
-            <label class="chip-item"><input type="radio" name="ObjetivoViagem" value="Compras"><span class="chip-label">Compras</span></label>
-            <label class="chip-item"><input type="radio" name="ObjetivoViagem" value="Cultura"><span class="chip-label">Cultura</span></label>
-            <label class="chip-item"><input type="radio" name="ObjetivoViagem" value="Aniversario"><span class="chip-label">Aniversário</span></label>
-        </div>
-
-        <br />
-
-        <label>Ritmo da Viagem</label>
-
-        <div class="chips-group">
-            <label class="chip-item"><input type="radio" name="RitmoViagem" value="Tranquilo"><span class="chip-label">Tranquilo</span></label>
-            <label class="chip-item"><input type="radio" name="RitmoViagem" value="Equilibrado"><span class="chip-label">Equilibrado</span></label>
-            <label class="chip-item"><input type="radio" name="RitmoViagem" value="Intenso"><span class="chip-label">Intenso</span></label>
-        </div>
-
-        <br />
-
-        <label>Clima</label>
-
-        <div class="chips-group">
-            <label class="chip-item"><input type="radio" name="ClimaViagem" value="Quente"><span class="chip-label">Quente</span></label>
-            <label class="chip-item"><input type="radio" name="ClimaViagem" value="Frio"><span class="chip-label">Frio</span></label>
-            <label class="chip-item"><input type="radio" name="ClimaViagem" value="Tanto Faz"><span class="chip-label">Tanto Faz</span></label>
-        </div>
-
-    </div>
-
-    <!-- ORÇAMENTO -->
-    <div class="card-secao">
-        <div class="titulo-secao-premium">
-            <i class="fas fa-wallet"></i>
-            <h3>Orçamento</h3>
-        </div>
-
-        <select name="FaixaOrcamento" class="input-premium">
-            <option>Até R$ 2.000</option>
-            <option>R$ 2.000 a R$ 5.000</option>
-            <option>R$ 5.000 a R$ 10.000</option>
-            <option>Acima de R$ 10.000</option>
-        </select>
-    </div>
-
-    <!-- DESEJOS ESPECIAIS -->
-    <div class="card-secao">
-        <div class="titulo-secao-premium">
-            <i class="fas fa-comment-dots"></i>
-            <h3>Desejos Especiais</h3>
-        </div>
-
-        <textarea name="DesejosEspeciais"
-                  class="input-premium"
-                  rows="5"></textarea>
-    </div>
-
-    <button type="submit" class="btn-enviar">
-        Enviar Planejamento
-    </button>
-
-</form>
+    });
+</script>
