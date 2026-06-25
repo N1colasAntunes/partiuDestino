@@ -48,6 +48,7 @@ CREATE TABLE usuarios (
     data_nascimento DATE NULL DEFAULT NULL
 );
 
+describe usuarios;
 -- ------------------------------------------------------------
 -- 2.2 Tabela: destinos
 -- ------------------------------------------------------------
@@ -142,7 +143,7 @@ CREATE TABLE carrinho (
     usuario_id INT NOT NULL,
     tipo_item VARCHAR(30) NOT NULL, -- pacote | destino | viagem_personalizada
     item_id INT NOT NULL,
-    nome_item VARCHAR(255) NOT NULL,
+    nome_item VARCHAR(1000) NOT NULL,
     preco_unitario DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     quantidade INT NOT NULL DEFAULT 1,
     data_adicionado TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -165,6 +166,7 @@ CREATE TABLE pedidos (
 describe pedidos;
 use bdpartiudestino;
 ALTER TABLE pedidos
+ADD COLUMN codigo_reserva VARCHAR(30) NULL AFTER id,
 ADD COLUMN forma_pagamento VARCHAR(30) NULL AFTER quantidade,
 ADD COLUMN status_pagamento VARCHAR(40) NULL DEFAULT 'Confirmado' AFTER forma_pagamento,
 ADD COLUMN valor_total_pedido DECIMAL(10,2) NULL DEFAULT 0.00 AFTER status_pagamento,
@@ -568,3 +570,6 @@ INNER JOIN quartos q ON q.hospedagem_id = h.id
 ORDER BY h.id, q.preco_adicional;
 
 SET SQL_SAFE_UPDATES = 1;
+
+DESCRIBE viagem_personalizada;
+SHOW CREATE TABLE viagem_personalizada;
